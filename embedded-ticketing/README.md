@@ -1,8 +1,8 @@
-# peakst8 Embed
+# peakst8 Embedded Ticketing
 
-**A peakst8 product feature.** peakst8 Embed lets a club sell its events on its own website. Event pages rank on Google and get cited by AI answer engines on the club's domain. peakst8 still runs checkout, payments, refunds and check-in, so the GMV take is unchanged.
+**A peakst8 product feature.** peakst8 Embedded Ticketing lets a club sell its events on its own website. Event pages rank on Google and get cited by AI answer engines on the club's domain. peakst8 still runs checkout, payments, refunds and check-in, so the GMV take is unchanged.
 
-[Product note](https://peakst8-basecamp.github.io/product-notes/embed/) · [Clickable prototype](https://peakst8-basecamp.github.io/product-notes/embed/prototype/) · Internal · updated 28 Oct 2026
+[Product note](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/) · [Clickable prototype](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/prototype/) · Internal · updated 28 Oct 2026
 
 ## Who we're building it for
 
@@ -10,7 +10,7 @@
 
 The pilot starts with three organisers:
 
-| Pilot | What they run | What Embed gives them | Go-live (proposed) |
+| Pilot | What they run | What Embedded Ticketing gives them | Go-live (proposed) |
 | --- | --- | --- | --- |
 | **Find Your Fit** | Recurring community runs and sessions | Every run ranks on their own site; bookings without leaving it | 30 Nov 2026 |
 | **Sisters in Sweat** | Women's fitness community events | Their brand all the way through checkout; one place for all their events | 7 Dec 2026 |
@@ -26,7 +26,7 @@ The pilot starts with three organisers:
 
 [cubbonclassic10k.com/register](https://cubbonclassic10k.com/register) is the setup Embed replaces:
 
-| Today | With peakst8 Embed |
+| Today | With peakst8 Embedded Ticketingded Ticketing |
 | --- | --- |
 | Individual entry is a KonfHub widget iframe inside the page | A server-rendered race page on their domain; peakst8 checkout opens on Book |
 | Structured data is an Organization and a WebPage only, with no Event markup | Event, FAQ and breadcrumb schema, sitemap and IndexNow |
@@ -78,13 +78,13 @@ The live peakst8 registration flow, re-skinned in the club's brand.
 
 ![A1 Embed access](screens/A1-embed-access.png)
 
-Every state, with acceptance criteria and analytics events, is in the [prototype](https://peakst8-basecamp.github.io/product-notes/embed/prototype/).
+Every state, with acceptance criteria and analytics events, is in the [prototype](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/prototype/).
 
 ## Timeline to go live
 
 ```mermaid
 gantt
-  title peakst8 Embed: scope to pilot (proposed)
+  title peakst8 Embedded Ticketingded Ticketing: scope to pilot (proposed)
   dateFormat YYYY-MM-DD
   axisFormat %d %b
   section Decide

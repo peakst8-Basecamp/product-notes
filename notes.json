@@ -1,0 +1,44 @@
+{
+  "_how_to_update": "Edit a note's status, next, owner and updated, then commit to main. The site and README badges pick it up within a few minutes. Allowed statuses are listed in statuses.",
+  "statuses": ["Draft", "Scoping", "In design", "In build", "In QA", "Pilot", "Live", "Paused", "Done"],
+  "notes": [
+    {
+      "id": "embedded-ticketing",
+      "title": "peakst8 Embedded Ticketing",
+      "folder": "embedded-ticketing/",
+      "status": "Scoping",
+      "next": "Scope lock on 30 Oct 2026",
+      "owner": "",
+      "updated": "2026-10-28",
+      "summary": "Clubs sell events on their own website. Event pages rank on Google and get cited by AI answer engines, while peakst8 runs checkout, payments and check-in. Pilots: Find Your Fit, Sisters in Sweat, Cubbon Classic 10K.",
+      "links": {
+        "Product note": "embedded-ticketing/",
+        "Prototype": "embedded-ticketing/prototype/"
+      },
+      "milestones": [
+        { "name": "Scope lock", "date": "2026-10-30", "status": "doing" },
+        { "name": "Build complete", "date": "2026-11-20", "status": "todo" },
+        { "name": "QA and staging", "date": "2026-11-27", "status": "todo" },
+        { "name": "Find Your Fit live", "date": "2026-11-30", "status": "todo" },
+        { "name": "Sisters in Sweat live", "date": "2026-12-07", "status": "todo" },
+        { "name": "Cubbon Classic 10K live", "date": "2026-12-14", "status": "todo" },
+        { "name": "Go / no-go for all organisers", "date": "2027-01-15", "status": "todo" }
+      ]
+    },
+    {
+      "id": "run-crew",
+      "title": "Run Crew × peakst8 Playbook",
+      "folder": "run-crew/",
+      "status": "Live",
+      "next": "Reebok training plan rollout to about 250 runners",
+      "owner": "",
+      "updated": "2026-10-28",
+      "summary": "Moving about 250 Run Crew runners on the Reebok training plan onto the peakst8 app: the roster, app setup, install guide, messages and the Reebok review.",
+      "links": {
+        "Playbook": "https://github.com/peakst8-Basecamp/product-notes/blob/main/run-crew/README.md",
+        "Install guide": "run-crew/install-guide/"
+      },
+      "milestones": []
+    }
+  ]
+}

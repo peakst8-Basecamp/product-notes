@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>peakst8 product notes</title>
-<meta name="description" content="Product notes for peakst8 features, starting with peakst8 Embed: club event pages that rank on Google and AI answers, with peakst8 checkout inside.">
+<meta name="description" content="Product notes for peakst8 features, starting with peakst8 Embedded Ticketing: club event pages that rank on Google and AI answers, with peakst8 checkout inside.">
 <link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;600;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"CollectionPage","name":"peakst8 product notes","url":"https://peakst8-basecamp.github.io/product-notes/","publisher":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"hasPart":[{"@type":"TechArticle","headline":"peakst8 Embed: product note","url":"https://peakst8-basecamp.github.io/product-notes/embed/"}]}
+{"@context":"https://schema.org","@type":"CollectionPage","name":"peakst8 product notes","url":"https://peakst8-basecamp.github.io/product-notes/","publisher":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"hasPart":[{"@type":"TechArticle","headline":"peakst8 Embedded Ticketing: product note","url":"https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/"}]}
 </script>
 <style>
 :root{color-scheme:light;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148}
@@ -25,6 +25,7 @@ h1{font-family:"Newsreader",Georgia,serif;font-weight:300;font-size:clamp(40px,7
 .note{display:grid;gap:10px;padding:22px;border-radius:22px;background:var(--fill);text-decoration:none;color:inherit}
 .note:hover{box-shadow:inset 0 0 0 2px var(--ink)}
 .note h2{margin:0;font-size:22px;letter-spacing:-.01em}
+.notes{display:grid;gap:14px}
 .note p{margin:0;color:var(--ink-2);line-height:1.5}
 .note .lbl{color:var(--signal)}
 .links{display:flex;gap:8px;flex-wrap:wrap}
@@ -39,20 +40,23 @@ footer a{color:var(--ink-2)}
 <main>
 <h1>Product notes</h1>
 <p class="lead">What peakst8 is building, who it's for, the screens and the timeline to go live.</p>
-<article class="note">
-  <span class="lbl">Scoped · pilot from 30 Nov 2026</span>
-  <h2>peakst8 Embed</h2>
+<article class="note" data-id="embedded-ticketing">
+  <span class="lbl">Scoping · scope lock 30 Oct 2026</span>
+  <h2>1 · peakst8 Embedded Ticketing</h2>
   <p>Clubs sell events on their own website. Event pages rank on Google and get cited by AI answer engines, while peakst8 runs checkout, payments and check-in. Pilots: Find Your Fit, Sisters in Sweat, Cubbon Classic 10K.</p>
-  <div class="links"><a href="embed/">Product note</a><a href="embed/prototype/">Prototype</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embed">Source</a></div>
+  <div class="links"><a href="embedded-ticketing/">Product note</a><a href="embedded-ticketing/prototype/">Prototype</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing">Source</a></div>
 </article>
-<article class="note">
+<article class="note" data-id="run-crew">
   <span class="lbl">Live · Reebok training plan rollout</span>
-  <h2>Run Crew × peakst8 Playbook</h2>
+  <h2>2 · Run Crew × peakst8 Playbook</h2>
   <p>Moving about 250 Run Crew runners on the Reebok training plan onto the peakst8 app: the roster, app setup, install guide, messages and the Reebok review.</p>
   <div class="links"><a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/run-crew/README.md">Playbook</a><a href="run-crew/install-guide/">Install guide</a></div>
 </article>
 </main>
 <footer>peakst8 · <a href="https://github.com/peakst8-Basecamp/product-notes">github.com/peakst8-Basecamp/product-notes</a></footer>
 </div>
+<script>
+(function(){fetch('notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){d.notes.forEach(function(n){var a=document.querySelector('[data-id="'+n.id+'"] .lbl');if(a)a.textContent=n.status+(n.next?' · '+n.next:'')})}).catch(function(){})})();
+</script>
 </body>
 </html>

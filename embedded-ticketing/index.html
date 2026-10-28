@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>peakst8 Embed: club event pages that rank on Google and AI answers</title>
-<meta name="description" content="peakst8 Embed lets run clubs and fitness communities sell events on their own website. Event pages rank on Google and get cited by AI answer engines, while peakst8 runs checkout and payments.">
-<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/embed/">
+<title>peakst8 Embedded Ticketingded Ticketing: club event pages that rank on Google and AI answers</title>
+<meta name="description" content="peakst8 Embedded Ticketing lets run clubs and fitness communities sell events on their own website. Event pages rank on Google and get cited by AI answer engines, while peakst8 runs checkout and payments.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="peakst8 Embed: product note">
+<meta property="og:title" content="peakst8 Embedded Ticketingded Ticketing: product note">
 <meta property="og:description" content="Club event pages on the club's own domain, built for SEO and AEO, with peakst8 checkout inside.">
-<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/embed/">
+<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"Organization","@id":"#peakst8","name":"peakst8","url":"https://ps8.club"},
-{"@type":"TechArticle","headline":"peakst8 Embed: product note","datePublished":"2026-10-21","dateModified":"2026-10-21","author":{"@id":"#peakst8"},"publisher":{"@id":"#peakst8"},"about":"Embedding event registration on run club websites with SEO and AEO built in","inLanguage":"en-IN"},
+{"@type":"TechArticle","headline":"peakst8 Embedded Ticketingded Ticketing: product note","datePublished":"2026-10-21","dateModified":"2026-10-21","author":{"@id":"#peakst8"},"publisher":{"@id":"#peakst8"},"about":"Embedding event registration on run club websites with SEO and AEO built in","inLanguage":"en-IN"},
 {"@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"What is peakst8 Embed?","acceptedAnswer":{"@type":"Answer","text":"peakst8 Embed puts a club's events and the full peakst8 booking flow on the club's own website. Event pages live on the club's domain; peakst8 runs tickets, payments, refunds and check-in."}},
-{"@type":"Question","name":"Does peakst8 Embed help a club's SEO?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each event gets a server-rendered page on the club's domain with schema.org Event and FAQ markup, a sitemap entry and an IndexNow ping, so Google credits the club, not peakst8."}},
+{"@type":"Question","name":"What is peakst8 Embedded Ticketing?","acceptedAnswer":{"@type":"Answer","text":"peakst8 Embedded Ticketing puts a club's events and the full peakst8 booking flow on the club's own website. Event pages live on the club's domain; peakst8 runs tickets, payments, refunds and check-in."}},
+{"@type":"Question","name":"Does peakst8 Embedded Ticketing help a club's SEO?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each event gets a server-rendered page on the club's domain with schema.org Event and FAQ markup, a sitemap entry and an IndexNow ping, so Google credits the club, not peakst8."}},
 {"@type":"Question","name":"Will AI assistants like ChatGPT, Perplexity or Google AI Overviews show a club's events?","acceptedAnswer":{"@type":"Answer","text":"Event pages are plain HTML that AI crawlers can read, open answer-first with date, place and price, carry a FAQ block, and are listed in the club's llms.txt. That makes them easy for answer engines to quote and cite."}},
 {"@type":"Question","name":"Who handles payments and refunds?","acceptedAnswer":{"@type":"Answer","text":"peakst8. Checkout opens over the club's page, and payments, refunds, QR tickets and check-in stay on peakst8. The club gets every order through its dashboard and a webhook."}},
 {"@type":"Question","name":"How long does setup take?","acceptedAnswer":{"@type":"Answer","text":"The target is under 10 minutes: peakst8 switches Embed on for the club, the club picks a mode, and either points a subdomain at peakst8 or pastes one snippet."}}
@@ -71,6 +71,11 @@ dl.faq{margin:0;display:grid;gap:4px}
 dl.faq dt{font-weight:700;font-size:16px;margin-top:14px}
 footer{margin-top:64px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.6}
 footer a{color:var(--ink-2)}
+.status{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:13.5px;color:var(--ink-2)}
+.status b{background:var(--ink);color:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px}
+.ms{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.ms span{font-size:12px;padding:5px 10px;border-radius:999px;background:var(--fill);color:var(--ink-3)}
+.ms .done{color:#17945a;background:#e8f5ee}.ms .doing{color:#fff;background:var(--signal)}
 </style>
 </head>
 <body>
@@ -79,10 +84,12 @@ footer a{color:var(--ink-2)}
 
 <main>
 <section class="hero">
-  <span class="lbl">peakst8 Embed</span>
+  <span class="lbl">peakst8 Embedded Ticketing</span>
   <h1>Club event pages that rank, get cited, and sell.</h1>
-  <p>peakst8 Embed puts a club's events and the full peakst8 booking flow on the club's own website. Pages are built for Google and AI answer engines on the club's domain; checkout, payments and the GMV take stay with peakst8.</p>
+  <p>peakst8 Embedded Ticketing puts a club's events and the full peakst8 booking flow on the club's own website. Pages are built for Google and AI answer engines on the club's domain; checkout, payments and the GMV take stay with peakst8.</p>
   <div class="facts"><span>ICP · community fitness clubs</span><span>SEO + AEO by default</span><span>Live in &lt; 10 min</span><span>Pilot live · 30 Nov 2026</span></div>
+  <div class="status" id="status" aria-live="polite"><span>Status</span><b>Scoping</b><span>Next: Scope lock on 30 Oct 2026</span></div>
+  <div class="ms" id="ms"></div>
   <nav class="toc" aria-label="Sections"><a href="#icp">ICP</a><a href="#problem">Problem</a><a href="#case">Case study</a><a href="#scale">Launch → scale</a><a href="#seo-aeo">SEO + AEO</a><a href="#how">How it works</a><a href="#scope">Scope</a><a href="#faq">FAQ</a><a href="#timeline">Timeline</a><a href="#open">Open questions</a><a href="prototype/" style="background:var(--ink);color:#fff">Prototype →</a></nav>
 </section>
 
@@ -113,7 +120,7 @@ footer a{color:var(--ink-2)}
 <h2 id="case">Case study: Cubbon Classic 10K today</h2>
 <p class="answer">Cubbon Classic 10K sells Edition 2 (21 March 2027, Kanteerava Stadium, Gate A) through a KonfHub iframe on its own register page, which is exactly the setup Embed replaces.</p>
 <div class="tbl"><table>
-  <thead><tr><th>Today on <a href="https://cubbonclassic10k.com/register" target="_blank" rel="noopener">cubbonclassic10k.com/register</a></th><th>With peakst8 Embed</th></tr></thead>
+  <thead><tr><th>Today on <a href="https://cubbonclassic10k.com/register" target="_blank" rel="noopener">cubbonclassic10k.com/register</a></th><th>With peakst8 Embedded Ticketingded Ticketing</th></tr></thead>
   <tbody>
     <tr><td>Individual entry is a KonfHub widget iframe inside the page</td><td>A server-rendered race page on their domain; peakst8 checkout opens only on Book</td></tr>
     <tr><td>Structured data is an Organization and a WebPage only, with no Event markup, so date, venue and price aren't machine-readable</td><td><code>Event</code>, <code>FAQPage</code> and <code>BreadcrumbList</code> schema, sitemap and IndexNow, so the race can be ranked and quoted</td></tr>
@@ -233,7 +240,7 @@ footer a{color:var(--ink-2)}
 
 <h2 id="faq">FAQ</h2>
 <dl class="faq">
-  <dt>What is peakst8 Embed?</dt><dd>It puts a club's events and the full peakst8 booking flow on the club's own website. Event pages live on the club's domain; peakst8 runs tickets, payments, refunds and check-in.</dd>
+  <dt>What is peakst8 Embedded Ticketing?</dt><dd>It puts a club's events and the full peakst8 booking flow on the club's own website. Event pages live on the club's domain; peakst8 runs tickets, payments, refunds and check-in.</dd>
   <dt>Does it help a club's SEO?</dt><dd>Yes. Each event gets a server-rendered page on the club's domain with Event and FAQ schema, a sitemap entry and an IndexNow ping, so Google credits the club, not peakst8.</dd>
   <dt>Will ChatGPT, Perplexity or Google AI Overviews show a club's events?</dt><dd>Pages are plain HTML that AI crawlers can read, open with date, place and price, carry an FAQ, and are listed in the club's llms.txt, which makes them easy to quote and cite.</dd>
   <dt>Who handles payments and refunds?</dt><dd>peakst8. The club sees every order in its dashboard and gets it by webhook.</dd>
@@ -253,5 +260,10 @@ footer a{color:var(--ink-2)}
 
 <footer>peakst8 · internal product note, 21 Oct 2026. Research: <a href="https://blog.konfhub.com/simplify-event-registrations-with-konfhubs-embed-ticket-feature" target="_blank" rel="noopener">KonfHub embed ticket feature</a>.</footer>
 </div>
+<script>
+(function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='embedded-ticketing'});if(!n)return;
+var st=document.getElementById('status');st.innerHTML='<span>Status</span><b></b><span></span><span></span>';st.children[1].textContent=n.status;st.children[2].textContent=n.next?'Next: '+n.next:'';st.children[3].textContent='Updated '+n.updated+(n.owner?' · '+n.owner:'');
+var ms=document.getElementById('ms');(n.milestones||[]).forEach(function(m){var e=document.createElement('span');e.className=m.status;e.textContent=(m.status==='done'?'✓ ':'')+m.name+' · '+m.date.slice(8)+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m.date.slice(5,7)-1];ms.appendChild(e)})}).catch(function(){})})();
+</script>
 </body>
 </html>
