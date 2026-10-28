@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>peakst8 Embed prototype: every screen in V1</title>
+<meta name="description" content="Clickable prototype of peakst8 Embed V1: the admin switch, seven organiser screens, the six-step attendee booking flow and club registration for races, with states and build notes.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/embed/prototype/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@400&family=DM+Serif+Display&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#fff;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--fill-2:#ececee;--line:#e7e7ea;--signal:#ff5148;--ok:#17945a;--warn:#b7791f;--bad:#d64545;--ps:#3466e0;
+--serif:"Newsreader",Georgia,serif;--sans:"Figtree",system-ui,-apple-system,sans-serif;--mono:"Chivo Mono",ui-monospace,Menlo,monospace;
+--club:#0f766e;--club-ink:#fff;--club-r:14px;--club-font:"Figtree",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit}
+.lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px clamp(16px,3vw,32px);border-bottom:1px solid var(--line)}
+.top .wm{font-weight:800;font-size:18px;letter-spacing:-.02em;text-decoration:none}
+.top nav{display:flex;gap:16px;align-items:center;font-size:14px}
+.top nav a{text-decoration:none;color:var(--ink-2)}
+.top nav a:hover{color:var(--ink)}
+.intro{padding:28px clamp(16px,3vw,32px) 8px;display:grid;gap:8px}
+.intro h1{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(32px,4.4vw,48px);letter-spacing:-.02em;line-height:1.05}
+.intro p{margin:0;color:var(--ink-2);max-width:72ch;line-height:1.5}
+
+.app{display:grid;grid-template-columns:230px minmax(0,1fr) 330px;gap:20px;padding:20px clamp(16px,3vw,32px) 64px;align-items:start}
+@media (max-width:1180px){.app{grid-template-columns:200px minmax(0,1fr)}.notes{grid-column:1/-1}}
+@media (max-width:760px){.app{grid-template-columns:minmax(0,1fr)}.side{position:static!important}}
+
+.side{position:sticky;top:16px;display:grid;gap:14px}
+.grp{display:grid;gap:2px}
+.grp .lbl{padding:0 10px 4px}
+.nav-b{appearance:none;border:0;background:transparent;text-align:left;padding:8px 10px;border-radius:10px;font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer;display:flex;gap:8px;align-items:baseline}
+.nav-b small{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);min-width:22px}
+.nav-b:hover{background:var(--fill)}
+.nav-b[aria-current="true"]{background:var(--ink);color:#fff}
+.nav-b[aria-current="true"] small{color:#a9aab0}
+.nav-b:focus-visible,.st-b:focus-visible,.stepb:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.stage{display:grid;gap:12px;min-width:0}
+.stage-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.stage-h h2{margin:0;font-size:20px;letter-spacing:-.01em}
+.states{display:flex;gap:6px;flex-wrap:wrap}
+.st-b{appearance:none;border:0;height:32px;padding:0 13px;border-radius:999px;background:var(--fill);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer}
+.st-b[aria-pressed="true"]{background:var(--signal);color:#fff}
+.canvas{background:var(--fill);border-radius:24px;padding:clamp(12px,2vw,28px);display:grid;place-items:center;min-height:560px;overflow:hidden}
+.pager{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.stepb{appearance:none;border:0;height:36px;padding:0 14px;border-radius:999px;background:var(--fill);font-size:13.5px;font-weight:600;cursor:pointer}
+.stepb:disabled{opacity:.35;cursor:default}
+
+/* browser frame */
+.browser{width:100%;max-width:980px;background:#fff;border-radius:14px;box-shadow:0 0 0 1px var(--line),0 20px 40px -24px rgba(0,0,0,.25);overflow:hidden}
+.bar{height:38px;display:flex;align-items:center;gap:10px;padding:0 14px;background:#f7f7f8;border-bottom:1px solid var(--line)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:#dcdce0}
+.url{flex:1;max-width:520px;margin:0 auto;height:24px;border-radius:7px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);font-size:12px;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 8px}
+.view{height:560px;overflow:auto;position:relative}
+
+/* phone frame */
+.phone{width:360px;max-width:100%;padding:9px;border-radius:46px;background:#1b1c20;box-shadow:0 24px 48px -24px rgba(0,0,0,.45)}
+.scr{position:relative;height:720px;border-radius:38px;overflow:hidden;background:#fff;display:flex;flex-direction:column;font-family:var(--club-font)}
+.sb{height:40px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:13px;font-weight:600;font-family:var(--sans)}
+.murl{flex:none;margin:0 12px 6px;height:30px;border-radius:10px;background:#f1f1f3;font-family:var(--mono);font-size:11px;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px}
+.mbody{flex:1;min-height:0;overflow:auto;position:relative}
+
+/* dashboard shell */
+.dash{display:grid;grid-template-columns:150px 1fr;min-height:100%}
+.dash aside{background:#fafafa;border-right:1px solid var(--line);padding:16px 12px;display:grid;align-content:start;gap:2px}
+.dash aside .wm{font-weight:800;font-size:16px;padding:0 8px 14px}
+.dash aside a{display:flex;justify-content:space-between;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:8px;border-radius:8px}
+.dash aside a.on{background:var(--ink);color:#fff}
+.dash aside .new{font-family:var(--mono);font-size:9.5px;color:var(--signal);letter-spacing:.06em}
+.dash main{padding:22px 26px;display:grid;gap:16px;align-content:start}
+.dash .org{display:flex;justify-content:space-between;align-items:center}
+.dash h3{margin:0;font-size:22px;letter-spacing:-.02em}
+.crumb{font-size:12.5px;color:var(--ink-3)}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.steps span{font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--fill);color:var(--ink-3)}
+.steps span.on{background:var(--ink);color:#fff}.steps span.done{color:var(--ok)}
+.btn{appearance:none;border:0;height:38px;padding:0 16px;border-radius:10px;font-size:13.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn-p{background:var(--ink);color:#fff}
+.btn-s{background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}
+.btn-ok{background:var(--ok);color:#fff}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.card{min-width:0;background:#fff;border-radius:14px;box-shadow:inset 0 0 0 1px var(--line);padding:16px;display:grid;gap:10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.kpis .card b{font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpis .card small{color:var(--ink-3);font-size:12px}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th{text-align:left;font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:6px 8px}
+table.t td{padding:10px 8px;border-top:1px solid var(--line);color:var(--ink-2);vertical-align:middle}
+table.t td b{color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--fill);color:var(--ink-2);white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-ok{color:var(--ok);background:#e8f5ee}.p-warn{color:var(--warn);background:#fbf3e4}.p-bad{color:var(--bad);background:#fbebeb}.p-off{color:var(--ink-3)}
+.f{display:grid;gap:6px}
+.f label,.f .fl{font-size:12.5px;font-weight:700}
+.f small{color:var(--ink-3);font-size:12px}
+.in{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;height:38px;border-radius:9px;box-shadow:inset 0 0 0 1px var(--line);background:#fff;display:flex;align-items:center;padding:0 12px;font-size:13.5px;color:var(--ink);gap:8px}
+.in.mono{font-family:var(--mono);font-size:12.5px}
+.in.ph{color:var(--ink-3)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid1{display:grid;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.tog{width:38px;height:22px;border-radius:999px;background:var(--fill-2);position:relative;flex:none;cursor:pointer;border:0;padding:0}
+.tog::before{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:left .15s}
+.tog.on{background:var(--ok)}.tog.on::before{left:19px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.4}
+.box{width:18px;height:18px;border-radius:5px;box-shadow:inset 0 0 0 1.5px var(--ink-3);flex:none;display:grid;place-items:center;font-size:12px;color:#fff}
+.box.on{background:var(--ink);box-shadow:none}
+.radio{width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--ink-3);flex:none}
+.radio.on{box-shadow:inset 0 0 0 5px var(--ink)}
+.mode{cursor:pointer;text-align:left;appearance:none;border:0;background:#fff;border-radius:14px;box-shadow:inset 0 0 0 1px var(--line);padding:16px;display:grid;gap:8px;align-content:start}
+.mode[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
+.mode b{font-size:15px}.mode p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.45}
+.thumb{height:84px;border-radius:10px;background:var(--fill);display:grid;gap:5px;padding:10px;align-content:start}
+.thumb i{display:block;height:8px;border-radius:4px;background:#d9d9de}
+.code{background:#0f1014;color:#e6e6ea;border-radius:12px;padding:14px;font-family:var(--mono);font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.code .k{color:#ff8f88}.code .s{color:#9ad6a8}
+.checks{display:grid;gap:0}
+.checks div{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:13.5px}
+.checks div:first-child{border-top:0}
+.checks .ic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex:none}
+.ic.ok{background:var(--ok)}.ic.bad{background:var(--bad)}.ic.wait{background:var(--warn)}
+.checks small{margin-left:auto;color:var(--ink-3);font-size:12px;text-align:right}
+.swatches{display:flex;gap:8px}
+.sw{width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:3px;padding:3px;border-radius:10px;background:var(--fill)}
+.seg button{white-space:nowrap;appearance:none;border:0;background:transparent;padding:6px 11px;border-radius:8px;font-size:12.5px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.prev{background:var(--fill);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start}
+.admin-top{background:#0b0b0c;color:#fff;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.admin-top b{font-weight:800}
+.empty{border:1.5px dashed var(--line);border-radius:14px;padding:28px;text-align:center;display:grid;gap:8px;justify-items:center;color:var(--ink-2);font-size:13.5px}
+
+/* club-branded attendee screens */
+.club{font-family:var(--club-font);color:#101114}
+.club .cbtn{appearance:none;border:0;width:100%;height:50px;border-radius:var(--club-r);background:var(--club);color:var(--club-ink);font-size:15.5px;font-weight:700;cursor:pointer;font-family:var(--club-font)}
+.club .cbtn.ghost{background:#fff;color:#101114;box-shadow:inset 0 0 0 1px #dedee3}
+.chead{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #eee}
+.clogo{font-weight:800;letter-spacing:-.02em;font-size:16px;display:flex;align-items:center;gap:7px}
+.clogo i{width:22px;height:22px;border-radius:7px;background:var(--club);display:inline-block}
+.hero-img{height:150px;background:linear-gradient(0deg,rgba(0,0,0,.0),rgba(0,0,0,0)),var(--club);position:relative;display:flex;align-items:flex-end;padding:14px 16px;color:#fff}
+.hero-img::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0 14px,transparent 14px 28px)}
+.hero-img span{position:relative;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.28);padding:5px 8px;border-radius:6px}
+.cpad{padding:16px;display:grid;gap:12px}
+.club h4{margin:0;font-size:24px;line-height:1.1;letter-spacing:-.02em}
+.club .bc{font-size:11.5px;color:#7a7b82}
+.club .ans{margin:0;font-size:14.5px;line-height:1.5;color:#2b2c31}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.facts div{background:#f5f5f7;border-radius:12px;padding:10px;display:grid;gap:2px}
+.facts small{font-size:11px;color:#7a7b82}
+.facts b{font-size:13.5px}
+.faq{display:grid;gap:0;border-top:1px solid #eee}
+.faq details{border-bottom:1px solid #eee;padding:11px 0}
+.faq summary{font-size:14px;font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+.faq summary::after{content:"+";color:#7a7b82}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin:8px 0 0;font-size:13.5px;color:#4a4b51;line-height:1.5}
+.sticky{position:sticky;bottom:0;background:#fff;border-top:1px solid #eee;padding:10px 16px 14px;display:flex;gap:12px;align-items:center}
+.sticky .pr{display:grid;line-height:1.2}
+.sticky .pr b{font-size:17px}.sticky .pr small{font-size:11.5px;color:#7a7b82}
+.by{font-size:11px;color:#7a7b82;text-align:center;padding:4px 0 8px;font-family:var(--sans)}
+.by b{color:#101114}
+.scrim{position:absolute;inset:0;background:rgba(10,10,12,.45);z-index:3}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:92%;background:#fff;border-radius:22px 22px 0 0;z-index:4;display:flex;flex-direction:column}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px;border-bottom:1px solid #eee}
+.sheet-h .who{display:flex;gap:8px;align-items:center;font-weight:800;font-size:14.5px}
+.sheet-h .who i{width:20px;height:20px;border-radius:6px;background:var(--club)}
+.sheet-h .x{width:30px;height:30px;border-radius:50%;background:#f1f1f3;display:grid;place-items:center;font-size:14px;border:0;cursor:pointer}
+.sheet-b{flex:1;overflow:auto;padding:14px 16px;display:grid;gap:12px;align-content:start}
+.sheet-f{padding:10px 16px 12px;border-top:1px solid #eee;display:grid;gap:6px}
+.ftabs{flex:none;display:flex;gap:6px;padding:8px 16px 8px;border-bottom:1px solid #eee;overflow-x:auto}
+.ftabs span{font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:999px;background:#f1f1f3;color:#7a7b82;white-space:nowrap}
+.ftabs span.on{background:var(--club);color:var(--club-ink)}.ftabs span.done{color:var(--club)}
+.modal{position:absolute;inset:0;z-index:6;background:rgba(10,10,12,.55);display:grid;place-items:center;padding:16px}
+.mcard{background:#fff;border-radius:18px;padding:18px;display:grid;gap:12px;width:100%;font-family:var(--club-font)}
+.rzp{background:#fff;border-radius:14px;width:100%;overflow:hidden;font-family:var(--sans);box-shadow:0 20px 40px -10px rgba(0,0,0,.4)}
+.rzp-h{background:#2A1809;color:#fff;padding:14px 16px;display:grid;gap:2px}
+.rzp-h small{opacity:.8;font-size:11.5px}
+.rzp-b{padding:12px 16px;display:grid;gap:8px}
+.rzp-b .mrow{font-size:13.5px}
+.spin{width:44px;height:44px;border-radius:50%;border:4px solid #eee;border-top-color:var(--club)}
+.prog{display:flex;gap:4px;padding:0 16px 10px}.prog i{flex:1;height:3px;border-radius:3px;background:#ececf0}.prog i.on{background:var(--club)}
+.tier{display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;box-shadow:inset 0 0 0 1px #e4e4e8}
+.tier.sel{box-shadow:inset 0 0 0 2px var(--club)}
+.tier.out{opacity:.5}
+.tier .tb{flex:1;display:grid;gap:2px}.tier .tb b{font-size:14.5px}.tier .tb small{font-size:12px;color:#7a7b82}
+.qty{display:flex;align-items:center;gap:8px;font-weight:700}
+.qty button{width:28px;height:28px;border-radius:50%;border:0;background:#f1f1f3;font-weight:800;cursor:pointer}
+.cin{height:46px;border-radius:12px;box-shadow:inset 0 0 0 1px #dedee3;display:flex;align-items:center;padding:0 12px;font-size:14px;color:#101114}
+.cin.ph{color:#9a9ba1}
+.cin.err{box-shadow:inset 0 0 0 1.5px var(--bad)}
+.cf{display:grid;gap:5px}.cf label{font-size:12px;font-weight:700;color:#4a4b51}
+.otp{display:flex;gap:7px}.otp span{flex:1;height:50px;border-radius:12px;box-shadow:inset 0 0 0 1px #dedee3;display:grid;place-items:center;font-size:20px;font-weight:800}
+.otp span.on{box-shadow:inset 0 0 0 2px var(--club)}.otp.err span{box-shadow:inset 0 0 0 1.5px var(--bad);color:var(--bad)}
+.upi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.upi div{border-radius:12px;box-shadow:inset 0 0 0 1px #e4e4e8;padding:12px 6px;text-align:center;font-size:12px;font-weight:700;display:grid;gap:6px;justify-items:center}
+.upi div i{width:28px;height:28px;border-radius:8px;display:block}
+.upi div.sel{box-shadow:inset 0 0 0 2px var(--club)}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;box-shadow:inset 0 0 0 1px #e4e4e8;font-size:14px;font-weight:700}
+.mrow small{font-weight:500;color:#7a7b82}
+.sum{display:grid;gap:4px;font-size:13px;color:#4a4b51}
+.sum div{display:flex;justify-content:space-between}
+.sum .tot{font-size:15px;font-weight:800;color:#101114;padding-top:6px;border-top:1px solid #eee;margin-top:2px}
+.alert{border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.45}
+.alert.bad{background:#fbebeb;color:#8a2323}.alert.info{background:#eef3fd;color:#22407e}.alert.ok{background:#e8f5ee;color:#135c39}
+.ticket{border-radius:18px;box-shadow:inset 0 0 0 1px #e4e4e8;overflow:hidden}
+.ticket .tt{background:var(--club);color:var(--club-ink);padding:14px 16px;display:grid;gap:2px}
+.ticket .tt small{opacity:.85;font-size:12px}
+.ticket .qr{display:grid;place-items:center;padding:16px}
+.listing{padding:16px;display:grid;gap:10px}
+.lcard{display:flex;gap:12px;padding:10px;border-radius:var(--club-r);box-shadow:inset 0 0 0 1px #e4e4e8;align-items:center}
+.lcard .d{width:52px;height:56px;border-radius:12px;background:var(--club);color:var(--club-ink);display:grid;place-items:center;text-align:center;font-weight:800;font-size:18px;line-height:1;flex:none}
+.lcard .d small{display:block;font-size:10px;font-weight:700;letter-spacing:.06em}
+.lcard .lb{flex:1;display:grid;gap:2px}.lcard .lb b{font-size:14px}.lcard .lb small{font-size:12px;color:#7a7b82}
+.lcard .go{font-size:12.5px;font-weight:800;color:var(--club)}
+.hint{position:absolute;inset:auto 12px 12px auto;font-family:var(--sans)}
+
+/* notes */
+.notes{display:grid;gap:12px;position:sticky;top:16px}
+.ncard{background:var(--fill);border-radius:20px;padding:16px 18px;display:grid;gap:8px}
+.ncard h3{margin:0;font-size:13px;font-family:var(--mono);font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.ncard p,.ncard li{margin:0;font-size:14px;line-height:1.5;color:var(--ink-2)}
+.ncard ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.ncard code{font-family:var(--mono);font-size:12px;background:#fff;border-radius:5px;padding:1px 5px;color:var(--ink)}
+.ncard b{color:var(--ink)}
+.ncard.flag{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.ncard.flag h3{color:var(--signal)}
+footer{padding:0 clamp(16px,3vw,32px) 40px;color:var(--ink-3);font-size:13px}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="wm" href="../">peakst8</a>
+  <nav aria-label="Site"><a href="../">Product note</a><a href="./" aria-current="page"><b>Prototype</b></a></nav>
+</header>
+<section class="intro">
+  <span class="lbl">Internal · V1 prototype · 21 Oct 2026</span>
+  <h1>peakst8 Embed, screen by screen.</h1>
+  <p>Every screen in V1: the admin switch, seven organiser screens, the six-step attendee flow and club registration for races (built for the Cubbon Classic 10K pilot). Click inside a screen to move through the flow, use the red chips to see each state, and read the build notes on the right. The brand you set in O4 carries into the attendee screens. Club, event and numbers are sample data.</p>
+</section>
+
+<div class="app">
+  <aside class="side" id="side" aria-label="Screens"></aside>
+  <section class="stage" aria-live="polite">
+    <div class="stage-h"><h2 id="sTitle"></h2><div class="states" id="sStates" role="group" aria-label="Screen state"></div></div>
+    <div class="canvas" id="canvas"></div>
+    <div class="pager"><button class="stepb" id="prev" type="button">← Previous</button><span class="lbl" id="count"></span><button class="stepb" id="next" type="button">Next →</button></div>
+  </section>
+  <aside class="notes" id="notes" aria-label="Build notes"></aside>
+</div>
+<footer>Sample data: “Find Your Fit” and its event are placeholders for the pilot clubs. See the <a href="../">product note</a> for ICP, SEO/AEO requirements and open questions.</footer>
+
+<script>
+(function(){
+  var S={id:'A1',state:{},brand:{color:'#0f766e',font:'Figtree',radius:14,label:'Register For Experience',layout:'list'},mode:'hosted',scope:'series',qty:1,tier:'gen'};
+  var SW=[['#0f766e','Teal'],['#e0412e','Red'],['#1d4ed8','Blue'],['#7c3aed','Violet'],['#111111','Black']];
+  var FONTS={Figtree:'"Figtree",system-ui,sans-serif','Space Grotesk':'"Space Grotesk",system-ui,sans-serif','DM Serif Display':'"DM Serif Display",Georgia,serif'};
+  function esc(s){return String(s)}
+  function applyBrand(){var r=document.documentElement.style;r.setProperty('--club',S.brand.color);r.setProperty('--club-r',S.brand.radius+'px');r.setProperty('--club-font',FONTS[S.brand.font])}
+
+  /* shells */
+  function browser(url,inner){return '<div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">🔒 '+url+'</span></div><div class="view">'+inner+'</div></div>'}
+  function dash(active,inner){
+    var items=[['Events',''],['Orders',''],['Attendees',''],['Embeds','new'],['Payouts',''],['Settings','']];
+    return '<div class="dash"><aside><span class="wm">peakst8</span>'+items.map(function(i){return '<a class="'+(i[0]===active?'on':'')+'">'+i[0]+(i[1]?'<span class="new">NEW</span>':'')+'</a>'}).join('')+'</aside><main>'+inner+'</main></div>'}
+  function wizard(step){var n=['Mode','Scope','Brand','Domain','Install'];return '<div class="steps">'+n.map(function(x,i){return '<span class="'+(i===step?'on':i<step?'done':'')+'">'+(i<step?'✓ ':'')+(i+1)+'. '+x+'</span>'}).join('')+'</div>'}
+  function phone(url,inner){return '<div class="phone"><div class="scr"><div class="sb"><span>9:41</span><span>●●● 5G</span></div><div class="murl">🔒 '+url+'</div><div class="mbody club">'+inner+'</div></div></div>'}
+  var URL_E='events.findyourfit.in/sunday-social-5k';
+
+  function eventPage(){
+    return '<div class="chead"><span class="clogo"><i></i>Find Your Fit</span><span style="font-size:13px;color:#7a7b82">Events</span></div>'+
+    '<div class="hero-img"><span>Sunday Social 5K · Week 12</span></div>'+
+    '<div class="cpad"><span class="bc">Home › Events › Sunday Social 5K</span><h4>Sunday Social 5K</h4>'+
+    '<p class="ans">A social 5 km run for all paces on Sun 25 Oct 2026, 6:00 AM at Cubbon Park, Bengaluru. ₹499 includes pacers, a finisher coffee and photos.</p>'+
+    '<div class="facts"><div><small>When</small><b>Sun 25 Oct · 6:00 AM</b></div><div><small>Where</small><b>Cubbon Park gate 2</b></div><div><small>Price</small><b>From ₹499</b></div><div><small>Spots left</small><b>38 of 150</b></div></div>'+
+    '<div class="faq"><details open><summary>What pace groups are there?</summary><p>Four pacers: 5:30, 6:30, 7:30 /km and a walk-run group.</p></details><details><summary>Where do I park?</summary><p>Paid parking at Queens Road; the start is a 3-minute walk.</p></details><details><summary>Can I get a refund?</summary><p>Full refund up to 48 hours before the start.</p></details></div></div>'+
+    '<div class="sticky"><span class="pr"><b>₹ 499 + GST</b><small>From · 38 spots left</small></span><button class="cbtn" data-go="E2" style="flex:1">'+esc(S.brand.label)+'</button></div><div class="by">Enabled by <b>peakst8</b></div>'}
+  function sheet(step,title,body,foot,overlay){
+    var tabs=['Choose Pass','Your Details','Waiver & Discounts'].map(function(t,i){return '<span class="'+(i+1===step?'on':i+1<step?'done':'')+'">'+t+'</span>'}).join('');
+    return '<div style="opacity:.6;pointer-events:none">'+eventPage()+'</div><div class="scrim"></div><div class="sheet"><div class="sheet-h"><span class="who"><i></i>Find Your Fit</span><button class="x" data-go="E1" aria-label="Close registration">✕</button></div>'+(step?'<div style="flex:none;padding:8px 16px 2px"><div style="font-size:17px;font-weight:800">Registration</div><div style="font-size:12.5px;color:#7a7b82">Almost game time! Add your details to confirm your entry.</div></div>':'')+(step?'<div class="ftabs">'+tabs+'</div>':'')+'<div class="sheet-b"><div style="font-size:14px;font-weight:800">'+title+'</div>'+body+'</div><div class="sheet-f">'+foot+'<div class="by">🔒 Secured by <b>peakst8</b></div></div></div>'+(overlay||'')}
+  function evcard(){return '<div class="mrow" style="display:grid;gap:2px"><b style="font-size:14px">Sunday Social 5K</b><small>Sun 25 Oct 2026 · 6:00 AM · Cubbon Park, Bengaluru</small></div>'}
+  function qr(){var s='',seed=7;for(var y=0;y<21;y++)for(var x=0;x<21;x++){seed=(seed*1103515245+12345)&0x7fffffff;var f=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);var on=f?((x%6===0||y%6===0||(x>1&&x<5&&y>1&&y<5)||(x>15&&x<19&&y>1&&y<5)||(x>1&&x<5&&y>15&&y<19))&&!(x===6&&y>6)&&!(y===6&&x>6)):(seed>>16)%2===0; if(f){var lx=x>13?x-14:x,ly=y>13?y-14:y;on=(lx===0||lx===6||ly===0||ly===6||(lx>1&&lx<5&&ly>1&&ly<5))} if(on)s+='<rect x="'+x+'" y="'+y+'" width="1" height="1"/>'}return '<svg viewBox="-1 -1 23 23" width="150" height="150" fill="#101114" role="img" aria-label="Ticket QR code">'+s+'</svg>'}
+
+  /* screens */
+  var SCREENS=[
+  {id:'A1',grp:'peakst8 admin',name:'Embed access',states:['On','Off','Domain pending'],url:'admin.ps8.club/organisers/find-your-fit/embed',
+   render:function(st){var on=st!=='Off',pend=st==='Domain pending';
+    return browser(this.url,'<div class="admin-top"><b>peakst8 admin</b><span>Ops · Priya R.</span></div><div style="padding:22px 26px;display:grid;gap:16px"><span class="crumb">Organisers › Find Your Fit › Embed access</span><div class="spread"><h3 style="margin:0;font-size:22px">Embed access</h3><span class="pill '+(on?'p-ok':'p-off')+'">'+(on?'Enabled':'Disabled')+'</span></div>'+
+    '<div class="card"><div class="spread"><div><b>Embed enabled</b><div class="crumb">Shows Embeds in this organiser’s dashboard (O1–O7)</div></div><button class="tog '+(on?'on':'')+'" data-state="'+(on?'Off':'On')+'" aria-label="Toggle embed"></button></div></div>'+
+    (on?'<div class="grid2"><div class="card"><b>Allowed modes</b><div class="chk"><span class="box on">✓</span>Hosted event pages (server-rendered)</div><div class="chk"><span class="box on">✓</span>Listing block</div><div class="chk"><span class="box on">✓</span>Book button</div></div>'+
+    '<div class="card"><div class="f"><label>Max domains</label><div class="in">3</div></div><div class="f"><label>Fee override for Embed orders</label><div class="in ph">Blank = standard GMV %</div><small>Pricing is an open question; leave blank for the pilot.</small></div></div></div>'+
+    '<div class="card"><div class="spread"><b>Race features</b><span class="crumb">Cubbon Classic 10K pilot</span></div><div class="spread"><span>Club codes (captain registers, members join with a code)</span><span class="tog on"></span></div><div class="spread"><span>Bib numbers and timing export</span><span class="tog on"></span></div></div>'+
+    '<div class="card"><div class="spread"><div><b>Custom domain</b><div class="crumb">events.findyourfit.in → clubs.ps8.club</div></div>'+(pend?'<div class="row"><span class="pill p-warn">Awaiting approval</span><button class="btn btn-ok" data-state="On">Approve</button></div>':'<span class="pill p-ok">Live · SSL issued</span>')+'</div></div>':'<div class="empty">Embed is off for Find Your Fit. Turn it on to give them O1–O7.</div>')+
+    '<span class="crumb">Audit: enabled by Priya R. on 21 Oct 2026, 11:04</span></div>')},
+   notes:{job:'Ops switches Embed on per organiser. Nothing shows in the organiser dashboard until this is on.',els:['Master toggle <code>embed_enabled</code>','Allowed modes, max domains, fee override','Race features: club codes, bibs and timing export (shows O7)','Custom domain approval with SSL status','Audit line for every change'],ac:['Turning off hides O1–O7 and stops embeds serving within 5 minutes','Every change is written to the audit log'],ev:['admin_embed_enabled','admin_domain_approved'],flag:'Fee override stays blank until pricing is decided.'}},
+
+  {id:'O1',grp:'Organiser dashboard',name:'Embeds home',states:['Live embeds','First time'],url:'dashboard.ps8.club/embeds',
+   render:function(st){var first=st==='First time';
+    var body='<div class="org"><div><span class="crumb">Find Your Fit</span><h3>Embeds</h3></div><button class="btn btn-p" data-go="O2">+ Create embed</button></div>';
+    if(first)body+='<div class="empty"><b style="color:var(--ink);font-size:16px">Sell on your own website</b>Put your events on your site, ranked on Google and AI search, with peakst8 checkout inside. Setup takes about 10 minutes.<button class="btn btn-p" data-go="O2">Create your first embed</button></div>';
+    else body+='<div class="kpis"><div class="card"><small>Page views · 30d</small><b>4,812</b></div><div class="card"><small>Checkouts started</small><b>611</b></div><div class="card"><small>Orders</small><b>402</b></div><div class="card"><small>GMV</small><b>₹2.1L</b></div></div>'+
+    '<div class="card"><table class="t"><thead><tr><th>Embed</th><th>Mode</th><th>Where</th><th>SEO</th><th>Status</th></tr></thead><tbody>'+
+    '<tr><td><b>All events</b></td><td>Hosted pages</td><td>events.findyourfit.in</td><td><span class="pill p-ok">8/8</span></td><td><span class="pill p-ok">Live</span></td></tr>'+
+    '<tr><td><b>Upcoming runs</b></td><td>Listing block</td><td>findyourfit.in/events</td><td>n/a</td><td><span class="pill p-ok">Live</span></td></tr>'+
+    '<tr><td><b>Bio link</b></td><td>Book button</td><td>linktr.ee/findyourfit</td><td>n/a</td><td><span class="pill p-warn">Not detected</span></td></tr></tbody></table></div>';
+    return browser(this.url,dash('Embeds',body))},
+   notes:{job:'Home for everything the club has embedded, and the first place they see results.',els:['30-day views, checkouts started, orders and GMV from Embed only','One row per embed: mode, where it runs, SEO score, status','“Not detected” when the install checker can’t find the snippet'],ac:['Numbers count orders with <code>source = embed</code> only','First-time state explains the value in one line and starts O2'],ev:['embeds_home_viewed','embed_create_clicked']}},
+
+  {id:'O2',grp:'Organiser dashboard',name:'Choose mode',states:['Default'],url:'dashboard.ps8.club/embeds/new',
+   render:function(){var m=S.mode;function card(k,t,p,rec){return '<button class="mode" data-mode="'+k+'" aria-pressed="'+(m===k)+'"><div class="thumb"><i style="width:60%"></i><i></i><i style="width:80%"></i></div><div class="spread"><b>'+t+'</b>'+(rec?'<span class="pill p-ok">Best for SEO</span>':'')+'</div><p>'+p+'</p></button>'}
+    return browser(this.url,dash('Embeds','<span class="crumb">Embeds › New</span><h3>How do you want to sell?</h3>'+wizard(0)+'<div class="grid3">'+
+    card('hosted','Hosted event pages','A page per event on events.yourclub.in. Ranks on Google, readable by AI search.',true)+
+    card('listing','Listing block','Your upcoming events as cards on any page of your site.')+
+    card('button','Book button','One button anywhere: a blog post, a link-in-bio page.')+
+    '</div><div class="row" style="justify-content:flex-end"><button class="btn btn-s" data-go="O1">Cancel</button><button class="btn btn-p" data-go="O3">Continue</button></div>'))},
+   notes:{job:'Pick what appears on the club’s site. All three end in the same peakst8 checkout.',els:['Three cards with a preview thumbnail and one line each','Hosted pages marked “Best for SEO”, because only server-rendered pages meet the AEO bar'],ac:['Only modes allowed in A1 are shown','Selection is kept if the user goes back'],ev:['embed_mode_selected']}},
+
+  {id:'O3',grp:'Organiser dashboard',name:'Choose scope',states:['Series','Single event','All upcoming'],url:'dashboard.ps8.club/embeds/new/scope',
+   render:function(st){var k=st;function r(v,t,d){return '<div class="chk" style="cursor:pointer" data-state="'+v+'"><span class="radio '+(k===v?'on':'')+'"></span><div><b>'+t+'</b><div class="crumb">'+d+'</div></div></div>'}
+    var pick=k==='Series'?'<div class="f"><label>Series</label><div class="in">Sunday Social 5K · 12 upcoming</div></div>':k==='Single event'?'<div class="f"><label>Event</label><div class="in">Sunday Social 5K · Sun 25 Oct</div></div><div class="f"><label>Preselect ticket</label><div class="in">General · ₹499</div></div>':'<div class="grid2"><div class="f"><label>City</label><div class="in">All cities</div></div><div class="f"><label>Tags</label><div class="in ph">Any tag</div></div></div>';
+    return browser(this.url,dash('Embeds','<span class="crumb">Embeds › New</span><h3>Which events?</h3>'+wizard(1)+'<div class="grid2"><div class="card">'+r('Single event','One event','A race day or a one-off')+r('Series','A series','Every date of a recurring run')+r('All upcoming','All upcoming events','Filter by city or tag')+'</div><div class="card">'+pick+'<div class="spread"><span>Show sold-out events</span><span class="tog on"></span></div><div class="spread"><span>Show past events</span><span class="tog"></span></div><small class="crumb">Past and sold-out events keep their page, with eventStatus updated, so search links don’t break.</small></div></div><div class="row" style="justify-content:flex-end"><button class="btn btn-s" data-go="O2">Back</button><button class="btn btn-p" data-go="O4">Continue</button></div>'))},
+   notes:{job:'Decide which events this embed shows.',els:['Single event, series or all upcoming','City and tag filters; show sold-out and past toggles','Preselect a ticket tier for single events'],ac:['New dates in a series appear without re-installing','Past events keep their URL and switch to a past state'],ev:['embed_scope_set']}},
+
+  {id:'O4',grp:'Organiser dashboard',name:'Brand',states:['Default'],url:'dashboard.ps8.club/embeds/new/brand',
+   render:function(){var b=S.brand;
+    var sw='<div class="swatches">'+SW.map(function(c){return '<button class="sw" style="background:'+c[0]+'" data-color="'+c[0]+'" aria-label="'+c[1]+'" aria-pressed="'+(b.color===c[0])+'"></button>'}).join('')+'</div>';
+    var fonts='<div class="seg">'+Object.keys(FONTS).map(function(f){return '<button data-font="'+f+'" aria-pressed="'+(b.font===f)+'">'+f+'</button>'}).join('')+'</div>';
+    var rad='<div class="seg">'+[[4,'Sharp'],[14,'Soft'],[24,'Round']].map(function(r){return '<button data-radius="'+r[0]+'" aria-pressed="'+(b.radius===r[0])+'">'+r[1]+'</button>'}).join('')+'</div>';
+    var lab='<div class="seg">'+['Register For Experience','Book now','Join the run'].map(function(l){return '<button data-label="'+l+'" aria-pressed="'+(b.label===l)+'">'+l+'</button>'}).join('')+'</div>';
+    var prev='<div class="prev club"><span class="lbl">Live preview</span><div class="lcard" style="background:#fff"><span class="d">25<small>OCT</small></span><span class="lb"><b>Sunday Social 5K</b><small>Cubbon Park · 6:00 AM · ₹499</small></span></div><button class="cbtn">'+b.label+'</button></div>';
+    return browser(this.url,dash('Embeds','<span class="crumb">Embeds › New</span><h3>Make it look like you</h3>'+wizard(2)+'<div class="grid2"><div class="card"><div class="f"><span class="fl">Primary colour</span>'+sw+'</div><div class="f"><span class="fl">Font</span>'+fonts+'<small>Or inherit from your site (listing block only).</small></div><div class="f"><span class="fl">Corners</span>'+rad+'</div><div class="f"><span class="fl">Button label</span>'+lab+'</div></div>'+prev+'</div><div class="row" style="justify-content:flex-end"><button class="btn btn-s" data-go="O3">Back</button><button class="btn btn-p" data-go="O5">Continue</button></div>'))},
+   notes:{job:'Match the club’s brand. Try it: the colour, font, corners and label you pick here carry into E1–E6.',els:['Colour, font, corner radius, button label','Live preview of a card and the button','Light/dark and grid/list layout (not drawn here)'],ac:['Preview updates instantly','Contrast check warns if the button text fails WCAG AA'],ev:['embed_theme_saved']}},
+
+  {id:'O5',grp:'Organiser dashboard',name:'Domain and tracking',states:['DNS pending','Verified'],url:'dashboard.ps8.club/embeds/new/domain',
+   render:function(st){var ok=st==='Verified';
+    return browser(this.url,dash('Embeds','<span class="crumb">Embeds › New</span><h3>Your domain and tracking</h3>'+wizard(3)+
+    '<div class="card"><div class="spread"><b>Event pages domain</b><span class="pill '+(ok?'p-ok':'p-warn')+'">'+(ok?'Verified · SSL live':'Waiting for DNS')+'</span></div><div class="in mono">events.findyourfit.in</div>'+(ok?'':'<div class="f"><small>Add this record where your domain is managed (GoDaddy, Cloudflare, Wix):</small><div class="code"><span class="k">CNAME</span>  events  →  <span class="s">clubs.ps8.club</span></div><div class="row"><button class="btn btn-s" data-state="Verified">Check again</button><span class="crumb">Usually 5–30 minutes</span></div></div>')+'</div>'+
+    '<div class="grid2"><div class="card"><b>Tracking</b><div class="f"><label>GA4 measurement ID</label><div class="in mono">G-7KX2Q4M1PL</div></div><div class="f"><label>Meta pixel ID</label><div class="in mono">482910377165</div></div><div class="spread"><span>Pass UTMs into orders</span><span class="tog on"></span></div></div>'+
+    '<div class="card"><b>Webhook (optional)</b><div class="f"><label>URL</label><div class="in mono">https://findyourfit.in/hooks/peakst8</div></div><div class="f"><label>Signing secret</label><div class="in mono">whsec_••••••••••3f9a</div></div><button class="btn btn-s">Send test event</button></div></div>'+
+    '<div class="row" style="justify-content:flex-end"><button class="btn btn-s" data-go="O4">Back</button><button class="btn btn-p" data-go="O6">Continue</button></div>'))},
+   notes:{job:'Point a subdomain at peakst8 so event pages live on the club’s domain, and wire up their tracking.',els:['Subdomain with the exact CNAME to add and a re-check','GA4 and Meta pixel IDs, UTM passthrough','Webhook URL, signing secret, test event'],ac:['SSL is issued automatically within 10 minutes of DNS resolving','Allowed domains feed the checkout’s frame-ancestors list'],ev:['embed_domain_verified','embed_tracking_saved'],flag:'Most ICP clubs have no developer: copy must name their DNS provider’s screen, not “add a record”.'}},
+
+  {id:'O6',grp:'Organiser dashboard',name:'Install and SEO check',states:['All checks pass','Issues found'],url:'dashboard.ps8.club/embeds/emb_fyf_7k2/install',
+   render:function(st){var bad=st==='Issues found';
+    function c(ok,t,n){return '<div><span class="ic '+(ok===1?'ok':ok===0?'bad':'wait')+'">'+(ok===1?'✓':ok===0?'!':'…')+'</span>'+t+'<small>'+n+'</small></div>'}
+    return browser(this.url,dash('Embeds','<span class="crumb">Embeds › All events</span><h3>You’re live. Here’s how search sees you.</h3>'+wizard(4)+
+    '<div class="grid2"><div class="card"><b>Add to your main site (optional)</b><div class="seg"><button aria-pressed="true">Snippet</button><button>Wix</button><button>Framer</button><button>WordPress</button></div><div class="code">&lt;<span class="k">div</span> id=<span class="s">"peakst8-events"</span>&gt;&lt;/<span class="k">div</span>&gt;\n&lt;<span class="k">script</span> src=<span class="s">"https://embed.ps8.club/v1/loader.js"</span>\n  data-embed=<span class="s">"emb_fyf_7k2"</span> async&gt;&lt;/<span class="k">script</span>&gt;</div><div class="row"><button class="btn btn-p">Copy snippet</button><button class="btn btn-s">Email to my developer</button></div></div>'+
+    '<div class="card"><div class="spread"><b>SEO and AEO check</b><span class="pill '+(bad?'p-bad':'p-ok')+'">'+(bad?'6 of 8':'8 of 8')+'</span></div><div class="checks">'+
+    c(1,'Pages reachable on your domain','12 pages')+c(bad?0:1,'Event schema valid',bad?'2 events missing a location':'12 of 12')+c(1,'FAQ schema valid','12 of 12')+c(1,'In sitemap.xml','submitted')+c(1,'IndexNow pinged','2 min ago')+c(bad?0:1,'AI crawlers allowed',bad?'robots.txt blocks GPTBot':'GPTBot, PerplexityBot')+c(1,'Mobile speed (LCP)','1.8 s')+c(2,'Indexed by Google','checking, up to 48 h')+
+    '</div>'+(bad?'<button class="btn btn-p" data-state="All checks pass">Fix the 2 issues</button>':'<a class="btn btn-s" data-go="E1" style="text-decoration:none">View your event page →</a>')+'</div></div>'))},
+   notes:{job:'Finish setup and prove it worked: the club sees its pages are live and readable by Google and AI search.',els:['Snippet plus Wix, Framer and WordPress guides; “Email to my developer”','Eight SEO and AEO checks with a plain-language fix for each failure','Link to their live event page'],ac:['Checks re-run on every publish and daily','Every failure names the event and the fix'],ev:['embed_snippet_copied','seo_check_failed','seo_check_passed'],flag:'This screen is new compared with the first draft. It makes the SEO and AEO promise visible to the club.'}},
+  {id:'O7',grp:'Organiser dashboard',name:'Clubs and bibs',states:['Club codes','Bibs and timing export'],url:'dashboard.ps8.club/events/cubbon-classic-10k/race',
+   render:function(st){var head='<span class="crumb">Cubbon Classic 10K · Events › Edition 2 · 21 Mar 2027</span><h3>Clubs and bibs</h3><div class="seg"><button data-state="Club codes" aria-pressed="'+(st==='Club codes')+'">Club codes</button><button data-state="Bibs and timing export" aria-pressed="'+(st!=='Club codes')+'">Bibs and timing export</button></div>';
+    if(st==='Club codes')return browser(this.url,dash('Events',head+
+    '<div class="grid1"><div class="card"><div class="spread"><b>Club registration</b><span class="tog on"></span></div><div class="grid3"><div class="f"><label>Min runners</label><div class="in">10</div></div><div class="f"><label>Min men</label><div class="in">7</div></div><div class="f"><label>Min women</label><div class="in">3</div></div></div><div class="f"><label>Issue code</label><div class="in">When you approve the club</div><small>Members register on their own with the code; each pays for their own bib.</small></div></div>'+
+    '<div class="card"><b>Applications</b><table class="t"><thead><tr><th>Club</th><th>Code</th><th>Roster</th><th></th></tr></thead><tbody>'+
+    '<tr><td><b>HSR Striders</b><br><span class="crumb">Captain Meera K.</span></td><td>n/a</td><td>0 / 10</td><td><button class="btn btn-ok">Approve</button></td></tr>'+
+    '<tr><td><b>Koramangala Run Club</b><br><span class="crumb">Captain Arjun M.</span></td><td><code>CC-KRC-4821</code></td><td>8 / 10 · women 2/3</td><td><span class="pill p-warn">Needs 2</span></td></tr>'+
+    '<tr><td><b>Whitefield Women Run</b><br><span class="crumb">Captain Divya S.</span></td><td><code>CC-WWR-1907</code></td><td>12 / 10</td><td><span class="pill p-ok">Complete</span></td></tr>'+
+    '</tbody></table></div></div>'));
+    return browser(this.url,dash('Events',head+
+    '<div class="grid2"><div class="card"><b>Bib numbers</b><table class="t"><thead><tr><th>Range</th><th>For</th><th>Used</th></tr></thead><tbody><tr><td><b>1–100</b></td><td>Reserved (elite, guests)</td><td>12</td></tr><tr><td><b>1001–2999</b></td><td>Individuals</td><td>938</td></tr><tr><td><b>3001–3999</b></td><td>Clubs, blocks of 50</td><td>346</td></tr></tbody></table><div class="f"><label>Assign</label><div class="in">On payment, in order</div></div><div class="f"><label>Bib freeze</label><div class="in">14 Mar 2027 · 7 days before race</div><small>After the freeze, changes need an organiser override.</small></div></div>'+
+    '<div class="card"><div class="spread"><b>Timing export</b><span class="pill p-ok">1,296 runners</span></div><div class="f"><span class="fl">Columns</span><div class="code">bib, first_name, last_name, gender, age_category, club, wave, tshirt, phone, emergency_contact</div></div><div class="row"><button class="btn btn-p">Download CSV</button><button class="btn btn-s">Schedule daily send</button></div><small class="crumb">Sends to the timing partner by email or SFTP. 34 changes since the last export on 21 Oct, 18:00.</small></div></div>'))},
+   notes:{job:'Race tools for the Cubbon Classic 10K pilot: approve club sign-ups, issue codes, assign bibs and hand runners to the timing partner.',els:['Club rules: min runners, men and women','Applications queue with approve, code, roster progress','Bib ranges for reserved, individual and club runners; freeze date','Timing export: CSV download and scheduled send'],ac:['A code is issued only on approval and works only for that club','Bib numbers are never reused, even after a refund','Export includes every paid runner with a bib; changes after the freeze are flagged'],ev:['club_approved','club_code_issued','bib_assigned','timing_export_sent'],flag:'Shown only when race features are on in A1. We export to the timing partner; we do not integrate with timing hardware in V1.'}},
+
+  {id:'E1',grp:'Attendee (club site)',name:'Event page',states:['Event page','Listing block on main site'],url:URL_E,
+   render:function(st){if(st==='Listing block on main site'){return phone('findyourfit.in/events','<div class="chead"><span class="clogo"><i></i>Find Your Fit</span><span style="font-size:13px;color:#7a7b82">Menu</span></div><div class="listing"><b style="font-size:20px;letter-spacing:-.02em">Upcoming runs</b>'+
+    [['25','Sunday Social 5K','Cubbon Park · 6:00 AM · ₹499'],['01','Sunday Social 5K','Cubbon Park · 6:00 AM · ₹499'],['08','Hill Repeats','Nandi Hills · 5:30 AM · ₹799']].map(function(e,i){return '<div class="lcard"><span class="d">'+e[0]+'<small>'+(i?'NOV':'OCT')+'</small></span><span class="lb"><b>'+e[1]+'</b><small>'+e[2]+'</small></span><span class="go" data-go="E2" style="cursor:pointer">'+S.brand.label+'</span></div>'}).join('')+
+    '<div class="by">Tickets by <b>peakst8</b></div></div>')}
+    return phone(URL_E,eventPage())},
+   notes:{job:'The page search engines and AI assistants read. Server-rendered on the club’s domain, in the club’s brand.',els:['Answer-first line: what, when, where, price, who','Facts grid, spots left, FAQ','Sticky price and Book button; “Tickets by peakst8”','Variant: listing block on the club’s main site'],ac:['Valid <code>Event</code>, <code>FAQPage</code> and <code>BreadcrumbList</code> JSON-LD','LCP under 2.5 s on 4G; no checkout code loads before Book'],ev:['event_page_viewed','book_clicked']}},
+
+  {id:'E2',grp:'Attendee (club site)',name:'Choose Pass',states:['Default','From a pass card'],url:URL_E,
+   render:function(st){if(st==='From a pass card')return phone(URL_E,sheet(2,'Your Details',evcard()+'<div class="alert info">Tapped “General” on the event page, so Choose Pass is skipped.</div>','<button class="cbtn" data-go="E3">Continue</button>'));
+    function t(k,n,info,out){return '<div class="tier '+(S.tier===k?'sel':'')+(out?' out':'')+'" '+(out?'':'data-tier="'+k+'" style="cursor:pointer"')+'><span class="radio'+(S.tier===k?' on':'')+'" style="'+(S.tier===k?'box-shadow:inset 0 0 0 5px var(--club)':'')+'"></span><span class="tb"><b>'+n+(out?' <span class="pill p-off" style="font-size:10.5px">Sold out</span>':'')+'</b><small>'+info+'</small></span><b>'+(k==='tee'?'₹ 799':k==='early'?'₹ 399':'₹ 499')+' <small style="font-weight:500;color:#7a7b82">+ GST</small></b></div>'}
+    return phone(URL_E,sheet(1,'Choose Pass',t('early','Early bird','Pacers, coffee, photos',true)+t('gen','General','Pacers, coffee, photos')+t('tee','General + run tee','Tee collected at the start'),'<button class="cbtn" data-go="E3">Continue</button>'))},
+   notes:{job:'First step of the real registration drawer, opened as a sheet over the club’s page. One pass per registration.',els:['Pass rows: radio, name, info, price as “₹ X + GST”, “₹ X (Incl. GST)” or “₹ X/Day”','Sold-out passes greyed with a “Sold out” badge','Skipped when the attendee tapped a pass card on the event page'],ac:['No quantity: one registration per person per event, as today','Approval passes say “Get me on the list” and end in the waitlist, not payment'],ev:['ps:checkout_started','ps:pass_selected'],flag:'Same steps and copy as the live peakst8 drawer. Embed only re-skins it in the club’s brand.'}},
+
+  {id:'E3',grp:'Attendee (club site)',name:'Your Details',states:['Signed out','Signed in (prefilled)'],url:URL_E,
+   render:function(st){var pre=st!=='Signed out';function f(l,v,ph){return '<div class="cf"><label>'+l+'</label><div class="cin'+(pre?'':' ph')+'">'+(pre?v:ph)+'</div></div>'}
+    var who=pre?'<div class="mrow" style="display:grid;gap:2px"><b style="font-size:14px">Ananya Iyer</b><small>ananya@example.com · General · ₹ 499 + GST</small></div>':'<div style="font-size:12.5px;color:#4a4b51">Already have an account? <b style="color:var(--club)">Log In</b></div>'+f('Email address','','Enter your email address')+f('First name','','Enter your first name')+f('Last name','','Enter your last name');
+    return phone(URL_E,sheet(2,'Your Details',evcard()+who+f('Pace group','6:30 /km','Select an option')+f('Emergency contact','+91 99000 54321','Enter phone number'),'<button class="cbtn" data-go="E4">Continue</button>'))},
+   notes:{job:'Collect the attendee and the organiser’s custom questions. Signed-in attendees only answer the custom fields.',els:['Email address, first name, last name (signed out only)','Organiser custom fields: text, dropdown, phone, date, file upload','Answers autosave and prefill next time','Renamed “Captain Details” for team passes; “Exclusive Drop” (merch) and “Squad Details” steps follow when the pass has them'],ac:['Required fields show “This field is required”','Prefill comes from saved answers, never from another user'],ev:['ps:details_submitted']}},
+
+  {id:'E4',grp:'Attendee (club site)',name:'Waiver & Discounts',states:['Default','Coupon applied','Invalid coupon'],url:URL_E,
+   render:function(st){var cp=st==='Coupon applied',bad=st==='Invalid coupon';var base=S.tier==='tee'?799:499,amt=base-(cp?100:0);
+    var coupon='<div class="cf"><label>Coupon Code</label><div style="display:flex;gap:8px"><div class="cin'+(bad?' err':cp?'':' ph')+'" style="flex:1">'+(cp?'FYF100':bad?'FYF1OO':'Type your coupon')+'</div><button class="cbtn ghost" style="width:auto;padding:0 16px" data-state="Coupon applied">Apply</button></div>'+(cp?'<div class="alert ok">🔥You just saved ₹100!</div>':bad?'<div class="alert bad">Invalid/Expired Coupon</div>':'')+'</div>';
+    return phone(URL_E,sheet(3,'Waiver & Discounts','<div class="mrow" style="display:block;font-weight:500;font-size:12.5px;line-height:1.5;color:#4a4b51;max-height:96px;overflow:hidden"><b style="color:#101114">Participation waiver</b><br>I confirm I am fit to take part, run at my own risk, and allow Find Your Fit to use event photos…</div>'+coupon+'<div class="chk"><span class="box on" style="background:var(--club)">✓</span>I agree to the participation terms.*</div>','<button class="cbtn" data-go="E5">Confirm and Pay ₹ '+amt+' + GST</button>'))},
+   notes:{job:'Last step of the drawer: waiver, coupon, consent, then pay.',els:['Organiser’s rich-text waiver (per pass or per event)','Coupon box: “Type your coupon”, Apply; percentage, flat ₹ or free pass','Required “I agree to the participation terms.*”','Button “Confirm and Pay ₹ X + GST” (or “Confirm and Register” when free)'],ac:['Coupons auto-apply from a lead link','Free passes skip E5 and go straight to the ticket'],ev:['ps:coupon_applied','ps:payment_started'],flag:'GST is set per club, as today.'}},
+
+  {id:'E5',grp:'Attendee (club site)',name:'Email OTP + Razorpay',states:['Confirm your email','Razorpay checkout','Processing','Payment failed'],url:URL_E,
+   render:function(st){var base=(S.tier==='tee'?799:499),tot=(base*1.18).toFixed(2);
+    var ov;
+    if(st==='Confirm your email')ov='<div class="modal"><div class="mcard"><b style="font-size:18px">Confirm your email</b><span style="font-size:13.5px;color:#4a4b51">Enter the 6-digit code we sent to <b>ananya@example.com</b>.</span><div class="otp"><span>4</span><span>8</span><span>1</span><span class="on">2</span><span></span><span></span></div><span style="font-size:12.5px;color:#7a7b82">Didn’t receive the email? Resend in 15s</span><button class="cbtn" data-state="Razorpay checkout">Continue</button><span style="font-size:11px;color:#9a9ba1">By proceeding, you agree to our Terms of Service and Privacy Policy.</span></div></div>';
+    else if(st==='Razorpay checkout')ov='<div class="modal"><div class="rzp"><div class="rzp-h"><b>peakst8</b><small>Registration for Sunday Social 5K</small><b style="font-size:20px;margin-top:4px">₹'+tot+'</b></div><div class="rzp-b"><span class="lbl">Payment options · Razorpay</span><div class="mrow">UPI / QR<small>GPay, PhonePe, Paytm</small></div><div class="mrow">Cards<small>Visa, Mastercard, RuPay</small></div><div class="mrow">Netbanking<small>All banks</small></div><div class="mrow">Wallets<small>Paytm, Mobikwik</small></div><button class="cbtn" style="background:#2A1809" data-state="Processing">Pay ₹'+tot+'</button></div></div></div>';
+    else if(st==='Processing')ov='<div class="modal"><div class="mcard" style="justify-items:center;text-align:center"><div class="spin"></div><b>Processing the payment</b><span style="font-size:13px;color:#7a7b82">Confirming the payment · Issuing the ticket</span><button class="cbtn" data-go="E6">Ticket issued →</button></div></div>';
+    else ov='<div class="modal"><div class="mcard" style="text-align:center"><b style="font-size:18px">Payment Failed</b><span style="font-size:13.5px;color:#4a4b51">Oops! Payment didn’t go through. Please try again to complete your booking.</span><button class="cbtn" data-state="Razorpay checkout">Try Again</button></div></div>';
+    return phone(URL_E,sheet(3,'Waiver & Discounts','<div class="alert info">Paying ₹ '+base+' + GST</div>','<button class="cbtn">Confirm and Pay ₹ '+base+' + GST</button>',ov))},
+   notes:{job:'Confirm identity, then pay. Signed-out attendees get an email OTP at the final submit; then the Razorpay Checkout modal opens.',els:['“Confirm your email”: 6-digit code, resend after 15 s','Razorpay modal: name “peakst8”, “Registration for {event}”, amount incl. GST, Razorpay’s default methods','Processing: “Processing the payment”, “Confirming the payment”, “Issuing the ticket”','Failure: “Payment Failed”, “Try Again”'],ac:['Ticket is issued only once Razorpay confirms the payment','On mobile, if Razorpay can’t complete UPI or 3-D Secure inside the frame, it opens in a top-level tab and returns'],ev:['ps:otp_sent','ps:payment_started','ps:payment_success','ps:payment_failed'],flag:'Sign-in is email OTP or Google, as today; there is no phone OTP.'}},
+
+  {id:'E6',grp:'Attendee (club site)',name:'Ticket',states:['Confirmed'],url:URL_E,
+   render:function(){var base=(S.tier==='tee'?799:499),tot=(base*1.18).toFixed(2);
+    return phone(URL_E,sheet(0,'It’s Game Time!','<div class="ticket"><div class="tt"><b>Sunday Social 5K</b><small>Sun 25 Oct 2026 · 6:00 AM</small></div><div class="qr">'+qr()+'</div><div class="facts" style="padding:0 12px 12px"><div><small>Athlete Name</small><b>Ananya Iyer</b></div><div><small>Status</small><b>Confirmed</b></div><div><small>Ticket Type</small><b>'+(S.tier==='tee'?'General + run tee':'General')+'</b></div><div><small>Amount</small><b>₹'+tot+'</b></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><button class="cbtn ghost" style="font-size:12.5px">Download Ticket</button><button class="cbtn ghost" style="font-size:12.5px">Share</button><button class="cbtn ghost" style="font-size:12.5px">Add to Calendar</button></div>',
+    '<button class="cbtn" data-go="E1">Back to Find Your Fit</button>'))},
+   notes:{job:'The real ticket, shown in the sheet on the club’s page instead of on ps8.club.',els:['“It’s Game Time!”, event, date and the QR from the backend','Download Ticket (PNG), Share, Add to Calendar','Athlete Name, Status, Ticket Type, Amount'],ac:['Fires <code>ps:payment_success</code> once, so the club’s GA4 and pixel count one purchase','Email and WhatsApp confirmations still come from peakst8'],ev:['ps:payment_success','ticket_shared'],flag:'Same ticket as today. Only “Back to {club}” is new.'}},
+
+  {id:'C1',grp:'Club registration (race site)',name:'Captain registers club',states:['Form','Submitted'],url:'cubbonclassic10k.com/register',
+   render:function(st){var w='<div style="--club:#e8542b;--club-ink:#fff;--club-r:10px">';var h='<div class="chead"><span class="clogo"><i></i>Cubbon Classic 10K</span><span style="font-size:13px;color:#7a7b82">Register</span></div>';
+    if(st==='Submitted')return phone(this.url,w+h+'<div class="cpad" style="padding-top:40px"><h4>Club submitted</h4><p class="ans">Thanks, Arjun. We’re checking Koramangala Run Club and will send your club code by email and WhatsApp once it’s approved.</p><div class="alert info">Then share the code: each member registers on their own with it. You need at least 10 runners: 7 men and 3 women.</div><button class="cbtn" data-go="C2">Preview: code approved</button><div class="by">Tickets by <b>peakst8</b></div></div></div>');
+    function f(l,v){return '<div class="cf"><label>'+l+'</label><div class="cin">'+v+'</div></div>'}
+    return phone(this.url,w+h+'<div class="cpad"><span class="bc">Edition 2 · 21 March 2027</span><h4>Register your club</h4><p class="ans">Only the captain fills this. Members register on their own with the club code.</p>'+f('Club name','Koramangala Run Club')+f('Captain name','Arjun Mehta')+f('Email','arjun@example.com')+f('Phone','+91 98860 11223')+f('Base city','Bengaluru')+'<div class="alert info">Minimum 10 runners · 7 men + 3 women</div><button class="cbtn" data-state="Submitted">Submit club</button><div class="by">Tickets by <b>peakst8</b></div></div></div>')},
+   notes:{job:'Captain sign-up, the first half of club registration. Replaces their current site form plus a manual code email.',els:['Club name, captain, email, phone, base city','Rule shown up front: 10 runners, 7 men and 3 women','Submitted state explains what happens next'],ac:['One captain per club; duplicate club names are flagged in O7','Captain gets the code by email and WhatsApp on approval'],ev:['club_submitted']}},
+
+  {id:'C2',grp:'Club registration (race site)',name:'Club code and roster',states:['In progress','Complete'],url:'cubbonclassic10k.com/club/CC-KRC-4821',
+   render:function(st){var done=st==='Complete';var n=done?11:8,m=done?7:6,wn=done?4:2;
+    var rows=[['Arjun Mehta','M','Captain'],['Kavya R.','W','Paid'],['Rohit S.','M','Paid'],['Neha P.','W','Paid'],['Vikram T.','M','Paid']].map(function(r){return '<div class="mrow"><span>'+r[0]+' <small>'+r[1]+'</small></span><small>'+r[2]+'</small></div>'}).join('');
+    return phone(this.url,'<div style="--club:#e8542b;--club-ink:#fff;--club-r:10px"><div class="chead"><span class="clogo"><i></i>Cubbon Classic 10K</span><span style="font-size:13px;color:#7a7b82">My club</span></div><div class="cpad"><span class="bc">Koramangala Run Club · captain view</span><div class="ticket"><div class="tt"><small>Your club code</small><b style="font-size:26px;letter-spacing:.06em">CC-KRC-4821</b></div></div><div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="cbtn ghost">Copy link</button><button class="cbtn ghost">Share on WhatsApp</button></div>'+
+    '<div class="facts"><div><small>Runners</small><b>'+n+' of 10</b></div><div><small>Men · Women</small><b>'+m+'/7 · '+wn+'/3</b></div></div>'+(done?'<div class="alert ok">Your club meets the rule. More members can still join until registration closes.</div>':'<div class="alert info">2 more runners needed, including 1 woman.</div>')+rows+'<button class="cbtn" data-go="C3">Preview: member joins</button></div></div>')},
+   notes:{job:'Captain’s live view of the club: the code to share and who has joined.',els:['Club code with copy link and WhatsApp share','Progress against the 10 / 7 / 3 rule','Members who have paid'],ac:['Counts only paid members','Captain sees names, never members’ phone or payment details'],ev:['club_code_shared','club_rule_met']}},
+
+  {id:'C3',grp:'Club registration (race site)',name:'Member joins with code',states:['Code applied','Invalid code','Ticket with bib'],url:'cubbonclassic10k.com/register',
+   render:function(st){var w='<div style="--club:#e8542b;--club-ink:#fff;--club-r:10px">';
+    if(st==='Ticket with bib')return phone(this.url,w+'<div class="cpad" style="padding-top:20px"><h4>You’re in, Kavya!</h4><div class="ticket"><div class="tt"><b>Cubbon Classic 10K · Edition 2</b><small>Sun 21 Mar 2027 · Kanteerava Stadium, Gate A</small></div><div class="facts" style="padding:12px"><div><small>Bib</small><b style="font-size:22px">3047</b></div><div><small>Club</small><b>Koramangala Run Club</b></div><div><small>Wave</small><b>B · 6:10 AM</b></div><div><small>T-shirt</small><b>S</b></div></div><div class="qr">'+qr()+'</div></div><div class="by">🔒 Secured by <b>peakst8</b></div></div></div>');
+    var bad=st==='Invalid code';
+    return phone(this.url,w+'<div style="opacity:.6;pointer-events:none"><div class="chead"><span class="clogo"><i></i>Cubbon Classic 10K</span></div><div class="hero-img"><span>Edition 2 · 21 March 2027</span></div></div><div class="scrim"></div><div class="sheet"><div class="sheet-h"><span class="who"><i></i>Cubbon Classic 10K</span><button class="x" aria-label="Close">✕</button></div><div class="sheet-b"><div style="font-size:16px;font-weight:800">Run the 10K</div><div class="tier sel"><span class="tb"><b>Timed 10K entry</b><small>T-shirt, medal, chip timing, photos, certificate, breakfast</small></span><b>₹1,499</b></div>'+
+    '<div class="cf"><label>Club code (optional)</label><div class="cin'+(bad?' err':'')+'">'+(bad?'CC-KRC-4812':'CC-KRC-4821')+'</div>'+(bad?'<div class="alert bad">We couldn’t find that code. Check it with your captain, or continue without a club.</div>':'<div class="alert ok">Koramangala Run Club · 8 of 10 joined</div>')+'</div>'+
+    '<div class="cf"><label>T-shirt size</label><div class="cin">S</div></div></div><div class="sheet-f"><button class="cbtn" data-state="Ticket with bib">Continue</button><div class="by">🔒 Secured by <b>peakst8</b></div></div></div></div>')},
+   notes:{job:'A club member registers with the captain’s code, pays for their own entry and gets a bib.',els:['Optional club code field, checked live','Timed entry with T-shirt size','Ticket shows bib, club and wave after payment'],ac:['Code links the order to the club and updates C2 and O7','Bib comes from the club range on payment','The rest of checkout reuses E3–E5'],ev:['club_code_applied','club_code_invalid','bib_assigned'],flag:'Price shown is sample: Cubbon has not announced the Edition 2 fee yet.'}}
+  ];
+
+  var side=document.getElementById('side'),canvas=document.getElementById('canvas'),notes=document.getElementById('notes'),sStates=document.getElementById('sStates'),sTitle=document.getElementById('sTitle'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
+  function idx(){return SCREENS.findIndex(function(s){return s.id===S.id})}
+  function buildSide(){var g={},order=[];SCREENS.forEach(function(s){if(!g[s.grp]){g[s.grp]=[];order.push(s.grp)}g[s.grp].push(s)});
+    side.innerHTML=order.map(function(k){return '<div class="grp"><span class="lbl">'+k+'</span>'+g[k].map(function(s){return '<button class="nav-b" type="button" data-nav="'+s.id+'"><small>'+s.id+'</small>'+s.name+'</button>'}).join('')+'</div>'}).join('')}
+  function render(){var s=SCREENS[idx()],st=S.state[s.id]||s.states[0];applyBrand();
+    sTitle.textContent=s.id+' · '+s.name;
+    sStates.innerHTML=s.states.length>1?s.states.map(function(x){return '<button class="st-b" type="button" data-state="'+x+'" aria-pressed="'+(x===st)+'">'+x+'</button>'}).join(''):'';
+    canvas.innerHTML=s.render(st);
+    var n=s.notes;
+    notes.innerHTML='<div class="ncard"><h3>Job</h3><p>'+n.job+'</p></div><div class="ncard"><h3>On screen</h3><ul>'+n.els.map(function(e){return '<li>'+e+'</li>'}).join('')+'</ul></div><div class="ncard"><h3>States</h3><p>'+s.states.join(' · ')+'</p></div><div class="ncard"><h3>Acceptance</h3><ul>'+n.ac.map(function(e){return '<li>'+e+'</li>'}).join('')+'</ul></div><div class="ncard"><h3>Events</h3><p>'+n.ev.map(function(e){return '<code>'+e+'</code>'}).join(' ')+'</p></div>'+(n.flag?'<div class="ncard flag"><h3>Watch</h3><p>'+n.flag+'</p></div>':'');
+    side.querySelectorAll('.nav-b').forEach(function(b){b.setAttribute('aria-current',String(b.dataset.nav===s.id))});
+    var i=idx();prev.disabled=i===0;next.disabled=i===SCREENS.length-1;count.textContent=(i+1)+' / '+SCREENS.length;
+    try{history.replaceState(null,'','#'+s.id)}catch(e){}
+  }
+  function go(id){if(SCREENS.some(function(s){return s.id===id})){S.id=id;render();if(window.innerWidth<760)canvas.scrollIntoView({block:'start'})}}
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-nav],[data-go],[data-state],[data-mode],[data-color],[data-font],[data-radius],[data-label],[data-tier],[data-qty]');if(!t)return;
+    var d=t.dataset;
+    if(d.nav)return go(d.nav);
+    if(d.go)return go(d.go);
+    if(d.state){S.state[S.id]=d.state;return render()}
+    if(d.mode){S.mode=d.mode}
+    if(d.color){S.brand.color=d.color}
+    if(d.font){S.brand.font=d.font}
+    if(d.radius){S.brand.radius=+d.radius}
+    if(d.label){S.brand.label=d.label}
+    if(d.tier){S.tier=d.tier}
+    if(d.qty){S.qty=Math.max(1,Math.min(6,S.qty+(+d.qty)))}
+    render();
+  });
+  prev.addEventListener('click',function(){var i=idx();if(i>0)go(SCREENS[i-1].id)});
+  next.addEventListener('click',function(){var i=idx();if(i<SCREENS.length-1)go(SCREENS[i+1].id)});
+  document.addEventListener('keydown',function(e){if(e.target.closest('input,textarea'))return;if(e.key==='ArrowRight')next.click();if(e.key==='ArrowLeft')prev.click()});
+  buildSide();
+  var h=(location.hash||'').slice(1);if(SCREENS.some(function(s){return s.id===h}))S.id=h;
+  render();
+})();
+</script>
+</body>
+</html>

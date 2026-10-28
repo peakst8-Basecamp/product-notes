@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://peakst8-basecamp.github.io/product-notes/sitemap.xml

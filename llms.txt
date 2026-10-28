@@ -1,0 +1,10 @@
+# peakst8 product notes
+
+> Product notes for peakst8 features: who each feature is for, the screens and the timeline to go live.
+
+## peakst8 Embed
+
+> peakst8 Embed lets run clubs and fitness communities sell events on their own website. Event pages are server-rendered on the club's domain with Event and FAQ schema, so they rank on Google and get cited by AI answer engines. peakst8 runs checkout, payments, refunds and check-in.
+
+- [Product note](https://peakst8-basecamp.github.io/product-notes/embed/): ICP and pilots, the problem, Cubbon Classic 10K case study, launch-to-scale path, SEO and AEO requirements, architecture, V1 scope, timeline, FAQ, open questions
+- [Prototype](https://peakst8-basecamp.github.io/product-notes/embed/prototype/): clickable V1 screens (admin A1, organiser O1–O7, attendee E1–E6, club registration C1–C3) with states and build notes
