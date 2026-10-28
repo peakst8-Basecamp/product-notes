@@ -5,6 +5,7 @@ Public product notes for peakst8 features. Site: [peakst8-basecamp.github.io/pro
 | Note | Status | Links |
 | --- | --- | --- |
 | **peakst8 Embed** | Scoped, pilot from 30 Nov 2026 | [Note](https://peakst8-basecamp.github.io/product-notes/embed/) · [Prototype](https://peakst8-basecamp.github.io/product-notes/embed/prototype/) · [Folder](embed/) |
+| **Run Crew × peakst8 Playbook** | Rollout live, Reebok training plan | [Playbook](run-crew/) · [Install guide](https://peakst8-basecamp.github.io/product-notes/run-crew/install-guide/) |
 
 ---
 

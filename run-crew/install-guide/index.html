@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/run-crew/install-guide/">
+</head>
+<body style="margin:0">
+<title>Install peakst8 · Reebok Run Crew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=Sora:wght@700;800&display=swap">
+<style>
+/* Layout: stacked cards in the peakst8 install-guide look (black ground, blue asterisk, lime highlights). Deliberately single dark theme. */
+:root{
+  color-scheme:dark;
+  --bg:#0b0b0c; --card:#141416; --line:#2a2b2f; --ink:#f4f4f2; --muted:#a3a4a8;
+  --blue:#1f4bff; --lime:#d6ff3a; --lime-ink:#141a00;
+  --display:"Sora","Arial Black",system-ui,sans-serif;
+  --body:"Familjen Grotesk",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 var(--body)}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+h1,h2{font-family:var(--display);margin:0;letter-spacing:-.03em;line-height:1;text-wrap:balance}
+p{margin:0}
+.kicker{font:700 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.hl{color:var(--lime)}
+a{color:var(--lime)}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+
+.cover{position:relative;overflow:hidden;border-radius:24px;background:var(--card);padding:44px 24px 40px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.cover h1{font-size:clamp(64px,17vw,128px);font-weight:800;color:var(--blue);letter-spacing:-.05em}
+.cover .sub{font-size:19px;color:var(--lime)}
+.cover .muted{color:var(--muted);font-size:15px}
+.ast{position:absolute;color:var(--blue);font:800 120px/1 var(--display);pointer-events:none}
+.ast.a{top:-18px;left:10px;font-size:90px}
+.ast.b{bottom:-70px;right:-10px;font-size:200px}
+
+.jump{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pillbtn{display:inline-flex;align-items:center;height:46px;padding:0 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:16px}
+.pillbtn.lime{background:var(--lime);color:var(--lime-ink)}
+.pillbtn.ghost{box-shadow:inset 0 0 0 1.5px var(--line);color:var(--ink)}
+
+.sec{border-radius:24px;background:var(--card);padding:28px 22px;display:flex;flex-direction:column;gap:18px;scroll-margin-top:16px}
+.sec h2{font-size:clamp(34px,8vw,48px);font-weight:800}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.steps li{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:start;padding:14px 16px;border-radius:16px;box-shadow:inset 0 0 0 1.5px var(--line)}
+.steps.lime li{box-shadow:inset 0 0 0 1.5px var(--lime)}
+.n{font:800 26px/1 var(--display);color:var(--lime)}
+.steps b{display:block;font-size:18px}
+.steps span{color:var(--muted);font-size:15.5px}
+.link{word-break:break-all}
+.qr{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:16px;border-radius:16px;background:var(--blue)}
+.qr #qr{background:#fff;padding:10px;border-radius:12px;width:148px;height:148px}
+.qr #qr img,.qr #qr canvas{width:128px!important;height:128px!important}
+.qr p{flex:1 1 180px;font-weight:700;color:#fff}
+.toggles{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.toggles i{font-style:normal;font-size:14px;padding:5px 10px;border-radius:999px;background:#23331a;color:var(--lime)}
+
+.done{text-align:center;align-items:center}
+.done h2{color:var(--blue);font-size:clamp(44px,12vw,72px)}
+footer{color:var(--muted);font-size:14px;text-align:center}
+</style>
+
+<div class="wrap">
+  <section class="cover">
+    <span class="ast a" aria-hidden="true">*</span><span class="ast b" aria-hidden="true">*</span>
+    <p style="font-family:var(--display);font-weight:700;font-size:26px">How to install</p>
+    <h1>peakst8</h1>
+    <p class="sub">Your training hub for the Reebok Training Plan × Run Crew</p>
+    <p class="muted">Android and iPhone setup guide</p>
+    <div class="jump">
+      <a class="pillbtn lime" href="#android">I'm on Android</a>
+      <a class="pillbtn ghost" href="#iphone">I'm on iPhone</a>
+    </div>
+  </section>
+
+  <section class="sec" id="android">
+    <span class="kicker">Android · Google Play</span>
+    <h2>It's <span class="hl">super simple</span></h2>
+    <ol class="steps lime">
+      <li><span class="n">01</span><div><b>Tap the download link below</b></div></li>
+      <li><span class="n">02</span><div><b>Tap Install on the Google Play Store</b></div></li>
+      <li><span class="n">03</span><div><b>Open the app and you're all set</b></div></li>
+    </ol>
+    <a class="pillbtn lime" style="align-self:flex-start" href="https://play.google.com/store/apps/details?id=club.peakst8.app" target="_blank" rel="noopener">Download peakst8 for Android</a>
+    <p class="link" style="color:var(--muted);font-size:14px">play.google.com/store/apps/details?id=club.peakst8.app</p>
+  </section>
+
+  <section class="sec" id="iphone">
+    <span class="kicker">iPhone · via TestFlight</span>
+    <h2>Five steps <span class="hl">on iPhone</span></h2>
+    <p style="color:var(--muted)">peakst8 is on iPhone through TestFlight, Apple's app for early releases. Join with our invite link and you're in.</p>
+    <ol class="steps">
+      <li><span class="n">01</span><div><b>Install TestFlight</b><span>Search for TestFlight in the App Store and tap Get. It's Apple's own app, with the blue propeller icon. <a href="https://apps.apple.com/app/testflight/id899247664" target="_blank" rel="noopener">Download TestFlight</a></span></div></li>
+      <li><span class="n">02</span><div><b>Tap the invite link</b><span>Open it on your iPhone. It takes you straight to peakst8 in TestFlight.<br><a class="link" href="https://testflight.apple.com/join/bJPU3a55" target="_blank" rel="noopener">testflight.apple.com/join/bJPU3a55</a></span></div></li>
+      <li><span class="n">03</span><div><b>Accept the invitation</b><span>TestFlight opens peakst8. Tap Accept, then Install.</span></div></li>
+      <li><span class="n">04</span><div><b>Turn on updates</b><span>Scroll down peakst8's page in TestFlight and switch these on:</span>
+        <div class="toggles"><i>Automatic Updates</i><i>Push Notifications</i><i>Email Notifications</i></div></div></li>
+      <li><span class="n">05</span><div><b>Use it like any other app</b><span>Move peakst8 to your home screen and open it from there.</span></div></li>
+    </ol>
+    <div class="qr">
+      <div id="qr" role="img" aria-label="QR code for the TestFlight invite link"></div>
+      <p>Reading this on a laptop? Scan with your iPhone camera to open the invite link.</p>
+    </div>
+  </section>
+
+  <section class="sec done">
+    <span class="kicker">You're all set</span>
+    <h2>peakst8</h2>
+    <p>Welcome to the Reebok Training Plan × Run Crew. Sign in with the email you registered with Run Crew.</p>
+    <p style="color:var(--muted);font-size:15px">Stuck? Ask in the Run Crew group and the peakst8 team will help.</p>
+  </section>
+
+  <footer>peakst8 · support@peakst8.club</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+try { new QRCode(document.getElementById("qr"), {text:"https://testflight.apple.com/join/bJPU3a55", width:128, height:128, colorDark:"#0b0b0c", colorLight:"#ffffff", correctLevel:QRCode.CorrectLevel.M}); }
+catch (e) { document.querySelector(".qr").hidden = true; }
+</script>
+
+</body>
+</html>
