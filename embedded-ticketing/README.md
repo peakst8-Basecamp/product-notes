@@ -26,7 +26,7 @@ The pilot starts with three organisers:
 
 [cubbonclassic10k.com/register](https://cubbonclassic10k.com/register) is the setup Embed replaces:
 
-| Today | With peakst8 Embedded Ticketingded Ticketing |
+| Today | With peakst8 Embedded Ticketing |
 | --- | --- |
 | Individual entry is a KonfHub widget iframe inside the page | A server-rendered race page on their domain; peakst8 checkout opens on Book |
 | Structured data is an Organization and a WebPage only, with no Event markup | Event, FAQ and breadcrumb schema, sitemap and IndexNow |
@@ -84,7 +84,7 @@ Every state, with acceptance criteria and analytics events, is in the [prototype
 
 ```mermaid
 gantt
-  title peakst8 Embedded Ticketingded Ticketing: scope to pilot (proposed)
+  title peakst8 Embedded Ticketing: scope to pilot (proposed)
   dateFormat YYYY-MM-DD
   axisFormat %d %b
   section Decide
