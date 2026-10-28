@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run Crew × peakst8 Playbook</title>
+<meta name="description" content="How peakst8 is moving the Run Crew runners on the Reebok training plan onto the peakst8 app: the playbook, install guide, app screens and rollout checklist in one place.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/run-crew/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;600;700;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#fff;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148;
+--serif:"Newsreader",Georgia,serif;--sans:"Figtree",system-ui,-apple-system,sans-serif;--mono:"Chivo Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.pg{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:24px 96px}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wm{font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.hero{text-align:center;padding-block:64px 16px;display:grid;gap:20px;justify-items:center}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6.6vw,76px);line-height:1;letter-spacing:-.025em;margin:0;max-width:16ch;text-wrap:balance}
+.hero p{margin:0;max-width:60ch;color:var(--ink-2);font-size:17px;line-height:1.5;text-wrap:pretty}
+.facts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.facts span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:7px 11px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding-top:8px}
+nav.toc a{font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--fill);border-radius:999px;padding:8px 14px}
+nav.toc a:hover{color:var(--ink)}
+
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;max-width:820px;margin:32px auto 0}
+.why div{background:var(--fill);border-radius:22px;padding:18px;display:grid;gap:6px;align-content:start}
+.why .lbl{color:var(--signal)}
+.why b{font-size:17px}
+.why p{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.5}
+
+.previews{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;margin-top:56px}
+.pv{display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit}
+.pv__frame{position:relative;aspect-ratio:4/5;border-radius:22px;background:var(--fill);overflow:hidden;box-shadow:inset 0 0 0 1px var(--line)}
+.pv__frame iframe{position:absolute;top:0;left:0;width:250%;height:250%;border:0;transform:scale(.4);transform-origin:0 0;pointer-events:none}
+.pv__frame .cover{position:absolute;inset:0}
+.pv:hover .pv__frame{box-shadow:inset 0 0 0 2px var(--ink)}
+.pv__meta{display:grid;gap:4px}
+.pv__meta b{font-size:18px;letter-spacing:-.01em}
+.pv__meta span{font-size:14px;color:var(--ink-2);line-height:1.45}
+.pv__go{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.mock{position:absolute;inset:0;padding:22px;display:grid;gap:10px;align-content:start}
+.mock .t{font-weight:800;font-size:22px;letter-spacing:-.02em}
+.mock .row{display:flex;gap:10px;align-items:center;background:#fff;border-radius:12px;padding:10px 12px;font-size:13.5px}
+.mock .box{width:16px;height:16px;border-radius:4px;box-shadow:inset 0 0 0 1.5px var(--ink);flex:none}
+.mock .box.on{background:var(--ink)}
+.mock .who{margin-left:auto;font-size:11.5px;color:var(--ink-3)}
+.mock .bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.mock .bar i{display:block;height:100%;width:38%;background:var(--ink)}
+
+.pr{max-width:820px;margin:0 auto;display:grid;gap:16px;padding-top:24px}
+.pr h2{margin:40px 0 0;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1;letter-spacing:-.015em;scroll-margin-top:16px}
+.pr h3{margin:8px 0 0;font-size:16px;font-weight:700}
+.pr p,.pr li{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.6}
+.pr strong{color:var(--ink)}
+.pr a{color:var(--ink)}
+.pr ul,.pr ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.pr ul ul{margin-top:6px}
+.pr li.task{list-style:none;margin-left:-20px;display:flex;gap:10px;align-items:flex-start}
+.pr li.task input{margin-top:5px;width:16px;height:16px;accent-color:var(--ink);flex:none}
+.pr pre{margin:0;padding:16px;border-radius:16px;background:var(--fill);white-space:pre-wrap;font:14px/1.55 var(--sans);color:var(--ink)}
+.pr code{font-family:var(--mono);font-size:12.5px;background:var(--fill);border-radius:6px;padding:1px 5px}
+.pr pre code{background:none;padding:0;font:inherit}
+.pr table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.45}
+.tbl{overflow-x:auto;border-radius:22px;background:var(--fill)}
+.tbl table{min-width:620px}
+.pr th{text-align:left;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:16px 16px 10px}
+.pr td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.pr td:first-child{color:var(--ink);font-weight:700}
+.note{font-size:13.5px;color:var(--ink-3)}
+.edit{display:inline-flex;gap:8px;align-items:center;font-weight:600;font-size:14px;color:var(--ink);background:var(--fill);border-radius:999px;padding:8px 14px;text-decoration:none;justify-self:start}
+footer{margin-top:64px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.6}
+footer a{color:var(--ink-2)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+</style>
+</head>
+<body>
+<div class="pg">
+<header class="top"><a class="wm" href="../">peakst8</a><span class="lbl">Product note · 28 Oct 2026</span></header>
+
+<main>
+<section class="hero">
+  <span class="lbl">Run Crew × peakst8</span>
+  <h1>Getting 250 Reebok runners onto peakst8.</h1>
+  <p>Run Crew is coaching a group of runners for Reebok ahead of the Adani Ahmedabad Marathon. We're moving them onto the peakst8 app so their training plan, workouts and Saturday runs live in one place, and they stay engaged until race day.</p>
+  <div class="facts"><span>Partner · Run Crew</span><span>Brand · Reebok</span><span>About 250 runners</span><span>First group run · 31 Oct 2026</span></div>
+  <nav class="toc" aria-label="Sections"><a href="#why">Why</a><a href="#pieces">The pieces</a><a href="#before-you-start">Before you start</a><a href="#step-1-lock-the-roster">Roster</a><a href="#step-2-set-up-the-app">App setup</a><a href="#step-3-install-guide">Install</a><a href="#step-4-onboard-the-runners">Onboard</a><a href="#step-5-weekly-message-before-each-training-week">Weekly</a><a href="#step-6-review-with-reebok">Reebok</a><a href="https://claude.ai/artifact/MNZVVd8tXVs9Xgjrm6MLSz" style="background:var(--ink);color:#fff">Checklist →</a></nav>
+</section>
+
+<section class="why" id="why" aria-label="Why peakst8 is doing this">
+  <div><span class="lbl">Goal 1</span><b>Acquire users</b><p>About 250 runners on the app, through one trusted club.</p></div>
+  <div><span class="lbl">Goal 2</span><b>Test how the app scales</b><p>A real group, a real plan, every day until race day.</p></div>
+  <div><span class="lbl">Optional</span><b>See if Reebok will pay</b><p>Reebok covers the server cost per user for the group.</p></div>
+</section>
+
+<section class="previews" id="pieces" aria-label="The pieces">
+  <a class="pv" href="https://claude.ai/artifact/MNZVVd8tXVs9Xgjrm6MLSz" target="_blank" rel="noopener">
+    <div class="pv__frame">
+      <div class="mock" aria-hidden="true">
+        <span class="lbl">Live · ticked by the team</span>
+        <span class="t">Run Crew rollout</span>
+        <div class="bar"><i></i></div>
+        <div class="row"><span class="box on"></span>Get the runner list from Aditya<span class="who">Aditya</span></div>
+        <div class="row"><span class="box on"></span>Confirm the list is final, then lock it<span class="who">Aditya</span></div>
+        <div class="row"><span class="box"></span>Upload the whole month's plan<span class="who">Rohit Sharma</span></div>
+        <div class="row"><span class="box"></span>Check Saturday's run shows<span class="who">Jitin</span></div>
+        <div class="row"><span class="box"></span>Share the install guide<span class="who">Aditya</span></div>
+      </div>
+    </div>
+    <div class="pv__meta"><b>✅ Rollout checklist</b><span>Every step with its owner, plus the runner list. Ticks save for the whole team.</span><span class="pv__go">Open checklist →</span></div>
+  </a>
+  <a class="pv" href="install-guide/">
+    <div class="pv__frame"><iframe src="install-guide/" title="Install guide preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="cover"></span></div>
+    <div class="pv__meta"><b>📲 Install guide</b><span>What runners get in the group: install on Android and iPhone in a few taps.</span><span class="pv__go">Open guide →</span></div>
+  </a>
+  <a class="pv" href="app-screens/">
+    <div class="pv__frame"><iframe src="app-screens/" title="App screens preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe><span class="cover"></span></div>
+    <div class="pv__meta"><b>📱 App screens</b><span>Every screen of the app, journey by journey, from sign-in to the leaderboard.</span><span class="pv__go">Open screens →</span></div>
+  </a>
+</section>
+
+<article class="pr" id="playbook">
+  <p class="note" id="loading">Loading the playbook…</p>
+</article>
+<div class="pr" style="padding-top:32px">
+  <a class="edit" href="https://github.com/peakst8-Basecamp/product-notes/edit/main/run-crew/README.md">✏️ Edit this playbook on GitHub</a>
+  <p class="note">The playbook below the previews comes from <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/run-crew/README.md">run-crew/README.md</a>. Edit that file and this page updates. Ticks here aren't saved; tick steps in the rollout checklist.</p>
+</div>
+</main>
+
+<footer>peakst8 · <a href="../">All product notes</a> · <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/run-crew">Source</a></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+(async () => {
+  const el = document.getElementById("playbook");
+  try {
+    const md = await (await fetch("README.md", {cache:"no-cache"})).text();
+    // The hero and the preview cards above already carry the title, the why and the links.
+    const body = md.split(/\n(?=## )/).filter((s, i) => i > 0 && !/^## Links/.test(s)).join("\n");
+    el.innerHTML = marked.parse(body, {gfm:true});
+    el.querySelectorAll("h2").forEach(h => h.id = h.textContent.toLowerCase().replace(/[^a-z0-9 ]/g,"").trim().replace(/\s+/g,"-"));
+    el.querySelectorAll("table").forEach(t => { const w = document.createElement("div"); w.className = "tbl"; t.replaceWith(w); w.append(t); });
+    el.querySelectorAll('li input[type="checkbox"]').forEach(c => c.closest("li").classList.add("task"));
+    el.querySelectorAll('a[href^="http"]').forEach(a => { a.target = "_blank"; a.rel = "noopener"; });
+    if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+  } catch (e) {
+    el.innerHTML = '<p class="note">The playbook didn\'t load. Read it on <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/run-crew/README.md">GitHub</a>.</p>';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1123 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Athlete OS · App screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@300;400&family=Caveat+Brush&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&display=swap" rel="stylesheet">
+<style>
+/* Athlete OS — screen PRD. Flat, no gradients.
+   Page: white canvas, Newsreader light display, Figtree UI, Chivo Mono labels, Caveat Brush for one hand note per section.
+   Layout: one journey per row. Phone on the left with pills to step through its screens; the PRD for the active screen on the right.
+   Phones: the programme app (dark), with three skins on the same markup: peakst8 (flat), iOS 26, Android. Deliberately single-theme page. */
+:root{
+  color-scheme:light;
+  --bg:#ffffff; --ink:#0b0b0c; --ink-2:#505157; --ink-3:#8b8c92; --fill:#f4f4f5; --fill-2:#ececee; --line:#e7e7ea;
+  --signal:#ff5148; --pass:#17945a; --ask:#2f5fd6;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --sans:"Figtree",system-ui,-apple-system,sans-serif;
+  --mono:"Chivo Mono",ui-monospace,Menlo,monospace;
+  --hand:"Caveat Brush","Marker Felt",cursive;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+.pg{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:24px 140px}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+
+/* header + hero */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wm{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.wm__8{width:22px;height:26px}
+.wm i{font-style:normal;font-weight:400;color:var(--ink-3)}
+.hero{text-align:center;padding-block:72px 56px;display:grid;gap:22px;justify-items:center}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(44px,7.4vw,84px);line-height:.98;letter-spacing:-.025em;margin:0;max-width:14ch;text-wrap:balance}
+.hero p{margin:0;max-width:56ch;color:var(--ink-2);font-size:17px;line-height:1.5;text-wrap:pretty}
+.hand{font-family:var(--hand);font-size:26px;line-height:1;color:var(--ink);transform:rotate(-3deg);display:inline-block}
+.hand--red{color:var(--signal)}
+.tally{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.tally span{height:30px;padding:0 12px;border-radius:999px;background:var(--fill);display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.tally b{color:var(--ink);font-variant-numeric:tabular-nums}
+.facts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.facts span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:7px 11px}
+
+/* dock */
+.dock{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;display:flex;gap:4px;padding:5px;border-radius:999px;background:#0b0b0c;box-shadow:0 10px 30px rgba(0,0,0,.18);max-width:calc(100vw - 32px)}
+.dock button{appearance:none;border:0;background:transparent;color:#a9aab0;height:40px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.dock button[aria-pressed="true"]{background:#fff;color:#0b0b0c}
+.dock button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:420px){.dock button{padding:0 11px;font-size:13px}}
+
+/* sections */
+.stage{display:grid;gap:6px;padding-block:80px 8px;text-align:center;justify-items:center;scroll-margin-top:20px}
+.stage h2{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(34px,4.6vw,52px);letter-spacing:-.02em;line-height:1}
+.stage p{margin:0;color:var(--ink-3);font-size:15px;max-width:52ch}
+.spec{display:grid;grid-template-columns:372px minmax(0,1fr);gap:56px;padding-block:48px;align-items:start;border-bottom:1px solid var(--line)}
+@media (max-width:880px){.spec{grid-template-columns:minmax(0,1fr);gap:28px}.phone{margin-inline:auto}}
+.notes{display:grid;gap:14px;min-width:0;padding-top:8px}
+.notes__where{display:grid;gap:6px}
+.notes__where h3{margin:0;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.05;letter-spacing:-.015em;text-wrap:balance}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{appearance:none;border:0;height:34px;padding:0 14px;border-radius:999px;background:var(--fill);color:var(--ink-2);font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.pill small{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);font-weight:400}
+.pill[aria-selected="true"]{background:var(--ink);color:#fff}
+.pill[aria-selected="true"] small{color:#a9aab0}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--signal)}
+.pill .dot--ask{background:var(--ask)}
+.pill:focus-visible,.vote:focus-visible,.circ-n:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.part{display:grid;gap:10px;padding:18px 18px 16px;border-radius:22px;background:var(--fill)}
+.part[hidden]{display:none}
+.part__name{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.part__name strong{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.part__name a{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-decoration:none}
+.part__name a:hover{color:var(--ink)}
+.part__name .new{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--signal)}
+.part__job{margin:0;font-size:15.5px;line-height:1.5}
+.part ul{margin:0;padding-left:18px;display:grid;gap:3px;font-size:14px;line-height:1.5;color:var(--ink-2)}
+.part ul b{color:var(--ink)}
+.part__plat{margin:0;font-size:14px;line-height:1.5;color:var(--ink-2)}
+.part__plat b{color:var(--ink)}
+.part__vote{display:flex;gap:8px;padding-top:4px;flex-wrap:wrap}
+.vote{appearance:none;height:34px;padding:0 16px;border-radius:999px;border:0;background:#fff;color:var(--ink-2);font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:inset 0 0 0 1px var(--line)}
+.vote:hover{color:var(--ink)}
+.vote[aria-pressed="true"][data-v="ok"]{background:var(--ink);color:#fff;box-shadow:none}
+.vote[aria-pressed="true"][data-v="change"]{background:var(--signal);color:#fff;box-shadow:none}
+.flag{margin:0;padding:14px 16px;border-radius:18px;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink-2);font-size:14px;line-height:1.5;background:#fff}
+.flag b{color:var(--ink)}
+.flag .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-right:6px;color:var(--signal)}
+.flag--ask .k{color:var(--ask)}
+.stepper{display:flex;justify-content:center;gap:10px;align-items:center;margin-top:14px}
+.circ-n{appearance:none;border:0;width:36px;height:36px;border-radius:50%;background:var(--fill);cursor:pointer;display:grid;place-items:center}
+.circ-n svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stepper .lbl{min-width:60px;text-align:center}
+
+/* tables, lists, picks */
+.lede{margin:0 auto 20px;max-width:64ch;color:var(--ink-2);line-height:1.55;text-align:center}
+.tbl{overflow-x:auto;border-radius:22px;background:var(--fill)}
+.tbl table{width:100%;min-width:760px;border-collapse:collapse;font-size:14px;line-height:1.45}
+.tbl th{text-align:left;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:16px 16px 10px}
+.tbl td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:700;white-space:nowrap}
+.st-fx,.st-ask,.st-ok{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;white-space:nowrap;text-transform:uppercase}
+.st-fx{color:var(--signal)}.st-ask{color:var(--ask)}.st-ok{color:var(--pass)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;padding-top:20px}
+.out div{padding:18px;border-radius:22px;background:var(--fill);display:grid;gap:6px;align-content:start}
+.out b{font-size:15.5px}
+.out p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.5}
+.out a{color:var(--ink);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.picks{margin-top:80px;padding:28px;border-radius:28px;background:var(--fill);display:grid;gap:14px}
+.picks h2{margin:0;font-family:var(--serif);font-weight:300;font-size:40px;letter-spacing:-.02em}
+.picks p{margin:0;color:var(--ink-2)}
+.picks pre{margin:0;white-space:pre-wrap;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--ink-2);background:#fff;border-radius:16px;padding:16px;max-height:320px;overflow:auto}
+.picks__row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn-ink{appearance:none;border:0;height:44px;padding:0 20px;border-radius:999px;background:var(--ink);color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.btn-ink:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+footer{margin-top:48px;text-align:center;color:var(--ink-3);font-size:13px}
+
+/* ════ PHONE ════ */
+.phone{width:372px;max-width:100%;padding:10px;border-radius:58px;background:#f1f1f2;box-shadow:inset 0 0 0 1px #dcdcdf,0 1px 0 #fff,0 30px 60px -30px rgba(0,0,0,.25)}
+.screen{
+  --s-bg:#0c0d10; --s-ink:#f2f3f5; --s-ink2:#a6abb5; --s-ink3:#6f7581; --s-card:#17191f; --s-card2:#21242c; --s-line:#262932;
+  --s-primary:#3466e0; --s-on-primary:#fff; --s-gold:#e9b949; --s-red:#ff5148; --s-pass:#3dbe7a; --s-strava:#fc4c02;
+  --s-font:var(--sans); --s-r-card:22px; --s-r-ctl:999px; --s-ctl-h:52px;
+  position:relative;height:760px;overflow:hidden;border-radius:48px;background:var(--s-bg);color:var(--s-ink);font-family:var(--s-font);display:flex;flex-direction:column;isolation:isolate
+}
+.pane{position:absolute;inset:0;display:flex;flex-direction:column}
+.pane[hidden]{display:none}
+.sb{height:50px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:600;position:relative;z-index:6}
+.sb::after{content:"";position:absolute;left:50%;top:11px;width:112px;height:32px;margin-left:-56px;border-radius:20px;background:#000}
+.sb i{display:flex;gap:5px;align-items:center;font-style:normal}
+.sb i::before{content:"";width:17px;height:10px;border-radius:2px;background:currentColor;opacity:.9}
+.sb i::after{content:"";width:24px;height:11px;border-radius:3px;box-shadow:inset 0 0 0 1.2px currentColor,inset -7px 0 0 1.2px var(--s-bg);background:currentColor}
+.bd{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px;padding:4px 18px 18px;position:relative;overflow:hidden}
+.bd > *{flex-shrink:0}
+.grow{flex:1 1 auto}
+.ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.nh{display:flex;align-items:center;justify-content:space-between;min-height:44px;gap:10px}
+.nh__t{margin:0;font-size:24px;font-weight:700;letter-spacing:-.02em}
+.circ{width:38px;height:38px;border-radius:50%;background:var(--s-card);display:grid;place-items:center;flex:none}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;flex:none}
+.av--a{background:#d9c7b0;color:#3b2a16}.av--b{background:#b8d4c4;color:#123522}.av--c{background:#c9c5e8;color:#241f52}.av--d{background:#e8c5c5;color:#521f1f}.av--me{background:var(--s-gold);color:#1a1405}
+.av--lg{width:64px;height:64px;font-size:20px}
+.xl{margin:0;font-size:34px;line-height:1.02;font-weight:700;letter-spacing:-.03em;text-wrap:balance}
+.sub{margin:0;color:var(--s-ink2);font-size:14.5px;line-height:1.45}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--s-ink3)}
+.gold{color:var(--s-gold)}
+.b{appearance:none;border:0;height:var(--s-ctl-h);padding:0 22px;border-radius:var(--s-r-ctl);font-size:15.5px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:9px;white-space:nowrap;cursor:default}
+.b--primary{background:var(--s-primary);color:var(--s-on-primary)}
+.b--light{background:#fff;color:#0b0b0c}
+.b--tonal{background:var(--s-card2);color:var(--s-ink)}
+.b--strava{background:var(--s-strava);color:#fff}
+.b--danger{background:transparent;color:var(--s-red);box-shadow:inset 0 0 0 1px var(--s-line)}
+.b--block{width:100%}
+.b--sm{height:38px;padding:0 14px;font-size:13.5px}
+.lnk{color:var(--s-ink2);font-size:14.5px;font-weight:500;align-self:center;padding:4px}
+.card{background:var(--s-card);border-radius:var(--s-r-card);padding:16px;display:grid;gap:10px}
+.list{background:var(--s-card);border-radius:var(--s-r-card);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;min-height:58px;padding:10px 16px;position:relative}
+.row + .row::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--s-line)}
+.row__b{flex:1;min-width:0}
+.row__t{display:block;font-size:15px;font-weight:600}
+.row__s{display:block;font-size:12.5px;color:var(--s-ink3);margin-top:1px}
+.tag{font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:999px;background:var(--s-card2);color:var(--s-ink2);white-space:nowrap}
+.tag--ok{color:var(--s-pass)}.tag--off{color:var(--s-red)}.tag--gold{color:var(--s-gold)}
+.field{height:52px;border-radius:16px;background:var(--s-card);box-shadow:inset 0 0 0 1px var(--s-line);display:flex;align-items:center;padding:0 16px;color:var(--s-ink3);font-size:15px;gap:10px}
+.field--on{box-shadow:inset 0 0 0 1.5px var(--s-ink);color:var(--s-ink)}
+.otp{display:flex;gap:8px}
+.otp span{flex:1;height:56px;border-radius:14px;background:var(--s-card);display:grid;place-items:center;font-size:22px;font-weight:700}
+.otp span.on{box-shadow:inset 0 0 0 1.5px var(--s-ink)}
+.or{display:flex;align-items:center;gap:10px;color:var(--s-ink3);font-size:12.5px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--s-line)}
+.mark8{width:40px;height:48px}
+.hero-p3{border-radius:24px;background:#16181d;padding:16px;display:grid;gap:14px;position:relative;overflow:hidden}
+.hero-p3 > *{position:relative}
+.p3{font-weight:800;font-size:28px;letter-spacing:-.03em;font-style:italic}
+.count{display:flex;align-items:baseline;gap:14px;font-variant-numeric:tabular-nums}
+.count b{font-size:34px;letter-spacing:-.03em}
+.count span{display:grid;font-size:16px;font-weight:700;text-align:center}
+.count small{font-size:9.5px;color:var(--s-ink3);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+.meter{height:5px;border-radius:5px;background:var(--s-card2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--s-gold);border-radius:5px}
+.goal{display:flex;align-items:center;gap:12px}
+.goal__ic{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;flex:none}
+.ic-run{background:#2a3566;color:#aebdff}.ic-rec{background:#1f3b2e;color:#8fe0b4}.ic-str{background:#3b2a52;color:#d3b8ff}
+.goal__t{font-size:16px;font-weight:700}
+.goal__s{font-size:12.5px;color:var(--s-ink3)}
+.check{width:24px;height:24px;border-radius:50%;background:var(--s-pass);display:grid;place-items:center;color:#06210f;margin-left:auto}
+.ring{width:24px;height:24px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--s-line);margin-left:auto}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kv div{display:grid;gap:2px}
+.kv small{font-size:11.5px;color:var(--s-ink3)}
+.kv b{font-size:15px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.week div{display:grid;gap:3px;padding:6px 0;border-radius:12px;font-size:11px;color:var(--s-ink3)}
+.week b{font-size:14px;color:var(--s-ink)}
+.week .on{background:var(--s-card2)}
+.week i{display:flex;gap:2px;justify-content:center;height:5px}
+.week i::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--d,transparent);box-shadow:inset 0 0 0 1px var(--s-ink3)}
+.tabs{flex:none;height:82px;padding:8px 10px 22px;display:flex;border-top:1px solid var(--s-line);background:var(--s-bg);position:relative;z-index:5}
+.tab{flex:1;display:grid;place-items:center;align-content:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--s-ink3)}
+.tab .ico{width:22px;height:22px}
+.tab.on{color:var(--s-gold)}
+.seg{display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--s-card)}
+.seg span{flex:1;text-align:center;font-size:13px;font-weight:600;padding:8px 0;border-radius:999px;color:var(--s-ink3)}
+.seg .on{background:var(--s-ink);color:#0b0b0c}
+.lb{display:grid;gap:6px}
+.lb div{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:14px;background:var(--s-card);font-size:14px}
+.lb .n{width:18px;font-weight:700;color:var(--s-ink3);font-variant-numeric:tabular-nums}
+.lb .p{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums}
+.lb .me{background:var(--s-card2);box-shadow:inset 0 0 0 1.5px var(--s-gold)}
+.lb .first{background:var(--s-gold);color:#1a1405}.lb .first .n{color:#1a1405}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--s-card);border-radius:30px 30px 0 0;padding:10px 18px 28px;display:grid;gap:12px;z-index:8}
+.sheet::before{content:"";width:40px;height:5px;border-radius:5px;background:var(--s-line);justify-self:center}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:7}
+.sheet__h{display:flex;justify-content:space-between;align-items:center}
+.sheet__h b{font-size:20px;letter-spacing:-.02em}
+.share{border-radius:20px;background:#eceef2;color:#0b0b0c;padding:16px;display:grid;gap:4px;aspect-ratio:4/5}
+.share .big{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.bars{display:grid;gap:5px}
+.bars div{height:26px;border-radius:7px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:12px;font-weight:700;color:#0b0b0c}
+.bub{max-width:78%;padding:10px 13px;border-radius:18px;font-size:14.5px;line-height:1.4}
+.bub--me{align-self:flex-end;background:var(--s-primary);color:#fff;border-bottom-right-radius:6px}
+.bub--them{align-self:flex-start;background:var(--s-card);border-bottom-left-radius:6px}
+.ctx{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:8px 10px;border-radius:12px;background:var(--s-card2);color:var(--s-gold)}
+.compose{display:flex;align-items:center;gap:10px;height:48px;border-radius:999px;background:var(--s-card);padding:0 8px 0 16px;color:var(--s-ink3);font-size:14.5px}
+.compose .send{margin-left:auto;width:34px;height:34px;border-radius:50%;background:var(--s-primary);display:grid;place-items:center;color:#fff}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slots span{height:42px;border-radius:12px;background:var(--s-card);display:grid;place-items:center;font-size:13.5px;font-weight:600}
+.slots .on{background:var(--s-ink);color:#0b0b0c}
+.slots .off{color:var(--s-ink3);text-decoration:line-through}
+.days{display:flex;gap:6px}
+.days span{flex:1;display:grid;gap:2px;text-align:center;padding:8px 0;border-radius:14px;background:var(--s-card);font-size:11px;color:var(--s-ink3)}
+.days b{font-size:15px;color:var(--s-ink)}
+.days .on{background:var(--s-ink)}.days .on b,.days .on{color:#0b0b0c}
+.tile{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-weight:800;font-size:15px;flex:none}
+.t-strava{background:var(--s-strava);color:#fff}.t-uh{background:#f2f3f5;color:#0b0b0c}.t-garmin{background:#111;color:#fff;box-shadow:inset 0 0 0 1px var(--s-line)}.t-none{background:var(--s-card2);color:var(--s-ink2)}
+.medal{width:86px;height:86px;border-radius:50%;background:#1f2128;box-shadow:inset 0 0 0 3px var(--s-gold);display:grid;place-items:center;text-align:center;font-size:10.5px;font-weight:700;line-height:1.1;color:var(--s-gold)}
+.medal--sm{width:62px;height:62px;font-size:9px}
+.tog{width:46px;height:28px;border-radius:999px;background:var(--s-card2);position:relative;flex:none}
+.tog::before{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff}
+.tog.on{background:var(--s-pass)}.tog.on::before{left:21px}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat div{background:var(--s-card);border-radius:16px;padding:12px;display:grid;gap:2px}
+.stat b{font-size:20px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat small{font-size:11px;color:var(--s-ink3)}
+.exp{display:flex;gap:12px;align-items:center}
+.exp__img{width:62px;height:62px;border-radius:14px;background:#22252d;display:grid;place-items:center;font-size:9px;font-weight:800;letter-spacing:.06em;color:#fff;flex:none;text-align:center;line-height:1.1}
+.ph{border:1.5px dashed var(--s-ink3);border-radius:18px;display:grid;place-items:center;text-align:center;padding:16px;color:var(--s-ink3);font-size:13px;line-height:1.4}
+
+/* skins */
+.pg[data-skin="ios"] .phone{border-radius:60px}
+.pg[data-skin="ios"] .screen{border-radius:50px;--s-card:#1c1d22;--s-card2:#2a2b31}
+.pg[data-skin="ios"] .tabs{position:absolute;left:14px;right:14px;bottom:22px;height:62px;padding:4px;border:0;border-radius:31px;background:rgba(40,41,46,.82);-webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.4)}
+.pg[data-skin="ios"] .tab{border-radius:27px}
+.pg[data-skin="ios"] .tab.on{background:rgba(255,255,255,.1)}
+.pg[data-skin="ios"] .pane:has(.tabs) .bd{padding-bottom:96px}
+.pg[data-skin="ios"] .b--primary{box-shadow:inset 0 1.5px 0 rgba(255,255,255,.28)}
+.pg[data-skin="ios"] .sheet{border-radius:38px 38px 0 0;background:rgba(32,33,38,.92);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+.pg[data-skin="android"] .screen{--s-font:"Roboto Flex",system-ui,sans-serif;--s-r-card:24px;--s-r-ctl:20px;--s-ctl-h:48px;border-radius:36px;--s-card:#1b1c21;--s-card2:#2a2c34;--s-primary:#4a78f0}
+.pg[data-skin="android"] .phone{border-radius:46px}
+.pg[data-skin="android"] .sb::after{width:12px;height:12px;margin-left:-6px;top:19px;border-radius:50%}
+.pg[data-skin="android"] .tabs{height:80px;padding:12px 8px 16px;border-top:0;background:#16171b}
+.pg[data-skin="android"] .tab.on{color:var(--s-ink)}
+.pg[data-skin="android"] .tab.on .ico{background:#3a3d48;border-radius:16px;width:56px;height:30px;padding:4px 16px;box-sizing:border-box}
+.pg[data-skin="android"] .seg{border-radius:20px}.pg[data-skin="android"] .seg span{border-radius:16px}
+.pg[data-skin="android"] .sheet{border-radius:28px 28px 0 0}
+@media (prefers-reduced-motion:no-preference){.pane{animation:in .25s var(--ease)}@keyframes in{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-prog" viewBox="0 0 24 24"><path d="M5 20V12M12 20V5M19 20v-9"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 20h8"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.8"/><path d="m9 20 3-6 3 2v5M7 11l3-3 4 1 3 3 3-1M12 14l-2-4"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7"/></symbol>
+  <symbol id="i-dumb" viewBox="0 0 24 24"><path d="M6 8v8M3 10v4M18 8v8M21 10v4M6 12h12"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="3"/><circle cx="12" cy="13.5" r="3.5"/><path d="M9 7l1.5-3h3L15 7"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  <symbol id="i-p8" viewBox="0 0 40 48"><path d="M12 2h18a8 8 0 0 1 8 8v8l-6 6 6 6v8a8 8 0 0 1-8 8H10a8 8 0 0 1-8-8v-8l6-6-6-6v-8a8 8 0 0 1 8-8zm2 9v9h12v-9zm0 17v9h12v-9z" fill="currentColor" stroke="none" fill-rule="evenodd"/></symbol>
+</svg>
+
+<div class="pg" data-skin="p8" id="pg">
+
+<header class="top">
+  <span class="wm"><svg class="wm__8"><use href="#i-p8"/></svg>Athlete OS <i>·</i> by peakst8</span>
+  <span class="lbl">Screen PRD · 27 Oct 2026</span>
+</header>
+
+<section class="hero">
+  <span class="hand">tap the pills :)</span>
+  <h1>Athlete OS, screen by screen.</h1>
+  <p>The app that keeps a cohort engaged while it gears up for an event. A brand, club or race organiser brings the cohort; Athlete OS coaches them, tracks every session, scores the week and builds to race day. Seven journeys, each one phone. Step through its screens with the pills; the brief for that screen sits beside it. Mark each screen Approve or Change, then paste your picks back.</p>
+  <div class="facts"><span>One cohort, one event</span><span>8–16 week build-up</span><span>Coach + tracker + leaderboard</span><span>Brand, club or organiser</span></div>
+  <div class="tally"><span><b id="tOk">0</b> approved</span><span><b id="tCh">0</b> to change</span><span><b id="tLeft">0</b> to decide</span></div>
+</section>
+
+<nav class="dock" role="group" aria-label="Phone skin">
+  <button type="button" data-skin="p8" aria-pressed="true">peakst8</button>
+  <button type="button" data-skin="ios" aria-pressed="false">iOS 26</button>
+  <button type="button" data-skin="android" aria-pressed="false">Android</button>
+</nav>
+
+<!-- ═════════ 01 REGISTER ═════════ -->
+<div class="stage" id="register"><span class="lbl">Journey 01</span><h2>Register</h2><p>Splash, sign-in and invite code become one screen. Only the selected squad gets past it.</p></div>
+<section class="spec" data-spec="register">
+  <div>
+  <div class="phone"><div class="screen">
+    <div class="pane" data-p="r1">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="grow" style="max-height:40px"></div>
+        <svg class="mark8"><use href="#i-p8"/></svg>
+        <span class="eyebrow gold">Partner programme</span>
+        <p class="xl">Your journey<br>starts here.</p>
+        <p class="sub">Selected squad only. Sign in with the email you applied with.</p>
+        <div class="grow"></div>
+        <span class="b b--light b--block"> Continue with Apple</span>
+        <span class="b b--tonal b--block">Continue with Google</span>
+        <div class="or">or</div>
+        <div class="field">Email you applied with</div>
+        <span class="b b--primary b--block">Continue</span>
+        <span class="lnk">Have an invite code instead?</span>
+      </div>
+    </div>
+    <div class="pane" data-p="r2" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span></div>
+        <p class="xl" style="font-size:30px">Check your email</p>
+        <p class="sub">We sent a 6-digit code to <b style="color:var(--s-ink)">aarav@example.com</b>.</p>
+        <div class="otp"><span>4</span><span>8</span><span>1</span><span class="on">2</span><span></span><span></span></div>
+        <span class="lnk">Resend in 0:24</span>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Verify</span>
+      </div>
+    </div>
+    <div class="pane" data-p="r3" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span></div>
+        <p class="xl" style="font-size:30px">Enter your invite code</p>
+        <p class="sub">It's in your selection email and WhatsApp.</p>
+        <div class="field field--on" style="letter-spacing:.3em;font-weight:700">SQ-7Q4K</div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Join the programme</span>
+      </div>
+    </div>
+    <div class="pane" data-p="r4" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="grow"></div>
+        <svg class="mark8"><use href="#i-p8"/></svg>
+        <p class="xl" style="font-size:30px">You're on the list.</p>
+        <p class="sub">This email isn't in the squad. If you applied, your result is in your inbox. You can still join peakst8 events.</p>
+        <div class="grow"></div>
+        <span class="b b--tonal b--block">Explore peakst8 events</span>
+        <span class="lnk">Try a different email</span>
+      </div>
+    </div>
+  </div></div>
+  <div class="stepper"><button class="circ-n" type="button" data-step="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span class="lbl" data-count></span><button class="circ-n" type="button" data-step="1" aria-label="Next screen"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  </div>
+  <div class="notes">
+    <div class="notes__where"><span class="lbl">01 · Register</span><h3>One door, three ways in</h3></div>
+    <div class="pills" role="tablist" aria-label="Register screens">
+      <button class="pill" role="tab" type="button" data-p="r1" aria-selected="true">Register</button>
+      <button class="pill" role="tab" type="button" data-p="r2" aria-selected="false">Email code</button>
+      <button class="pill" role="tab" type="button" data-p="r3" aria-selected="false">Invite code</button>
+      <button class="pill" role="tab" type="button" data-p="r4" aria-selected="false">Not selected</button>
+    </div>
+    <div class="part" data-p="r1" data-id="01a" data-name="Register">
+      <div class="part__name"><strong>Register</strong></div>
+      <p class="part__job">Welcome and sign-in on one screen. The partner's brand moment and the door into the app share it.</p>
+      <ul><li>Apple, Google or email sign-in</li><li>Account is matched to the application by <b>email</b></li><li>Match found → Onboarding. No match → Not selected</li></ul>
+      <p class="part__plat"><b>States</b> · default · signing in · no network</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="r2" data-id="01b" data-name="Email code" hidden>
+      <div class="part__name"><strong>Email code</strong></div>
+      <p class="part__job">Only for email sign-in. Six digits, auto-fill from the mail app.</p>
+      <ul><li>Resend after 30 s</li><li>Wrong code shows inline, never clears what was typed</li></ul>
+      <p class="part__plat"><b>States</b> · typing · wrong code · expired · verified</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="r3" data-id="01c" data-name="Invite code" hidden>
+      <div class="part__name"><strong>Invite code</strong></div>
+      <p class="part__job">Fallback when the sign-in email doesn't match an application. Becomes a link from Register, not its own step.</p>
+      <ul><li>One code per selected athlete, sent with the selection message</li><li>Code links this account to the application</li></ul>
+      <p class="part__plat"><b>States</b> · invalid · already used · success</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="r4" data-id="01d" data-name="Not selected" hidden>
+      <div class="part__name"><strong>Not selected</strong></div>
+      <p class="part__job">What every applicant outside the squad sees if they download the app.</p>
+      <ul><li>Kind, short, no dead end</li><li>Links to other peakst8 events</li></ul>
+      <div class="part__vote"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 02 ONBOARDING ═════════ -->
+<div class="stage" id="onboarding"><span class="lbl">Journey 02</span><h2>Onboarding</h2><p>Two minutes from signed-in to Home: a face, permissions, your best races, your coach.</p></div>
+<section class="spec" data-spec="onboarding">
+  <div>
+  <div class="phone"><div class="screen">
+    <div class="pane" data-p="o1">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div style="display:flex;gap:4px"><i style="flex:1;height:4px;border-radius:4px;background:var(--s-ink)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-card2)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-card2)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-card2)"></i></div>
+        <p class="xl" style="font-size:30px">Put a face to your name.</p>
+        <p class="sub">Your photo shows on the leaderboard, to your coach and to your crew.</p>
+        <div class="grow"></div>
+        <div style="display:grid;place-items:center"><span class="av av--me" style="width:150px;height:150px;font-size:44px">AS</span></div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block"><svg class="ico"><use href="#i-cam"/></svg>Take photo</span>
+        <span class="b b--tonal b--block">Choose from photos</span>
+        <span class="lnk">Later</span>
+      </div>
+    </div>
+    <div class="pane" data-p="o2" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div style="display:flex;gap:4px"><i style="flex:1;height:4px;border-radius:4px;background:var(--s-ink)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-ink)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-card2)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-card2)"></i></div>
+        <p class="xl" style="font-size:30px">Two things we need.</p>
+        <div class="list">
+          <div class="row"><span class="goal__ic ic-run"><svg class="ico"><use href="#i-bell"/></svg></span><div class="row__b"><span class="row__t">Notifications</span><span class="row__s">Coach messages, new challenges, your daily card</span></div><span class="tog on"></span></div>
+          <div class="row"><span class="goal__ic ic-rec"><svg class="ico"><use href="#i-pulse"/></svg></span><div class="row__b"><span class="row__t">Activity</span><span class="row__s">So runs count even before your watch syncs</span></div><span class="tog"></span></div>
+        </div>
+        <p class="sub" style="font-size:13px">You can change these any time in Profile.</p>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Continue</span>
+      </div>
+    </div>
+    <div class="pane" data-p="o3" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd" style="text-align:center;align-items:center">
+        <span class="eyebrow">Your top 3</span>
+        <p class="xl" style="font-size:30px">Every finish has a story.</p>
+        <div class="medal" style="width:120px;height:120px;font-size:13px">IRONMAN<br>70.3<br>GOA</div>
+        <div><b style="font-size:26px" class="gold">2h 22m</b><div class="sub">Ironman 70.3 · Goa · Nov ’25</div></div>
+        <div style="display:flex;gap:16px"><div style="display:grid;gap:4px;justify-items:center"><span class="medal medal--sm">HYROX<br>BLR</span><b style="font-size:14px">1h 42m</b></div><div style="display:grid;gap:4px;justify-items:center"><span class="medal medal--sm">TMM<br>FULL</span><b style="font-size:14px">3h 02m</b></div></div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block"><svg class="ico"><use href="#i-share"/></svg>Share</span>
+        <span class="lnk">Not now</span>
+      </div>
+    </div>
+    <div class="pane" data-p="o4" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <span class="eyebrow">Meet your head coach</span>
+        <div style="display:flex;gap:14px;align-items:center"><span class="av av--a av--lg">KK</span><div><b style="font-size:22px;letter-spacing:-.02em">Krishna Kohli</b><div class="sub">Head coach · Bengaluru</div></div></div>
+        <div class="stat"><div><b>26</b><small>Marathons</small></div><div><b>100+</b><small>Athletes</small></div><div><b>3:57</b><small>Marathon PB</small></div></div>
+        <div class="card"><span class="eyebrow">Your performance team</span>
+          <div style="display:flex;gap:10px;align-items:center"><span class="av av--b">DR</span><div class="row__b"><span class="row__t">Deepak Raj</span><span class="row__s">Run coach</span></div></div>
+          <div style="display:flex;gap:10px;align-items:center"><span class="av av--c">NS</span><div class="row__b"><span class="row__t">Dr. Nandini Sharma</span><span class="row__s">Nutritionist</span></div></div>
+        </div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Continue to the programme</span>
+      </div>
+    </div>
+  </div></div>
+  <div class="stepper"><button class="circ-n" type="button" data-step="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span class="lbl" data-count></span><button class="circ-n" type="button" data-step="1" aria-label="Next screen"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  </div>
+  <div class="notes">
+    <div class="notes__where"><span class="lbl">02 · Onboarding</span><h3>A face, two permissions, a coach</h3></div>
+    <div class="pills" role="tablist" aria-label="Onboarding screens">
+      <button class="pill" role="tab" type="button" data-p="o1" aria-selected="true">Photo</button>
+      <button class="pill" role="tab" type="button" data-p="o2" aria-selected="false">Permissions</button>
+      <button class="pill" role="tab" type="button" data-p="o3" aria-selected="false">Top 3</button>
+      <button class="pill" role="tab" type="button" data-p="o4" aria-selected="false">Meet your coach</button>
+    </div>
+    <div class="part" data-p="o1" data-id="02a" data-name="Photo">
+      <div class="part__name"><strong>Profile photo</strong></div>
+      <p class="part__job">The photo travels to the leaderboard, the coach and the crew.</p>
+      <ul><li>Camera or library, square crop</li><li><b>Later</b> is always available</li></ul>
+      <p class="part__plat"><b>States</b> · empty · uploading · failed · done</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="o2" data-id="02b" data-name="Permissions" hidden>
+      <div class="part__name"><strong>Permissions</strong></div>
+      <p class="part__job">Says why before the system asks. Every coach message, challenge and report alert depends on it.</p>
+      <ul><li>Each toggle triggers its own system prompt</li><li>Deny still continues; Profile can turn them on later</li><li>Target: 80% push opt-in</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="o3" data-id="02c" data-name="Top 3" hidden>
+      <div class="part__name"><strong>Your top 3</strong></div>
+      <p class="part__job">A proud moment before training starts: the athlete's best finishes, ready to share.</p>
+      <ul><li>Featured finish + up to two more</li><li>Share or Not now</li></ul>
+      <p class="part__plat"><b>States</b> · 1 finish · 3 finishes · no finishes (skip the screen)</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="o4" data-id="02d" data-name="Meet your coach" hidden>
+      <div class="part__name"><strong>Meet your coach</strong></div>
+      <p class="part__job">The last onboarding screen. Introduces the lead coach and the rest of the team, then Home.</p>
+      <ul><li>Name, role, city, three numbers</li><li>The other two team members underneath</li></ul>
+      <div class="part__vote"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 03 TODAY ═════════ -->
+<div class="stage" id="today"><span class="lbl">Journey 03</span><h2>Today</h2><p>Home answers one question: what do I do today? Goals complete themselves when the run syncs.</p></div>
+<section class="spec" data-spec="today">
+  <div>
+  <div class="phone"><div class="screen">
+    <div class="pane" data-p="t1">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><svg style="width:20px;height:24px"><use href="#i-p8"/></svg><span style="display:flex;gap:6px"><span class="tag tag--ok">● Strava</span><span class="tag tag--ok">● UH</span></span><span class="av av--me" style="width:30px;height:30px;font-size:11px">AS</span></div>
+        <div class="hero-p3"><span class="p3">PROGRAMME</span><div style="display:flex;justify-content:space-between;align-items:end"><div><span class="eyebrow">Week 1 of 12</span><div class="count"><b>82</b><span>days<small>to race day</small></span></div></div><span class="tag tag--gold">Rank #7</span></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px">Today's goals</b><span class="sub" style="font-size:12.5px">1 of 2 done</span></div>
+        <div class="card" style="gap:12px">
+          <div class="goal"><span class="goal__ic ic-run"><svg class="ico"><use href="#i-run"/></svg></span><div><div class="goal__t">Run · 6 km</div><div class="goal__s">Easy · Zone 2 · 6:10 /km</div></div><span class="check"><svg class="ico" style="width:14px"><use href="#i-check"/></svg></span></div>
+          <div class="goal"><span class="goal__ic ic-rec"><svg class="ico"><use href="#i-leaf"/></svg></span><div><div class="goal__t">Recovery · 10 min</div><div class="goal__s">Mobility or yoga</div></div><span class="ring"></span></div>
+        </div>
+        <b style="font-size:17px">Coming up</b>
+        <div class="card"><div class="exp"><span class="exp__img">GROUP<br>RUN</span><div><div class="goal__t">Saturday group run</div><div class="goal__s">Sat 25 Oct · 6:00 AM · Mumbai</div></div></div></div>
+      </div>
+      <div class="tabs"><span class="tab on"><svg class="ico"><use href="#i-home"/></svg>Home</span><span class="tab"><svg class="ico"><use href="#i-trophy"/></svg>Programme</span><span class="tab"><svg class="ico"><use href="#i-disc"/></svg>Discover</span><span class="tab"><svg class="ico"><use href="#i-prog"/></svg>Progress</span></div>
+    </div>
+    <div class="pane" data-p="t2" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd" style="opacity:.35"><div class="hero-p3" style="height:200px"></div><div class="card" style="height:140px"></div></div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="sheet__h"><b>Run · 6 km</b><span class="circ"><svg class="ico"><use href="#i-x"/></svg></span></div>
+        <p class="sub" style="margin-top:-6px">Easy run · Zone 2 · 6:10 /km</p>
+        <div class="list">
+          <div class="row"><div class="row__b"><span class="row__t">Warm-up</span><span class="row__s">Brisk walk or light jog</span></div><span class="tag">5 min</span></div>
+          <div class="row"><div class="row__b"><span class="row__t">Run</span><span class="row__s">Conversational. If you're puffing, slow down.</span></div><span class="tag">35 min</span></div>
+          <div class="row"><div class="row__b"><span class="row__t">Post-run stretches</span><span class="row__s">Watch the video</span></div><span class="tag">6 min</span></div>
+        </div>
+        <span class="lnk" style="font-size:13px">Run didn't sync? Add it manually</span>
+        <span class="b b--primary b--block">Got it</span>
+      </div>
+    </div>
+    <div class="pane" data-p="t3" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd" style="opacity:.35"><div class="hero-p3" style="height:200px"></div></div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="sheet__h"><b>Goal complete.</b><span class="circ"><svg class="ico"><use href="#i-x"/></svg></span></div>
+        <div class="share"><div style="display:flex;justify-content:space-between"><svg style="width:16px;height:20px;color:#0b0b0c"><use href="#i-p8"/></svg><b style="font-size:11px;font-style:italic">PROGRAMME</b></div><div class="grow"></div><span style="font-size:13px;font-weight:700;color:#55565b">6 KM</span><span class="big">DONE IN 36:58</span><span style="font-size:12px;display:flex;justify-content:space-between"><span>6:10 /km</span><span>Zone 2</span></span></div>
+        <span class="b b--tonal b--block"><svg class="ico"><use href="#i-cam"/></svg>Add your photo</span>
+        <span class="b b--primary b--block"><svg class="ico"><use href="#i-share"/></svg>Share</span>
+      </div>
+    </div>
+    <div class="pane" data-p="t4" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span class="eyebrow">Sun 2 Nov</span><span style="width:38px"></span></div>
+        <span class="eyebrow gold">Week 1 · report</span>
+        <p class="xl" style="font-size:30px">6 of 7 goals.<br>A week to build on.</p>
+        <div class="share" style="aspect-ratio:auto">
+          <div class="bars"><div style="background:#7fd1a8;width:100%">42 km<span>Run</span></div><div style="background:#a9b9f5;width:62%">3<span>Recovery</span></div><div style="background:#e9c46a;width:40%">1<span>Strength</span></div><div style="background:#f2a39d;width:40%">1<span>Challenge</span></div></div>
+          <span style="font-size:13px;margin-top:8px"><b>Rank #7</b> of 50 · up 3</span>
+        </div>
+        <div class="card"><span class="eyebrow">Coach note</span><span class="sub" style="color:var(--s-ink)">Strong week. Keep Tuesday easy before Thursday's benchmark.</span></div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block"><svg class="ico"><use href="#i-share"/></svg>Share my week</span>
+      </div>
+    </div>
+    <div class="pane" data-p="t5" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><p class="nh__t">Discover</p></div>
+        <div class="seg"><span class="on">Upcoming · 6</span><span>Past</span></div>
+        <div style="display:flex;gap:6px"><span class="tag" style="background:var(--s-ink);color:#0b0b0c">All cities</span><span class="tag">Mumbai</span><span class="tag">Bengaluru</span><span class="tag">Delhi</span></div>
+        <div class="card"><div class="exp"><span class="exp__img">GROUP<br>RUN</span><div><div class="goal__s">Partner original · Run</div><div class="goal__t">Group run</div><div class="goal__s"><svg class="ico" style="width:12px;height:12px;vertical-align:-1px"><use href="#i-pin"/></svg> Mumbai · Sat 25 Oct</div></div></div></div>
+        <div class="card"><div class="exp"><span class="exp__img">BENCH<br>MARK</span><div><div class="goal__s">Programme · Benchmark</div><div class="goal__t">5 km time trial</div><div class="goal__s"><svg class="ico" style="width:12px;height:12px;vertical-align:-1px"><use href="#i-pin"/></svg> All cities · Thu 6 Nov</div></div></div></div>
+        <div class="card"><div class="exp"><span class="exp__img">CLINIC</span><div><div class="goal__s">Coach clinic</div><div class="goal__t">Race fuelling</div><div class="goal__s"><svg class="ico" style="width:12px;height:12px;vertical-align:-1px"><use href="#i-pin"/></svg> Bengaluru · Sat 15 Nov</div></div></div></div>
+      </div>
+      <div class="tabs"><span class="tab"><svg class="ico"><use href="#i-home"/></svg>Home</span><span class="tab"><svg class="ico"><use href="#i-trophy"/></svg>Programme</span><span class="tab on"><svg class="ico"><use href="#i-disc"/></svg>Discover</span><span class="tab"><svg class="ico"><use href="#i-prog"/></svg>Progress</span></div>
+    </div>
+    <div class="pane" data-p="t6" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><p class="nh__t">Progress</p><span class="eyebrow">Week 1</span></div>
+        <div class="week"><div><span>M</span><b>27</b><i style="--d:var(--s-pass)"></i></div><div><span>T</span><b>28</b><i style="--d:var(--s-pass)"></i></div><div><span>W</span><b>29</b><i></i></div><div class="on"><span>T</span><b>30</b><i style="--d:var(--s-gold)"></i></div><div><span>F</span><b>31</b><i></i></div><div><span>S</span><b>1</b><i></i></div><div><span>S</span><b>2</b><i></i></div></div>
+        <div style="text-align:center;padding-block:10px"><b style="font-size:64px;letter-spacing:-.04em;line-height:1">1/2</b><div class="sub">goals done today</div></div>
+        <div class="list">
+          <div class="row"><span class="goal__ic ic-run"><svg class="ico"><use href="#i-run"/></svg></span><div class="row__b"><span class="row__t">Run · 6.2 km</span><span class="row__s">36:58 · from Strava</span></div><span class="tag tag--ok">Done</span></div>
+          <div class="row"><span class="goal__ic ic-rec"><svg class="ico"><use href="#i-leaf"/></svg></span><div class="row__b"><span class="row__t">Recovery · 10 min</span><span class="row__s">Not yet</span></div><span class="tag">Open</span></div>
+          <div class="row"><span class="goal__ic ic-str"><svg class="ico"><use href="#i-dumb"/></svg></span><div class="row__b"><span class="row__t">Cycling · 18 km</span><span class="row__s">Other activity · doesn't count</span></div></div>
+        </div>
+        <div class="card" style="grid-template-columns:1fr auto;align-items:center"><div><b>You're primed.</b><div class="sub" style="font-size:13px">Sleep 7h 40m · HRV up · from Ultrahuman</div></div><span class="tag tag--ok">84</span></div>
+      </div>
+      <div class="tabs"><span class="tab"><svg class="ico"><use href="#i-home"/></svg>Home</span><span class="tab"><svg class="ico"><use href="#i-trophy"/></svg>Programme</span><span class="tab"><svg class="ico"><use href="#i-disc"/></svg>Discover</span><span class="tab on"><svg class="ico"><use href="#i-prog"/></svg>Progress</span></div>
+    </div>
+  </div></div>
+  <div class="stepper"><button class="circ-n" type="button" data-step="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span class="lbl" data-count></span><button class="circ-n" type="button" data-step="1" aria-label="Next screen"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  </div>
+  <div class="notes">
+    <div class="notes__where"><span class="lbl">03 · Today</span><h3>The daily loop</h3></div>
+    <div class="pills" role="tablist" aria-label="Today screens">
+      <button class="pill" role="tab" type="button" data-p="t1" aria-selected="true">Home</button>
+      <button class="pill" role="tab" type="button" data-p="t2" aria-selected="false">Goal detail</button>
+      <button class="pill" role="tab" type="button" data-p="t3" aria-selected="false">Goal complete</button>
+      <button class="pill" role="tab" type="button" data-p="t4" aria-selected="false">Sunday report</button>
+      <button class="pill" role="tab" type="button" data-p="t5" aria-selected="false">Discover</button>
+      <button class="pill" role="tab" type="button" data-p="t6" aria-selected="false">Progress</button>
+    </div>
+    <div class="part" data-p="t1" data-id="03a" data-name="Home">
+      <div class="part__name"><strong>Home</strong></div>
+      <p class="part__job">Programme hero, today's goals, what's coming up. Tracker status sits in the header so a dropped sync is seen.</p>
+      <ul><li>Goals tick themselves when the activity syncs</li><li>Tracker chips open Connections (Journey 05)</li><li>Tabs: Home, Programme, Discover, Progress</li></ul>
+      <p class="part__plat"><b>States</b> · first visit (no goals yet) · goal open · partial · all done · rest day</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="t2" data-id="03b" data-name="Goal detail" hidden>
+      <div class="part__name"><strong>Goal detail</strong></div>
+      <p class="part__job">The workout behind a goal: warm-up, main set, stretches.</p>
+      <ul><li>Steps with durations, stretch video</li><li>Manual entry link when a run didn't sync</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="t3" data-id="03c" data-name="Goal complete" hidden>
+      <div class="part__name"><strong>Goal complete + daily card</strong></div>
+      <p class="part__job">One moment, not two: the goal is done and the card is ready. The goal-complete notification opens here.</p>
+      <ul><li>Distance, time, pace, zone from the synced activity</li><li>Add a photo or video, three layouts</li></ul>
+      <p class="part__plat"><b>States</b> · generating · ready · failed (goal still counts) · shared</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="t4" data-id="03d" data-name="Sunday report" hidden>
+      <div class="part__name"><strong>Sunday report</strong></div>
+      <p class="part__job">The week in one card. The Sunday notification opens here.</p>
+      <ul><li>Goals done, breakdown by type, rank and movement</li><li>One line from the coach</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="t5" data-id="03e" data-name="Discover" hidden>
+      <div class="part__name"><strong>Discover</strong></div>
+      <p class="part__job">Every programme event in one list: group runs, benchmarks, clinics. New-event notifications open the event.</p>
+      <ul><li>Upcoming / Past, filter by city</li><li>Event detail: when, where, RSVP</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="t6" data-id="03f" data-name="Progress" hidden>
+      <div class="part__name"><strong>Progress</strong></div>
+      <p class="part__job">The day-by-day record. Week strip, done vs planned, other activities, readiness.</p>
+      <ul><li>Tap a day to see it</li><li>Rest day shows “Rest is part of the plan”</li></ul>
+      <div class="part__vote"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 04 COACH ═════════ -->
+<div class="stage" id="coach"><span class="lbl">Journey 04</span><h2>Coach</h2><p>A head coach, a run coach and a nutritionist for every athlete. Chat any time, one call a week.</p></div>
+<section class="spec" data-spec="coach">
+  <div>
+  <div class="phone"><div class="screen">
+    <div class="pane" data-p="c1">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span style="width:38px"></span></div>
+        <p class="xl" style="font-size:30px">Your performance team</p>
+        <div class="card" style="gap:12px">
+          <div style="display:flex;gap:12px;align-items:center"><span class="av av--a">KK</span><div class="row__b"><span class="row__t">Krishna Kohli</span><span class="row__s">Head coach · 26 marathons</span></div></div>
+          <div style="display:flex;gap:8px"><span class="b b--tonal b--sm" style="flex:1">Profile</span><span class="b b--primary b--sm" style="flex:1"><svg class="ico" style="width:16px"><use href="#i-chat"/></svg>Chat · 1</span></div>
+          <div style="display:flex;gap:10px;align-items:center;border-top:1px solid var(--s-line);padding-top:10px"><svg class="ico"><use href="#i-cal"/></svg><div class="row__b"><span class="row__t" style="font-size:14px">Book this week's 1:1</span><span class="row__s">1 call available</span></div><svg class="ico"><use href="#i-chev"/></svg></div>
+        </div>
+        <div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="av av--b">DR</span><div class="row__b"><span class="row__t">Deepak Raj</span><span class="row__s">Run coach · 28 IRONMAN finishes</span></div><span class="b b--tonal b--sm">Chat</span></div></div>
+        <div class="card"><div style="display:flex;gap:12px;align-items:center"><span class="av av--c">NS</span><div class="row__b"><span class="row__t">Dr. Nandini Sharma</span><span class="row__s">Nutritionist · race fuelling</span></div><span class="b b--tonal b--sm">Chat</span></div></div>
+      </div>
+    </div>
+    <div class="pane" data-p="c2" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd" style="gap:10px">
+        <div class="nh" style="justify-content:flex-start;gap:12px"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span class="av av--a">KK</span><div><b>Krishna Kohli</b><div class="row__s" style="font-size:12px;color:var(--s-ink3)">Head coach · replies within a day</div></div></div>
+        <span class="eyebrow" style="align-self:center">Today</span>
+        <div class="bub bub--them">Saw your 6 km this morning. How did the legs feel?</div>
+        <div class="ctx" style="align-self:flex-end"><svg class="ico" style="width:16px"><use href="#i-run"/></svg>Run · 6 km · today</div>
+        <div class="bub bub--me">Heavy for the first 2 km, fine after. Is that normal?</div>
+        <div class="bub bub--them">Totally. Add 5 more minutes of warm-up on Thursday.</div>
+        <div class="grow"></div>
+        <div class="compose">Message Krishna<span class="send"><svg class="ico" style="width:16px"><use href="#i-send"/></svg></span></div>
+      </div>
+    </div>
+    <div class="pane" data-p="c3" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span style="width:38px"></span></div>
+        <p class="xl" style="font-size:30px">Book your 1:1</p>
+        <p class="sub">20 minutes with Krishna on Google Meet. One call per programme week.</p>
+        <div class="days"><span><small>MON</small><b>27</b></span><span class="on"><small>TUE</small><b>28</b></span><span><small>WED</small><b>29</b></span><span><small>THU</small><b>30</b></span><span><small>FRI</small><b>31</b></span></div>
+        <div class="slots"><span>7:00</span><span class="off">7:30</span><span class="on">8:00</span><span>18:00</span><span class="off">18:30</span><span>19:00</span></div>
+        <div class="list"><div class="row"><svg class="ico"><use href="#i-cal"/></svg><div class="row__b"><span class="row__t" style="font-size:14px">Add to my calendar</span><span class="row__s">Google or Apple Calendar</span></div><span class="tog on"></span></div></div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Book Tue 28 Oct · 8:00</span>
+      </div>
+    </div>
+    <div class="pane" data-p="c4" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd" style="opacity:.35"><div class="card" style="height:180px"></div><div class="card" style="height:80px"></div></div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="sheet__h"><b>You're booked.</b><span class="circ"><svg class="ico"><use href="#i-x"/></svg></span></div>
+        <div style="display:flex;gap:12px;align-items:center"><span class="av av--a">KK</span><div><b>Tue 28 Oct · 8:00 AM</b><div class="sub" style="font-size:13px">Google Meet link in your calendar</div></div></div>
+        <p class="sub" style="color:var(--s-pass);font-size:13px">0 of 1 weekly call used after this one</p>
+        <span class="b b--tonal b--block">Reschedule</span>
+        <span class="b b--primary b--block">Done</span>
+      </div>
+    </div>
+  </div></div>
+  <div class="stepper"><button class="circ-n" type="button" data-step="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span class="lbl" data-count></span><button class="circ-n" type="button" data-step="1" aria-label="Next screen"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  </div>
+  <div class="notes">
+    <div class="notes__where"><span class="lbl">04 · Coach</span><h3>Talk to your coach, book the weekly call</h3></div>
+    <div class="pills" role="tablist" aria-label="Coach screens">
+      <button class="pill" role="tab" type="button" data-p="c1" aria-selected="true">Team</button>
+      <button class="pill" role="tab" type="button" data-p="c2" aria-selected="false">Chat</button>
+      <button class="pill" role="tab" type="button" data-p="c3" aria-selected="false">Book a call</button>
+      <button class="pill" role="tab" type="button" data-p="c4" aria-selected="false">Booked</button>
+    </div>
+    <div class="part" data-p="c1" data-id="04a" data-name="Team">
+      <div class="part__name"><strong>Your performance team</strong></div>
+      <p class="part__job">Three people, one tap away. The weekly 1:1 lives on the head coach's card.</p>
+      <ul><li>Profile, chat with unread count</li><li>1:1 row: pending · scheduled · complete</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="c2" data-id="04b" data-name="Chat" hidden>
+      <div class="part__name"><strong>Chat</strong></div>
+      <p class="part__job">One-to-one messages. A goal can be attached so the coach sees what the athlete means. Coach-message notifications open here.</p>
+      <ul><li>Attach today's goal as context</li><li>Sent / read state, reply-time promise in the header</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="c3" data-id="04c" data-name="Book a call" hidden>
+      <div class="part__name"><strong>Book your 1:1</strong></div>
+      <p class="part__job">Pick a day and a time; the call lands in the athlete's calendar with a Meet link.</p>
+      <ul><li>Coach's open slots only, one call per programme week</li><li>Calendar is optional: a toggle, not a gate</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="c4" data-id="04d" data-name="Booked" hidden>
+      <div class="part__name"><strong>Booked / complete</strong></div>
+      <p class="part__job">Confirms the booking; after the call the same sheet says “1 of 1 done, next call opens next week”.</p>
+      <ul><li>Reschedule until 2 hours before</li></ul>
+      <div class="part__vote"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 05 INTEGRATIONS ═════════ -->
+<div class="stage" id="integrations"><span class="lbl">Journey 05</span><h2>Integrations</h2><p>Strava, Ultrahuman and Garmin feed every goal, score and card. No tracker, no score.</p></div>
+<section class="spec" data-spec="integrations">
+  <div>
+  <div class="phone"><div class="screen">
+    <div class="pane" data-p="i1">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div style="display:flex;gap:4px"><i style="flex:1;height:4px;border-radius:4px;background:var(--s-ink)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-ink)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-ink)"></i><i style="flex:1;height:4px;border-radius:4px;background:var(--s-card2)"></i></div>
+        <p class="xl" style="font-size:30px">Connect your watch.</p>
+        <p class="sub">Your runs complete your goals and earn your score. Connect at least one.</p>
+        <div class="list">
+          <div class="row"><span class="tile t-strava">S</span><div class="row__b"><span class="row__t">Strava</span><span class="row__s">Runs from Coros, Apple Watch, Whoop and more</span></div><span class="tag tag--ok">Connected</span></div>
+          <div class="row"><span class="tile t-garmin">G</span><div class="row__b"><span class="row__t">Garmin</span><span class="row__s">Runs, direct from Garmin Connect</span></div><span class="b b--light b--sm">Connect</span></div>
+          <div class="row"><span class="tile t-uh">U</span><div class="row__b"><span class="row__t">Ultrahuman</span><span class="row__s">Sleep and recovery</span></div><span class="b b--light b--sm">Connect</span></div>
+        </div>
+        <span class="lnk">I don't have a watch</span>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Continue</span>
+      </div>
+    </div>
+    <div class="pane" data-p="i2" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd" style="text-align:center;align-items:center">
+        <div class="grow"></div>
+        <span style="width:88px;height:88px;border-radius:50%;background:var(--s-pass);display:grid;place-items:center;color:#06210f"><svg class="ico" style="width:44px;height:44px;stroke-width:2.4"><use href="#i-check"/></svg></span>
+        <p class="xl" style="font-size:30px">Strava connected.</p>
+        <p class="sub">We found 14 runs from the last 30 days. New runs arrive within a few minutes of upload.</p>
+        <div class="card" style="width:100%;text-align:left"><span class="eyebrow">Last synced run</span><b>Run · 8.4 km · 51:20</b><span class="goal__s">Yesterday · Garmin Forerunner 265 via Strava</span></div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Continue</span>
+      </div>
+    </div>
+    <div class="pane" data-p="i3" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd" style="opacity:.35"><div class="hero-p3" style="height:200px"></div><div class="card" style="height:140px"></div></div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="sheet__h"><b>Connections</b><span class="circ"><svg class="ico"><use href="#i-x"/></svg></span></div>
+        <p class="sub" style="margin-top:-4px;font-size:13.5px">Strava stopped sending runs 2 days ago. Reconnect so today's run counts.</p>
+        <div class="list">
+          <div class="row"><span class="tile t-strava">S</span><div class="row__b"><span class="row__t">Strava</span><span class="row__s" style="color:var(--s-red)">Disconnected · 2 days</span></div></div>
+          <div class="row"><span class="tile t-garmin">G</span><div class="row__b"><span class="row__t">Garmin</span><span class="row__s">Not connected</span></div></div>
+          <div class="row"><span class="tile t-uh">U</span><div class="row__b"><span class="row__t">Ultrahuman</span><span class="row__s" style="color:var(--s-pass)">Connected · synced 6:10 AM</span></div></div>
+        </div>
+        <span class="b b--strava b--block">Reconnect Strava</span>
+        <span class="lnk" style="font-size:13px;color:var(--s-ink3)">Disconnect Ultrahuman</span>
+      </div>
+    </div>
+    <div class="pane" data-p="i4" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span style="width:38px"></span></div>
+        <p class="xl" style="font-size:30px">Add a run by hand.</p>
+        <p class="sub">For runs without a watch, or when sync fails. Your coach checks the screenshot.</p>
+        <div class="kv"><div class="field" style="display:grid;align-content:center;gap:0"><small style="font-size:11px">Distance</small><b style="color:var(--s-ink)">6.0 km</b></div><div class="field" style="display:grid;align-content:center;gap:0"><small style="font-size:11px">Time</small><b style="color:var(--s-ink)">37:10</b></div></div>
+        <div class="field">Today · 6:40 AM</div>
+        <div class="ph" style="height:150px"><svg class="ico" style="width:28px;height:28px"><use href="#i-cam"/></svg>Add a screenshot from your phone or treadmill</div>
+        <div class="grow"></div>
+        <span class="b b--primary b--block">Submit for review</span>
+      </div>
+    </div>
+  </div></div>
+  <div class="stepper"><button class="circ-n" type="button" data-step="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span class="lbl" data-count></span><button class="circ-n" type="button" data-step="1" aria-label="Next screen"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  </div>
+  <div class="notes">
+    <div class="notes__where"><span class="lbl">05 · Integrations</span><h3>One list, every tracker</h3></div>
+    <div class="pills" role="tablist" aria-label="Integration screens">
+      <button class="pill" role="tab" type="button" data-p="i1" aria-selected="true">Connect</button>
+      <button class="pill" role="tab" type="button" data-p="i2" aria-selected="false">Connected</button>
+      <button class="pill" role="tab" type="button" data-p="i3" aria-selected="false">Reconnect</button>
+      <button class="pill" role="tab" type="button" data-p="i4" aria-selected="false">No watch</button>
+    </div>
+    <div class="part" data-p="i1" data-id="05a" data-name="Connect">
+      <div class="part__name"><strong>Connect your watch</strong></div>
+      <p class="part__job">One list of every supported tracker. The athlete connects what they own.</p>
+      <ul><li><b>Strava</b> for most watches, <b>Garmin</b> direct, <b>Ultrahuman</b> for sleep and recovery</li><li>At least one activity source to continue, or “I don't have a watch”</li><li>Partners choose which trackers count for their cohort</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="i2" data-id="05b" data-name="Connected" hidden>
+      <div class="part__name"><strong>Connected</strong></div>
+      <p class="part__job">Proves it worked by showing a real synced run, not just a tick.</p>
+      <ul><li>Last synced activity and its source watch</li><li>Same screen for each provider</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="i3" data-id="05c" data-name="Reconnect" hidden>
+      <div class="part__name"><strong>Connections</strong></div>
+      <p class="part__job">Opens from the tracker chips on Home, or from a reconnect push when a token expires.</p>
+      <ul><li>Says how long it's been broken and what it costs</li><li>Reconnect is the main action; disconnect is a quiet link with a confirm step</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="i4" data-id="05d" data-name="No watch" hidden>
+      <div class="part__name"><strong>Add a run by hand</strong></div>
+      <p class="part__job">For athletes without a watch and for failed syncs, with screenshot proof.</p>
+      <ul><li>Distance, time, date, screenshot</li><li>Counts once the coach approves</li></ul>
+      <div class="part__vote"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 06 LEADERBOARD ═════════ -->
+<div class="stage" id="leaderboard"><span class="lbl">Journey 06</span><h2>Leaderboard</h2><p>Benchmark runs plus weekly consistency, ranked. The prize places depend on it.</p></div>
+<section class="spec" data-spec="leaderboard">
+  <div>
+  <div class="phone"><div class="screen">
+    <div class="pane" data-p="l1">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><p class="nh__t">Programme</p><span class="tag">How scoring works</span></div>
+        <div class="kv" style="grid-template-columns:repeat(3,1fr)"><div><small>Week</small><b>1 of 12</b></div><div><small>Done</small><b>8%</b></div><div><small>Squad</small><b>50</b></div></div>
+        <div class="meter"><i style="width:8%"></i></div>
+        <div class="seg"><span class="on">Overall</span><span>My crew</span><span>Challenge</span></div>
+        <div class="lb">
+          <div class="first"><span class="n">1</span><span class="av av--b" style="width:28px;height:28px;font-size:10px">PG</span>Pooja G.<span class="p">142</span></div>
+          <div><span class="n">2</span><span class="av av--c" style="width:28px;height:28px;font-size:10px">RM</span>Rahul M.<span class="p">138</span></div>
+          <div><span class="n">3</span><span class="av av--d" style="width:28px;height:28px;font-size:10px">KN</span>Kabir N.<span class="p">131</span></div>
+          <div><span class="n">6</span><span class="av av--a" style="width:28px;height:28px;font-size:10px">SJ</span>Sana J.<span class="p">118</span></div>
+          <div class="me"><span class="n">7</span><span class="av av--me" style="width:28px;height:28px;font-size:10px">AS</span>You<span class="p">116</span></div>
+          <div><span class="n">8</span><span class="av av--b" style="width:28px;height:28px;font-size:10px">VR</span>Vikram R.<span class="p">112</span></div>
+        </div>
+      </div>
+      <div class="tabs"><span class="tab"><svg class="ico"><use href="#i-home"/></svg>Home</span><span class="tab on"><svg class="ico"><use href="#i-trophy"/></svg>Programme</span><span class="tab"><svg class="ico"><use href="#i-disc"/></svg>Discover</span><span class="tab"><svg class="ico"><use href="#i-prog"/></svg>Progress</span></div>
+    </div>
+    <div class="pane" data-p="l2" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span style="width:38px"></span></div>
+        <p class="xl" style="font-size:30px">How your score works</p>
+        <div class="card"><div style="display:flex;justify-content:space-between"><b>Benchmark runs</b><span class="tag tag--gold">60%</span></div><span class="sub" style="font-size:13.5px">Four timed runs: weeks 1, 4, 8, 11. Points for improving on your own first time, not for being fastest.</span></div>
+        <div class="card"><div style="display:flex;justify-content:space-between"><b>Weekly consistency</b><span class="tag tag--gold">40%</span></div><span class="sub" style="font-size:13.5px">Goals completed each week. 10 points a goal, bonus for a full week.</span></div>
+        <div class="card"><span class="sub" style="font-size:13px">Weights and benchmark weeks are set with each partner for their event.</span></div>
+        <div class="grow"></div>
+        <span class="b b--tonal b--block">Got it</span>
+      </div>
+    </div>
+    <div class="pane" data-p="l3" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><p class="nh__t">Programme</p><span style="width:38px"></span></div>
+        <div class="seg"><span>Overall</span><span class="on">My crew</span><span>Challenge</span></div>
+        <div class="card"><span class="eyebrow">Mumbai Striders · crew of 6</span><b style="font-size:20px">2nd of 9 crews</b><span class="goal__s">Crew average 121 pts</span></div>
+        <div class="lb">
+          <div><span class="n">1</span><span class="av av--d" style="width:28px;height:28px;font-size:10px">KN</span>Kabir N.<span class="p">131</span></div>
+          <div class="me"><span class="n">2</span><span class="av av--me" style="width:28px;height:28px;font-size:10px">AS</span>You<span class="p">116</span></div>
+          <div><span class="n">3</span><span class="av av--b" style="width:28px;height:28px;font-size:10px">VR</span>Vikram R.<span class="p">112</span></div>
+          <div><span class="n">4</span><span class="av av--c" style="width:28px;height:28px;font-size:10px">MF</span>Meera F.<span class="p">104</span></div>
+        </div>
+      </div>
+      <div class="tabs"><span class="tab"><svg class="ico"><use href="#i-home"/></svg>Home</span><span class="tab on"><svg class="ico"><use href="#i-trophy"/></svg>Programme</span><span class="tab"><svg class="ico"><use href="#i-disc"/></svg>Discover</span><span class="tab"><svg class="ico"><use href="#i-prog"/></svg>Progress</span></div>
+    </div>
+    <div class="pane" data-p="l4" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><p class="nh__t">Programme</p><span style="width:38px"></span></div>
+        <div class="seg"><span>Overall</span><span>My crew</span><span class="on">Challenge</span></div>
+        <div class="card" style="gap:12px"><span class="eyebrow gold">Live · ends Sun</span><b style="font-size:22px;letter-spacing:-.02em">100 km in October</b><div class="meter"><i style="width:62%"></i></div><div style="display:flex;justify-content:space-between" class="goal__s"><span>62 of 100 km</span><span>31 of 50 joined</span></div><span class="b b--primary b--block">Joined · keep going</span></div>
+        <div class="card" style="gap:8px"><span class="eyebrow">Starts Mon</span><b style="font-size:18px;letter-spacing:-.02em">Crew streak: 5 days in a row</b><span class="goal__s">Every crew member logs a session, five days running</span><span class="b b--tonal b--block b--sm">Remind me</span></div>
+      </div>
+      <div class="tabs"><span class="tab"><svg class="ico"><use href="#i-home"/></svg>Home</span><span class="tab on"><svg class="ico"><use href="#i-trophy"/></svg>Programme</span><span class="tab"><svg class="ico"><use href="#i-disc"/></svg>Discover</span><span class="tab"><svg class="ico"><use href="#i-prog"/></svg>Progress</span></div>
+    </div>
+  </div></div>
+  <div class="stepper"><button class="circ-n" type="button" data-step="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span class="lbl" data-count></span><button class="circ-n" type="button" data-step="1" aria-label="Next screen"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  </div>
+  <div class="notes">
+    <div class="notes__where"><span class="lbl">06 · Leaderboard</span><h3>Where you stand, and why</h3></div>
+    <div class="pills" role="tablist" aria-label="Leaderboard screens">
+      <button class="pill" role="tab" type="button" data-p="l1" aria-selected="true">Overall</button>
+      <button class="pill" role="tab" type="button" data-p="l2" aria-selected="false">Scoring</button>
+      <button class="pill" role="tab" type="button" data-p="l3" aria-selected="false">My crew</button>
+      <button class="pill" role="tab" type="button" data-p="l4" aria-selected="false">Challenge</button>
+    </div>
+    <div class="part" data-p="l1" data-id="06a" data-name="Overall">
+      <div class="part__name"><strong>Overall leaderboard</strong></div>
+      <p class="part__job">The Programme tab. Week, progress, squad size, then the whole squad ranked.</p>
+      <ul><li>Your row always visible and highlighted</li><li>Prize places marked once the selection rule is set</li></ul>
+      <p class="part__plat"><b>States</b> · before first score (26 Oct) · ranked · tie</p>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="l2" data-id="06b" data-name="Scoring" hidden>
+      <div class="part__name"><strong>How scoring works</strong></div>
+      <p class="part__job">One screen that makes the leaderboard trustworthy. Without it, points look arbitrary.</p>
+      <ul><li>Benchmark runs and weekly consistency, with their weights</li><li>What a manual run earns</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="l3" data-id="06c" data-name="My crew" hidden>
+      <div class="part__name"><strong>My crew</strong></div>
+      <p class="part__job">Rank inside a small group; the number people actually talk about.</p>
+      <ul><li>Crew rank against other crews, then members</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="l4" data-id="06d" data-name="Challenge" hidden>
+      <div class="part__name"><strong>Challenge</strong></div>
+      <p class="part__job">Time-boxed squad challenges. New-challenge notifications open here.</p>
+      <ul><li>Live challenge, progress, who's joined</li></ul>
+      <div class="part__vote"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 07 PROFILE ═════════ -->
+<div class="stage" id="profile"><span class="lbl">Journey 07</span><h2>Profile</h2><p>Your stats, your finishes, your settings. App Store review needs the last pill.</p></div>
+<section class="spec" data-spec="profile">
+  <div>
+  <div class="phone"><div class="screen">
+    <div class="pane" data-p="p1">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span class="tag">Settings</span></div>
+        <div style="display:flex;gap:14px;align-items:center"><span class="av av--me av--lg">AS</span><div><b style="font-size:22px;letter-spacing:-.02em">Aarav Shah</b><div class="sub" style="font-size:13px">Mumbai · Mumbai Striders</div></div></div>
+        <div class="stat"><div><b>#7</b><small>Rank</small></div><div><b>42</b><small>km this week</small></div><div><b>6/7</b><small>Goals</small></div></div>
+        <span class="eyebrow">Top finishes</span>
+        <div style="display:flex;gap:12px"><span class="medal medal--sm">IRONMAN<br>70.3</span><span class="medal medal--sm">HYROX<br>BLR</span><span class="medal medal--sm">TMM<br>FULL</span></div>
+        <div class="list">
+          <div class="row"><span class="tile t-strava" style="width:32px;height:32px;border-radius:9px;font-size:12px">S</span><div class="row__b"><span class="row__t" style="font-size:14px">Connections</span><span class="row__s">Strava, Ultrahuman</span></div><svg class="ico"><use href="#i-chev"/></svg></div>
+          <div class="row"><svg class="ico"><use href="#i-bell"/></svg><div class="row__b"><span class="row__t" style="font-size:14px">Notifications</span></div><svg class="ico"><use href="#i-chev"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <div class="pane" data-p="p2" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span style="width:38px"></span></div>
+        <p class="xl" style="font-size:30px">Notifications</p>
+        <div class="list">
+          <div class="row"><div class="row__b"><span class="row__t">From your coach</span><span class="row__s">Direct messages, crew updates</span></div><span class="tog on"></span></div>
+          <div class="row"><div class="row__b"><span class="row__t">Goals and reports</span><span class="row__s">Daily card, Sunday report</span></div><span class="tog on"></span></div>
+          <div class="row"><div class="row__b"><span class="row__t">Challenges and events</span><span class="row__s">New challenge, new experience</span></div><span class="tog on"></span></div>
+          <div class="row"><div class="row__b"><span class="row__t">Tracker problems</span><span class="row__s">When a watch stops syncing</span></div><span class="tog"></span></div>
+        </div>
+        <p class="sub" style="font-size:13px">Quiet hours 9:30 PM – 6:00 AM, except messages from your coach.</p>
+      </div>
+    </div>
+    <div class="pane" data-p="p3" hidden>
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="bd">
+        <div class="nh"><span class="circ"><svg class="ico"><use href="#i-back"/></svg></span><span style="width:38px"></span></div>
+        <p class="xl" style="font-size:30px">Account</p>
+        <div class="list">
+          <div class="row"><div class="row__b"><span class="row__t">Email</span><span class="row__s">aarav@example.com</span></div></div>
+          <div class="row"><div class="row__b"><span class="row__t">Signed in with</span><span class="row__s">Apple</span></div></div>
+          <div class="row"><div class="row__b"><span class="row__t">Privacy policy</span></div><svg class="ico"><use href="#i-chev"/></svg></div>
+        </div>
+        <div class="grow"></div>
+        <span class="b b--tonal b--block">Sign out</span>
+        <span class="b b--danger b--block">Delete account</span>
+        <p class="sub" style="font-size:12.5px;text-align:center">Deleting removes your data and your place on the leaderboard. This can't be undone.</p>
+      </div>
+    </div>
+  </div></div>
+  <div class="stepper"><button class="circ-n" type="button" data-step="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span class="lbl" data-count></span><button class="circ-n" type="button" data-step="1" aria-label="Next screen"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>
+  </div>
+  <div class="notes">
+    <div class="notes__where"><span class="lbl">07 · Profile</span><h3>Everything about you, in one place</h3></div>
+    <div class="pills" role="tablist" aria-label="Profile screens">
+      <button class="pill" role="tab" type="button" data-p="p1" aria-selected="true">Profile</button>
+      <button class="pill" role="tab" type="button" data-p="p2" aria-selected="false">Notifications</button>
+      <button class="pill" role="tab" type="button" data-p="p3" aria-selected="false">Account</button>
+    </div>
+    <div class="part" data-p="p1" data-id="07a" data-name="Profile">
+      <div class="part__name"><strong>Profile</strong></div>
+      <p class="part__job">Opened from the avatar on Home. Stats, top finishes, and the way into settings.</p>
+      <ul><li>Rank, km this week, goals</li><li>Top finishes from onboarding</li><li>Connections and notifications</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="p2" data-id="07b" data-name="Notifications" hidden>
+      <div class="part__name"><strong>Notification settings</strong></div>
+      <p class="part__job">Category switches, so athletes turn off one kind instead of all.</p>
+      <ul><li>Four categories map to the trigger doc</li><li>Quiet hours, coach messages exempt</li></ul>
+      <div class="part__vote"></div>
+    </div>
+    <div class="part" data-p="p3" data-id="07c" data-name="Account" hidden>
+      <div class="part__name"><strong>Account + delete</strong></div>
+      <p class="part__job">Sign out and delete account.</p>
+      <ul><li>Delete asks for confirmation on a second screen</li></ul>
+      <div class="part__vote"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ OPEN ═════════ -->
+<div class="stage" id="open"><span class="lbl">Partner onboarding</span><h2>Customised for each partner</h2><p>The journeys stay the same. These are the parts we design and set up for every brand, club or organiser that brings a cohort.</p></div>
+<div class="tbl" style="margin-top:28px"><table>
+  <thead><tr><th>What we customise</th><th>Journey</th><th>What the partner gives us</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td>Brand skin</td><td>01 Register · 03 Today</td><td>Logo, colours and programme name for the Register screen, Home hero and share cards.</td><td><span class="st-fx">At onboarding</span></td></tr>
+    <tr><td>Selection + invites</td><td>01 Register</td><td>Selected cohort list, wait-list rule and the selection message that carries the invite code.</td><td><span class="st-fx">At onboarding</span></td></tr>
+    <tr><td>Scoring rule</td><td>06 Leaderboard</td><td>Benchmark runs, their weights, weekly consistency points and how prize places are decided.</td><td><span class="st-fx">At onboarding</span></td></tr>
+    <tr><td>Coach team</td><td>02 Onboarding · 04 Coach</td><td>Names, roles, photos, reply-time promise and how many 1:1 calls each athlete gets.</td><td><span class="st-fx">At onboarding</span></td></tr>
+    <tr><td>Trackers</td><td>05 Integrations</td><td>Which sources count for this cohort: Strava, Garmin, Ultrahuman, manual entry.</td><td><span class="st-fx">At onboarding</span></td></tr>
+    <tr><td>Programme calendar</td><td>03 Today · Discover</td><td>Week-by-week sessions, benchmark dates and partner experiences by city.</td><td><span class="st-ask">Before launch</span></td></tr>
+    <tr><td>Crews + challenges</td><td>06 Leaderboard</td><td>How crews are formed and the challenges planned for the build-up.</td><td><span class="st-ask">Before launch</span></td></tr>
+    <tr><td>Notification copy</td><td>07 Profile</td><td>Voice for coach, goal, report and challenge alerts; quiet hours.</td><td><span class="st-ask">Before launch</span></td></tr>
+    <tr><td>Race week + prize reveal</td><td>06 Leaderboard</td><td>Camp, race-day logistics and the prize announcement.</td><td><span class="st-ok">Before race week</span></td></tr>
+  </tbody>
+</table></div>
+
+<section class="picks" aria-labelledby="pk">
+  <h2 id="pk">Your picks</h2>
+  <p>Saved in this browser only. Copy and paste them back into the thread.</p>
+  <pre id="picksOut"></pre>
+  <div class="picks__row"><button class="btn-ink" type="button" id="copyPicks">Copy picks</button><span class="lbl" id="copyMsg" aria-live="polite"></span></div>
+</section>
+
+<footer>Athlete OS by peakst8. Names, times and numbers in the phones are examples.</footer>
+</div>
+
+<script>
+(function(){
+  var pg=document.getElementById('pg'), KEY='p3-screen-prd-v2', votes={};
+  try{votes=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(votes))}catch(e){}}
+
+  // skin dock
+  document.querySelectorAll('.dock button').forEach(function(b){b.addEventListener('click',function(){
+    pg.dataset.skin=b.dataset.skin;
+    document.querySelectorAll('.dock button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+  })});
+
+  // pills + stepper per spec
+  document.querySelectorAll('.spec').forEach(function(spec){
+    var pills=[].slice.call(spec.querySelectorAll('.pill')), count=spec.querySelector('[data-count]');
+    function show(p){
+      var idx=0;
+      pills.forEach(function(x,i){var on=x.dataset.p===p; x.setAttribute('aria-selected',String(on)); x.tabIndex=on?0:-1; if(on)idx=i});
+      spec.querySelectorAll('.pane').forEach(function(x){x.hidden=x.dataset.p!==p});
+      spec.querySelectorAll('.part').forEach(function(x){x.hidden=x.dataset.p!==p});
+      count.textContent=(idx+1)+' / '+pills.length;
+    }
+    pills.forEach(function(x,i){
+      x.addEventListener('click',function(){show(x.dataset.p)});
+      x.addEventListener('keydown',function(e){
+        var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0; if(!d)return;
+        var n=pills[(i+d+pills.length)%pills.length]; show(n.dataset.p); n.focus(); e.preventDefault();
+      });
+    });
+    spec.querySelectorAll('[data-step]').forEach(function(b){b.addEventListener('click',function(){
+      var cur=pills.findIndex(function(x){return x.getAttribute('aria-selected')==='true'});
+      show(pills[(cur+(+b.dataset.step)+pills.length)%pills.length].dataset.p);
+    })});
+    show(pills[0].dataset.p);
+  });
+
+  // votes
+  var parts=[].slice.call(document.querySelectorAll('.part'));
+  parts.forEach(function(p){
+    var v=p.querySelector('.part__vote');
+    [['ok','Approve'],['change','Change']].forEach(function(o){
+      var b=document.createElement('button'); b.type='button'; b.className='vote'; b.dataset.v=o[0]; b.textContent=o[1];
+      b.addEventListener('click',function(){votes[p.dataset.id]=votes[p.dataset.id]===o[0]?undefined:o[0]; if(!votes[p.dataset.id])delete votes[p.dataset.id]; save(); paint()});
+      v.appendChild(b);
+    });
+  });
+  function paint(){
+    var ok=[],ch=[],left=[];
+    parts.forEach(function(p){
+      var val=votes[p.dataset.id], t=p.dataset.id+' '+p.dataset.name;
+      p.querySelectorAll('.vote').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.v===val))});
+      (val==='ok'?ok:val==='change'?ch:left).push(t);
+    });
+    document.getElementById('tOk').textContent=ok.length;
+    document.getElementById('tCh').textContent=ch.length;
+    document.getElementById('tLeft').textContent=left.length;
+    document.getElementById('picksOut').textContent='Athlete OS · screen PRD\n\nApprove ('+ok.length+'): '+(ok.join(', ')||'—')+'\nChange ('+ch.length+'): '+(ch.join(', ')||'—')+'\nTo decide ('+left.length+'): '+(left.join(', ')||'—');
+  }
+  document.getElementById('copyPicks').addEventListener('click',function(){
+    var txt=document.getElementById('picksOut').textContent, msg=document.getElementById('copyMsg');
+    function fb(){var r=document.createRange();r.selectNodeContents(document.getElementById('picksOut'));var s=getSelection();s.removeAllRanges();s.addRange(r);msg.textContent='Selected — press copy'}
+    try{navigator.clipboard.writeText(txt).then(function(){msg.textContent='Copied'},fb)}catch(e){fb()}
+  });
+  paint();
+})();
+</script>
+
+
+</body></html>

@@ -13,5 +13,7 @@
 
 > Reebok training plan rollout: about 250 Run Crew runners moving onto the peakst8 app.
 
+- [Product note](https://peakst8-basecamp.github.io/product-notes/run-crew/): why, team, roster, app setup, install, onboarding and weekly messages, Reebok review
+- [App screens](https://peakst8-basecamp.github.io/product-notes/run-crew/app-screens/): every app screen, journey by journey
 - [Install guide](https://peakst8-basecamp.github.io/product-notes/run-crew/install-guide/): how runners install the peakst8 app on Android and iPhone
 - [Status of every note](https://peakst8-basecamp.github.io/product-notes/notes.json)

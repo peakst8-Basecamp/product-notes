@@ -1,6 +1,6 @@
 # Run Crew × peakst8 Playbook
 
-Internal · updated 28 Oct 2026 · edit this file directly on GitHub
+[Product note](https://peakst8-basecamp.github.io/product-notes/run-crew/) · Internal · updated 28 Oct 2026 · edit this file directly on GitHub
 
 Run Crew is coaching a group of runners for Reebok ahead of the Adani Ahmedabad Marathon. We're moving them onto the peakst8 app so their training plan, workouts and Saturday runs live in one place, and they stay engaged until race day. This doc has everything needed to run the rollout, in six steps.
 
@@ -20,7 +20,7 @@ The latest checklist and the runner list, ticked live by the team.
 
 What runners get to install the app on Android and iPhone. Source: [install-guide/](install-guide/)
 
-### 📱 [App screens](https://claude.ai/artifact/MDoGZX2BfJgufLC2DFQE13)
+### 📱 [App screens](https://peakst8-basecamp.github.io/product-notes/run-crew/app-screens/)
 
 Every screen of the app, journey by journey.
 

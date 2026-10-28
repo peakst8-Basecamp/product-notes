@@ -35,8 +35,10 @@
       "updated": "2026-10-28",
       "summary": "Moving about 250 Run Crew runners on the Reebok training plan onto the peakst8 app: the roster, app setup, install guide, messages and the Reebok review.",
       "links": {
-        "Playbook": "https://github.com/peakst8-Basecamp/product-notes/blob/main/run-crew/README.md",
-        "Install guide": "run-crew/install-guide/"
+        "Product note": "run-crew/",
+        "Install guide": "run-crew/install-guide/",
+        "App screens": "run-crew/app-screens/",
+        "Rollout checklist": "https://claude.ai/artifact/MNZVVd8tXVs9Xgjrm6MLSz"
       },
       "milestones": []
     }

@@ -7,7 +7,7 @@ Every peakst8 product note lives here, one folder per note. Each folder has its 
 | # | Note | Status | What it is | Open |
 | --- | --- | --- | --- | --- |
 | 1 | **[peakst8 Embedded Ticketing](embedded-ticketing/)** | ![status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpeakst8-Basecamp%2Fproduct-notes%2Fmain%2Fnotes.json&query=%24.notes%5B0%5D.status&label=status&color=0b0b0c) | Clubs sell events on their own website, built for SEO and AEO, with peakst8 checkout inside. Pilots: Find Your Fit, Sisters in Sweat, Cubbon Classic 10K. | [Note](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/) · [Prototype](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/prototype/) · [README](embedded-ticketing/README.md) |
-| 2 | **[Run Crew × peakst8 Playbook](run-crew/)** | ![status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpeakst8-Basecamp%2Fproduct-notes%2Fmain%2Fnotes.json&query=%24.notes%5B1%5D.status&label=status&color=0b0b0c) | Reebok training plan rollout: about 250 Run Crew runners moving onto the peakst8 app. | [Playbook](run-crew/README.md) · [Install guide](https://peakst8-basecamp.github.io/product-notes/run-crew/install-guide/) |
+| 2 | **[Run Crew × peakst8 Playbook](run-crew/)** | ![status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpeakst8-Basecamp%2Fproduct-notes%2Fmain%2Fnotes.json&query=%24.notes%5B1%5D.status&label=status&color=0b0b0c) | Reebok training plan rollout: about 250 Run Crew runners moving onto the peakst8 app. | [Note](https://peakst8-basecamp.github.io/product-notes/run-crew/) · [Install guide](https://peakst8-basecamp.github.io/product-notes/run-crew/install-guide/) · [App screens](https://peakst8-basecamp.github.io/product-notes/run-crew/app-screens/) · [Edit playbook](run-crew/README.md) |
 
 ## Updating a status
 
@@ -33,6 +33,6 @@ To give an engineer write access: repo **Settings → Collaborators and teams �
 | `notes.json` | Status of every note (edit this to update a status) |
 | `index.html` | Site home: every note with its live status |
 | `embedded-ticketing/` | Note 1: note page, `prototype/`, `screens/`, `README.md` |
-| `run-crew/` | Note 2: playbook `README.md`, `install-guide/` |
+| `run-crew/` | Note 2: note page `index.html` (renders the playbook `README.md`), `install-guide/`, `app-screens/` |
 | `404.html` | Sends old `/embed/` links to `/embedded-ticketing/` |
 | `robots.txt`, `sitemap.xml`, `llms.txt` | Search and AI crawler files |
