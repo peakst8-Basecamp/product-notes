@@ -16,4 +16,10 @@
 - [Product note](https://peakst8-basecamp.github.io/product-notes/run-crew/): why, team, roster, app setup, install, onboarding and weekly messages, Reebok review
 - [App screens](https://peakst8-basecamp.github.io/product-notes/run-crew/app-screens/): every app screen, journey by journey
 - [Install guide](https://peakst8-basecamp.github.io/product-notes/run-crew/install-guide/): how runners install the peakst8 app on Android and iPhone
+## peakst8 Club Memberships
+
+> Clubs sell recurring memberships and prepaid packs on peakst8. Members book each run, class or event as usual, and peakst8 applies the plan at checkout so the ticket is free, discounted or uses one credit. Recurring plans bill through Razorpay Subscriptions with UPI AutoPay.
+
+- [Product note](https://peakst8-basecamp.github.io/product-notes/memberships/): concepts, member and host flows, plan lifecycle, checkout pricing, payments, data model, API, scope, open questions, SweatPals evidence
+
 - [Status of every note](https://peakst8-basecamp.github.io/product-notes/notes.json)

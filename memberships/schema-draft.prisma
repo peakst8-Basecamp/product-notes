@@ -1,0 +1,386 @@
+// peakst8 Club Memberships: schema draft
+// Merge into peakst8-backend/prisma/schema.prisma. Conventions follow that file:
+// uuid ids, snake_case @@map, updatedAt/createdAt on every model, soft delete via isDeleted/isArchived,
+// money as Float (as Category.baseAmount does today).
+
+enum PLAN_KIND {
+  MEMBERSHIP // recurring or prepaid access with a per-period limit
+  PACK // fixed number of credits with an expiry
+}
+
+enum PLAN_BILLING_TYPE {
+  RECURRING
+  ONE_TIME
+}
+
+enum PLAN_INTERVAL {
+  WEEKLY
+  MONTHLY
+  EVERY_4_WEEKS
+  QUARTERLY
+  HALF_YEARLY
+  YEARLY
+}
+
+enum PLAN_VALIDITY {
+  NEVER_EXPIRES
+  FROM_PURCHASE // validityDays after purchase
+  FROM_FIRST_USE // validityDays after first booking
+  FIXED_DATE // validUntil
+}
+
+enum PLAN_LIMIT_PERIOD {
+  UNLIMITED
+  TOTAL // packs: usageLimit for the life of the plan
+  PER_DAY
+  PER_WEEK
+  PER_MONTH
+  PER_YEAR
+}
+
+enum PLAN_CANCELLATION_POLICY {
+  AUTO // member cancels directly
+  REVIEW // member sends a request, host approves
+}
+
+enum PLAN_PRICE_POLICY {
+  FREE
+  HALF
+  FULL
+  CUSTOM_PERCENT // customValue = percent off
+  CUSTOM_FLAT // customValue = rupees off
+}
+
+enum USER_PLAN_STATUS {
+  PENDING_APPROVAL
+  PENDING_PAYMENT
+  ACTIVE
+  PAST_DUE
+  PAUSED
+  CANCELS_AT_PERIOD_END
+  ENDED
+  ABANDONED
+}
+
+enum USER_PLAN_SOURCE {
+  PURCHASE
+  SENT_BY_HOST
+  SWITCHED
+}
+
+enum PLAN_USAGE_STATUS {
+  HELD // order open
+  CONSUMED // ticket generated
+  RELEASED // order failed or expired, or cancelled inside the window
+}
+
+enum PLAN_CHARGE_TYPE {
+  FIRST_PAYMENT
+  RENEWAL
+  JOINING_FEE
+  FIX_BILLING
+  SWITCH
+  BILLING_DATE_CHANGE
+}
+
+enum PLAN_SHARE_STATUS {
+  INVITED
+  ACTIVE
+  REVOKED
+}
+
+enum GUEST_PASS_STATUS {
+  SENT
+  CLAIMED
+  REDEEMED
+  EXPIRED
+}
+
+enum GUEST_ELIGIBILITY {
+  FIRST_TIME_ONLY
+  ANYONE
+}
+
+model Plan {
+  id                      String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clubId                  String                   @db.Uuid
+  club                    Club                     @relation(fields: [clubId], references: [id])
+  kind                    PLAN_KIND
+  name                    String
+  description             String
+  coverImage              String?
+  // Usage limit
+  limitPeriod             PLAN_LIMIT_PERIOD        @default(UNLIMITED)
+  usageLimit              Int? // null when UNLIMITED
+  rollOverUnused          Boolean                  @default(false)
+  // Rules
+  isApprovalRequired      Boolean                  @default(false)
+  isFirstTimeOnly         Boolean                  @default(false)
+  isOnePerMember          Boolean                  @default(false)
+  capacity                Int? // max active holders
+  isUnlisted              Boolean                  @default(false)
+  isFeatured              Boolean                  @default(false)
+  isShareable             Boolean                  @default(false)
+  shareSeats              Int? // seats besides the holder
+  guestPassesPerCycle     Int? // null = guest passes off
+  guestEligibility        GUEST_ELIGIBILITY        @default(FIRST_TIME_ONLY)
+  cancellationPolicy      PLAN_CANCELLATION_POLICY @default(AUTO)
+  minCommitmentCycles     Int? // recurring only
+  whatsappGroupInviteUrl  String?
+  waiver                  Waiver?                  @relation(fields: [waiverId], references: [id])
+  waiverId                Int?
+  customForm              Json? // questionnaire, same shape as Event.customWaiverForm
+  isPublished             Boolean                  @default(false)
+  isArchived              Boolean                  @default(false) // discontinued: holders keep it, no new joins
+  order                   Int?
+  prices                  PlanPrice[]
+  coverage                PlanCoverage[]
+  categoryPolicies        CategoryPlanPolicy[]
+  userPlans               UserPlan[]
+  joinRequests            PlanJoinRequest[]
+  updatedAt               DateTime                 @updatedAt
+  createdAt               DateTime                 @default(now())
+
+  @@index([clubId, isPublished, isArchived])
+  @@map("plan")
+}
+
+/// A price option on a plan (SweatPals "tier").
+model PlanPrice {
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planId           String            @db.Uuid
+  plan             Plan              @relation(fields: [planId], references: [id], onDelete: Cascade)
+  label            String? // "Monthly", "Annual"
+  amount           Float
+  isAmountInclusiveGST Boolean       @default(false)
+  billingType      PLAN_BILLING_TYPE
+  interval         PLAN_INTERVAL? // RECURRING only
+  validity         PLAN_VALIDITY? // ONE_TIME only
+  validityDays     Int?
+  validUntil       DateTime?
+  joiningFee       Float?
+  razorpayPlanId   String?           @unique // created lazily for RECURRING
+  isActive         Boolean           @default(true)
+  introOffers      PlanIntroOffer[]
+  userPlans        UserPlan[]
+  updatedAt        DateTime          @updatedAt
+  createdAt        DateTime          @default(now())
+
+  @@map("plan_price")
+}
+
+/// Discounted first period, redeemable once per member per plan.
+model PlanIntroOffer {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planPriceId    String        @db.Uuid
+  planPrice      PlanPrice     @relation(fields: [planPriceId], references: [id], onDelete: Cascade)
+  amount         Float // total charged for the intro period
+  durationDays   Int
+  isActive       Boolean       @default(true)
+  userPlans      UserPlan[]
+  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime      @default(now())
+
+  @@map("plan_intro_offer")
+}
+
+/// What the plan covers: an event type for the club, or one explicit event. One of the two is set.
+model PlanCoverage {
+  id         Int         @id @default(autoincrement())
+  planId     String      @db.Uuid
+  plan       Plan        @relation(fields: [planId], references: [id], onDelete: Cascade)
+  eventType  EVENT_TYPE?
+  eventId    String?
+  event      Event?      @relation(fields: [eventId], references: [id])
+  updatedAt  DateTime    @updatedAt
+  createdAt  DateTime    @default(now())
+
+  @@unique([planId, eventType])
+  @@unique([planId, eventId])
+  @@map("plan_coverage")
+}
+
+/// What a plan holder pays for a ticket category. No row = no benefit (full price).
+model CategoryPlanPolicy {
+  categoryId   String            @db.Uuid
+  category     Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  planId       String            @db.Uuid
+  plan         Plan              @relation(fields: [planId], references: [id], onDelete: Cascade)
+  policy       PLAN_PRICE_POLICY
+  customValue  Float?
+  updatedAt    DateTime          @updatedAt
+  createdAt    DateTime          @default(now())
+
+  @@id([categoryId, planId])
+  @@map("category_plan_policy")
+}
+
+/// A member's copy of a plan (SweatPals "user-to-membership").
+model UserPlan {
+  id                     String             @id @default(uuid()) @db.Uuid
+  userId                 String             @db.Uuid
+  user                   User               @relation(fields: [userId], references: [id])
+  planId                 String             @db.Uuid
+  plan                   Plan               @relation(fields: [planId], references: [id])
+  planPriceId            String             @db.Uuid
+  planPrice              PlanPrice          @relation(fields: [planPriceId], references: [id])
+  introOfferId           String?            @db.Uuid
+  introOffer             PlanIntroOffer?    @relation(fields: [introOfferId], references: [id])
+  status                 USER_PLAN_STATUS   @default(PENDING_PAYMENT)
+  source                 USER_PLAN_SOURCE   @default(PURCHASE)
+  priceOverride          Float? // host "change price" for all future cycles
+  startedAt              DateTime?
+  currentPeriodStart     DateTime?
+  currentPeriodEnd       DateTime? // renewal date (recurring) or expiry (one-time)
+  creditsOverride        Int? // host "change credits" for the current period
+  firstUsedAt            DateTime? // drives FROM_FIRST_USE validity
+  pausedAt               DateTime?
+  pauseUntil             DateTime? // null = indefinite
+  cancelRequestedAt      DateTime?
+  cancelAt               DateTime? // CANCELS_AT_PERIOD_END → ENDED at this time
+  endedAt                DateTime?
+  commitmentEndsAt       DateTime?
+  razorpaySubscriptionId String?            @unique
+  claimToken             String?            @unique // Send plan link
+  usages                 PlanUsage[]
+  charges                PlanCharge[]
+  shares                 PlanShare[]
+  guestPasses            GuestPass[]
+  cancelRequests         PlanCancelRequest[]
+  history                UserPlanEvent[]
+  registrations          Registration[]
+  updatedAt              DateTime           @updatedAt
+  createdAt              DateTime           @default(now())
+
+  @@index([userId, status])
+  @@index([planId, status])
+  @@index([status, currentPeriodEnd]) // renewal and expiry sweeps
+  @@map("user_plan")
+}
+
+/// One row per booking that used a plan. This is the usage meter.
+model PlanUsage {
+  id               String            @id @default(uuid()) @db.Uuid
+  userPlanId       String            @db.Uuid
+  userPlan         UserPlan          @relation(fields: [userPlanId], references: [id])
+  registrationId   String            @unique @db.Uuid
+  registration     Registration      @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  usedByUserId     String            @db.Uuid // holder or a share member
+  eventDate        DateTime // limits are counted by event date
+  status           PLAN_USAGE_STATUS @default(HELD)
+  amountSaved      Float
+  updatedAt        DateTime          @updatedAt
+  createdAt        DateTime          @default(now())
+
+  @@index([userPlanId, status, eventDate])
+  @@map("plan_usage")
+}
+
+model PlanCharge {
+  id                String           @id @default(uuid()) @db.Uuid
+  userPlanId        String           @db.Uuid
+  userPlan          UserPlan         @relation(fields: [userPlanId], references: [id])
+  type              PLAN_CHARGE_TYPE
+  amount            Float
+  periodStart       DateTime?
+  periodEnd         DateTime?
+  razorpayOrderId   String?          @unique
+  razorpayPaymentId String?          @unique
+  razorpayInvoiceId String?
+  status            ORDER_STATUS     @default(INITIATED)
+  attempt           Int              @default(1)
+  refundedAmount    Float            @default(0)
+  updatedAt         DateTime         @updatedAt
+  createdAt         DateTime         @default(now())
+
+  @@index([userPlanId, createdAt])
+  @@map("plan_charge")
+}
+
+model PlanJoinRequest {
+  id                     String          @id @default(uuid()) @db.Uuid
+  planId                 String          @db.Uuid
+  plan                   Plan            @relation(fields: [planId], references: [id])
+  userId                 String          @db.Uuid
+  user                   User            @relation(fields: [userId], references: [id])
+  planPriceId            String          @db.Uuid
+  status                 APPROVAL_STATUS @default(PENDING)
+  isWithdrawn            Boolean         @default(false)
+  reviewedById           String?         @db.Uuid
+  reviewedBy             Host?           @relation(fields: [reviewedById], references: [userId])
+  updatedAt              DateTime        @updatedAt
+  createdAt              DateTime        @default(now())
+
+  @@index([planId, status])
+  @@map("plan_join_request")
+}
+
+model PlanCancelRequest {
+  id           String          @id @default(uuid()) @db.Uuid
+  userPlanId   String          @db.Uuid
+  userPlan     UserPlan        @relation(fields: [userPlanId], references: [id])
+  reason       String?
+  status       APPROVAL_STATUS @default(PENDING)
+  reviewedById String?         @db.Uuid
+  reviewedBy   Host?           @relation(fields: [reviewedById], references: [userId])
+  updatedAt    DateTime        @updatedAt
+  createdAt    DateTime        @default(now())
+
+  @@map("plan_cancel_request")
+}
+
+model PlanShare {
+  id            String            @id @default(uuid()) @db.Uuid
+  userPlanId    String            @db.Uuid
+  userPlan      UserPlan          @relation(fields: [userPlanId], references: [id])
+  invitedEmail  String?
+  invitedPhone  String?
+  memberUserId  String?           @db.Uuid // set on claim
+  memberUser    User?             @relation("PlanShareMember", fields: [memberUserId], references: [id])
+  status        PLAN_SHARE_STATUS @default(INVITED)
+  claimToken    String            @unique
+  updatedAt     DateTime          @updatedAt
+  createdAt     DateTime          @default(now())
+
+  @@map("plan_share")
+}
+
+model GuestPass {
+  id              String            @id @default(uuid()) @db.Uuid
+  userPlanId      String            @db.Uuid
+  userPlan        UserPlan          @relation(fields: [userPlanId], references: [id])
+  guestUserId     String?           @db.Uuid
+  guestUser       User?             @relation("GuestPassGuest", fields: [guestUserId], references: [id])
+  registrationId  String?           @unique @db.Uuid
+  status          GUEST_PASS_STATUS @default(SENT)
+  claimToken      String            @unique
+  periodStart     DateTime // counts against guestPassesPerCycle for this period
+  expiresAt       DateTime?
+  updatedAt       DateTime          @updatedAt
+  createdAt       DateTime          @default(now())
+
+  @@map("guest_pass")
+}
+
+/// Append-only history for member and host actions.
+model UserPlanEvent {
+  id          Int      @id @default(autoincrement())
+  userPlanId  String   @db.Uuid
+  userPlan    UserPlan @relation(fields: [userPlanId], references: [id])
+  type        String // JOINED, RENEWED, RENEWAL_FAILED, PAUSED, RESUMED, CANCEL_REQUESTED, CANCELLED, ENDED, PRICE_CHANGED, CREDITS_CHANGED, BILLING_DATE_CHANGED, SWITCHED, REFUNDED, SHARED, ...
+  actorUserId String?  @db.Uuid
+  data        Json?
+  createdAt   DateTime @default(now())
+
+  @@index([userPlanId, createdAt])
+  @@map("user_plan_event")
+}
+
+// Changes to existing models
+// model Registration { appliedUserPlanId String? @db.Uuid; appliedUserPlan UserPlan? @relation(...); planUsage PlanUsage? }
+// model Category     { isPlanHoldersOnly Boolean @default(false); planPolicies CategoryPlanPolicy[] }
+// model Club         { plans Plan[] }
+// model Event        { planCoverage PlanCoverage[] }
+// model User         { userPlans UserPlan[]; planJoinRequests PlanJoinRequest[]; planShares PlanShare[] @relation("PlanShareMember"); guestPasses GuestPass[] @relation("GuestPassGuest") }
+// model Host         { reviewedPlanJoinRequests PlanJoinRequest[]; reviewedPlanCancelRequests PlanCancelRequest[] }
+// model Waiver       { plans Plan[] }

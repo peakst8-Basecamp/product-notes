@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>peakst8 Club Memberships: plans, packs and automatic plan pricing at checkout</title>
+<meta name="description" content="peakst8 Club Memberships lets clubs sell recurring memberships and prepaid packs. Members book each session as usual and peakst8 applies the plan at checkout. Reverse-engineered from SweatPals Plans and mapped onto the peakst8 backend.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/memberships/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="peakst8 Club Memberships: product note">
+<meta property="og:description" content="Recurring memberships and prepaid packs for clubs, applied automatically at checkout.">
+<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/memberships/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"#peakst8","name":"peakst8","url":"https://ps8.club"},
+{"@type":"TechArticle","headline":"peakst8 Club Memberships: product note","datePublished":"2026-11-01","dateModified":"2026-11-01","author":{"@id":"#peakst8"},"publisher":{"@id":"#peakst8"},"about":"Recurring memberships and prepaid packs for fitness clubs, applied automatically at event checkout"},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a peakst8 Club Membership?","acceptedAnswer":{"@type":"Answer","text":"A plan a club sells: a recurring membership or a prepaid pack of sessions. Members still book each session, and peakst8 applies the plan at checkout so the ticket is free, discounted or uses one credit."}},
+{"@type":"Question","name":"Does buying a plan book me into sessions?","acceptedAnswer":{"@type":"Answer","text":"No. A plan is a pricing rule and a usage meter. Members book each run, class or event, and the plan benefit is applied automatically."}},
+{"@type":"Question","name":"How are recurring plans charged?","acceptedAnswer":{"@type":"Answer","text":"Through Razorpay Subscriptions with a UPI AutoPay, card or eNACH mandate, with a pre-debit notice at least 24 hours before each renewal."}},
+{"@type":"Question","name":"What happens when a member cancels?","acceptedAnswer":{"@type":"Answer","text":"Depending on the plan, the member cancels directly or sends a request to the host. A recurring plan stays active until the end of the period already paid for, and there is no automatic refund."}}
+]}]}
+</script>
+<style>
+:root{color-scheme:light;--bg:#fff;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148;--ok:#17945a;
+--serif:"Newsreader",Georgia,serif;--sans:"Figtree",system-ui,-apple-system,sans-serif;--mono:"Chivo Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.pg{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:24px 96px}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wm{font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.hero{text-align:center;padding-block:64px 16px;display:grid;gap:20px;justify-items:center}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6.6vw,76px);line-height:1;letter-spacing:-.025em;margin:0;max-width:16ch;text-wrap:balance}
+.hero p{margin:0;max-width:60ch;color:var(--ink-2);font-size:17px;line-height:1.5;text-wrap:pretty}
+.facts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.facts span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:7px 11px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding-top:8px}
+nav.toc a{font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--fill);border-radius:999px;padding:8px 14px}
+nav.toc a:hover{color:var(--ink)}
+.pr{max-width:820px;margin:0 auto;display:grid;gap:16px;padding-top:24px}
+.pr h2{margin:40px 0 0;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1;letter-spacing:-.015em;scroll-margin-top:16px}
+.pr h3{margin:8px 0 0;font-size:16px;font-weight:700}
+.pr p,.pr li,.pr dd{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.6}
+.pr b{color:var(--ink)}
+.pr a{color:var(--ink)}
+.pr ul,.pr ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.pr code{font-family:var(--mono);font-size:12.5px;background:var(--fill);border-radius:6px;padding:1px 5px;color:var(--ink)}
+.pr .answer{font-size:18px;line-height:1.55;color:var(--ink)}
+.tbl{overflow-x:auto;border-radius:22px;background:var(--fill)}
+.tbl table{width:100%;min-width:620px;border-collapse:collapse;font-size:14px;line-height:1.45}
+.tbl th{text-align:left;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:16px 16px 10px}
+.tbl td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:700}
+.tbl code{background:#fff}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
+.stages div{background:var(--fill);border-radius:22px;padding:18px;display:grid;gap:8px;align-content:start}
+.stages .lbl{color:var(--signal)}
+.stages b{font-size:17px}
+.stages p{font-size:14.5px}
+figure{margin:0;padding:20px;border-radius:22px;background:var(--fill);overflow-x:auto}
+figure svg{width:100%;min-width:640px;height:auto;display:block}
+figcaption{margin-top:10px;font-size:13px;color:var(--ink-3);text-align:center}
+pre{margin:0;padding:18px 20px;border-radius:22px;background:var(--ink);color:#e9e9ec;font-family:var(--mono);font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre}
+pre .c{color:#8b8c92}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns span{font-size:13px;font-weight:700;border-radius:999px;padding:9px 14px}
+.b1{background:var(--ink);color:#fff}.b2{background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}.b3{background:#fff;color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line)}
+dl.faq{margin:0;display:grid;gap:4px}
+dl.faq dt{font-weight:700;font-size:16px;margin-top:14px}
+footer{margin-top:64px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.6}
+footer a{color:var(--ink-2)}
+.status{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:13.5px;color:var(--ink-2)}
+.status b{background:var(--ink);color:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px}
+svg text{font-family:Figtree,system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div class="pg">
+<header class="top"><a class="wm" href="../">peakst8</a><span class="lbl">Product note · 1 Nov 2026</span></header>
+
+<main>
+<section class="hero">
+  <span class="lbl">peakst8 Club Memberships</span>
+  <h1>Pay once a month. Book every run.</h1>
+  <p>Clubs sell plans: a recurring membership or a prepaid pack. Members book each session as they do today, and peakst8 applies the plan at checkout, so the ticket is free, discounted or uses one credit. This note reverse-engineers SweatPals Plans and maps them onto the peakst8 backend.</p>
+  <div class="facts"><span>Membership · Pack</span><span>Applied at checkout</span><span>Razorpay Subscriptions</span><span>UPI AutoPay</span></div>
+  <div class="status" id="status" aria-live="polite"><span>Status</span><b>Draft</b><span>Next: pick pilot clubs and lock V1 scope</span></div>
+  <nav class="toc" aria-label="Sections"><a href="#minute">In one minute</a><a href="#concepts">Concepts</a><a href="#member">Member flows</a><a href="#host">Host flows</a><a href="#lifecycle">Lifecycle</a><a href="#checkout">Checkout pricing</a><a href="#payments">Payments</a><a href="#data">Data model</a><a href="#api">API</a><a href="#scope">Scope</a><a href="#open">Open questions</a><a href="#evidence">Evidence</a></nav>
+</section>
+
+<article class="pr">
+
+<h2 id="minute">In one minute</h2>
+<p class="answer">A plan is not a ticket. It is a pricing rule plus a usage meter, and it plugs into the registration flow peakst8 already has.</p>
+<div class="stages">
+  <div><span class="lbl">1 · Host</span><b>Creates a plan</b><p>Decides what it covers, how often it can be used, the price and billing, and the rules.</p></div>
+  <div><span class="lbl">2 · Host</span><b>Sets plan price per ticket</b><p>On each ticket category, plan holders pay nothing, half, full price or a custom ₹ or % amount.</p></div>
+  <div><span class="lbl">3 · Member</span><b>Joins</b><p>Pays, or requests approval and then pays. The plan appears under Passes → Plans.</p></div>
+  <div><span class="lbl">4 · Member</span><b>Books as usual</b><p>Checkout finds the plan, reprices the ticket and records one use. At ₹0, Razorpay is skipped.</p></div>
+  <div><span class="lbl">5 · System</span><b>Renews or ends</b><p>Renews automatically with a notice 24 hours before. If cancelled, access lasts to the end of the period.</p></div>
+</div>
+
+<h2 id="concepts">Concepts</h2>
+<div class="tbl"><table>
+  <thead><tr><th>peakst8 term</th><th>SweatPals term</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td>Plan</td><td>Plan (Membership or Class Pack)</td><td>The product a club sells. <code>kind = MEMBERSHIP | PACK</code></td></tr>
+    <tr><td>Plan price</td><td>Tier</td><td>A price option on a plan, for example ₹1,499 a month or ₹14,999 a year</td></tr>
+    <tr><td>Intro offer</td><td>Offer</td><td>A discounted first period, once per member, for example ₹199 for 2 weeks, then ₹1,499 a month</td></tr>
+    <tr><td>Coverage + usage limit</td><td>Booking pools + limits</td><td>Which events the plan covers, and N bookings per period or in total</td></tr>
+    <tr><td>Category plan policy</td><td>Plan policy per experience</td><td>What a holder pays for a ticket category: Free, Half, Full or Custom</td></tr>
+    <tr><td>Member plan</td><td>user-to-membership</td><td>One member's copy: status, period, credits, renewal date</td></tr>
+    <tr><td>Join request</td><td>Membership join request</td><td>Used when the plan needs approval. The member can withdraw it.</td></tr>
+    <tr><td>Plan share</td><td>Shared plan</td><td>The holder invites family or friends to use the plan's benefits</td></tr>
+    <tr><td>Guest pass</td><td>Guest pass</td><td>The holder sends a friend one free trial booking</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="member">Member flows</h2>
+<h3>Join button states on the plan card</h3>
+<div class="btns"><span class="b1">Join</span><span class="b1">Request to join</span><span class="b2">Request pending · Withdraw</span><span class="b3">Not approved</span><span class="b2">View</span></div>
+<p>These are the five states SweatPals' offer card renders. The state comes from the member's plan and their join request.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Flow</th><th>What happens</th></tr></thead>
+  <tbody>
+    <tr><td>Join</td><td>Club page → Plans → card → Join → confirm price, billing, intro offer, minimum commitment, waiver and questionnaire → pay (mandate for a recurring plan, order for a pack) → receipt → Passes → Plans</td></tr>
+    <tr><td>Use</td><td>Plan screen shows status, renewal or expiry date, coverage, credits left, shares and guest passes. Booking any covered event shows "Booked with &lt;plan&gt;" and the plan price.</td></tr>
+    <tr><td>Renew</td><td>Automatic, with a notice 24 hours before. A promo code applies only to the first charge.</td></tr>
+    <tr><td>Cancel</td><td>Manage → Cancel. Either it cancels straight away (Auto) or it sends a request to the host (Review). A minimum commitment blocks cancelling. Access lasts to the end of the period, with no automatic refund.</td></tr>
+    <tr><td>Change plan</td><td>Cancel and join the new plan. Only the host can switch a member directly.</td></tr>
+    <tr><td>Claim links</td><td>Sent plan, shared plan, guest pass and fix billing all open from a link with a signed token. The member fills in details and the intake form, then claims or pays. No account is needed beforehand.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="host">Host flows</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Create a plan</th><th>Fields</th></tr></thead>
+  <tbody>
+    <tr><td>Basics</td><td>Membership or Pack, name, description, cover image</td></tr>
+    <tr><td>Coverage</td><td>Event types (Training, Single day and so on) or specific events</td></tr>
+    <tr><td>Usage limit</td><td>Unlimited, N in total, or N per day, week, month or year. Roll-over is optional.</td></tr>
+    <tr><td>Apply to existing</td><td>Set Free, Half, Full or Custom on every covered category in one action</td></tr>
+    <tr><td>Pricing</td><td>Recurring (weekly, monthly, every 4 weeks, quarterly, half-yearly or yearly) or one-time with validity (never expires, from purchase, from first use, fixed date)</td></tr>
+    <tr><td>Extras</td><td>Intro offer, joining fee, minimum commitment</td></tr>
+    <tr><td>Rules</td><td>One per member, first-timers only, capacity, approval required, unlisted, featured, shareable (seats), guest passes, WhatsApp group, waiver, questionnaire</td></tr>
+    <tr><td>Cancellation</td><td>Automatic, or review each request</td></tr>
+  </tbody>
+</table></div>
+<div class="tbl"><table>
+  <thead><tr><th>Manage a member's plan</th><th>Effect</th></tr></thead>
+  <tbody>
+    <tr><td>Pause / resume</td><td>Billing and access stop, price and credits are kept, and the end date moves out. Only the host can pause.</td></tr>
+    <tr><td>Cancel / refund</td><td>Cancel keeps access to the end of the period. Refund, then keep the plan, cancel it now or pause it.</td></tr>
+    <tr><td>Change</td><td>Billing date, credits left or price, for this cycle or for all cycles</td></tr>
+    <tr><td>Switch plan</td><td>Upgrade or downgrade with an optional extra charge</td></tr>
+    <tr><td>Share, send, fix billing</td><td>Add seats on a shareable plan. Send a plan (free, free for a period, or full payment). Recover a failed renewal (this cycle, prorated or custom).</td></tr>
+    <tr><td>Requests</td><td>Approve or reject join and cancel requests</td></tr>
+    <tr><td>Money</td><td>Upcoming renewals, at-risk renewals (no or expiring mandate), projected revenue. Plan revenue goes into the weekly club payout.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="lifecycle">Member plan lifecycle</h2>
+<figure>
+<svg viewBox="0 0 900 360" role="img" aria-label="Member plan status diagram">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8b8c92"/></marker></defs>
+  <g font-size="12.5" font-weight="700" text-anchor="middle">
+    <rect x="20" y="40" width="160" height="44" rx="22" fill="#fff" stroke="#e7e7ea"/><text x="100" y="67">PENDING_APPROVAL</text>
+    <rect x="230" y="40" width="160" height="44" rx="22" fill="#fff" stroke="#e7e7ea"/><text x="310" y="67">PENDING_PAYMENT</text>
+    <rect x="470" y="140" width="140" height="48" rx="24" fill="#0b0b0c"/><text x="540" y="169" fill="#fff">ACTIVE</text>
+    <rect x="230" y="140" width="140" height="44" rx="22" fill="#fff" stroke="#e7e7ea"/><text x="300" y="167">PAUSED</text>
+    <rect x="700" y="140" width="140" height="44" rx="22" fill="#fff" stroke="#ff5148"/><text x="770" y="167" fill="#ff5148">PAST_DUE</text>
+    <rect x="430" y="260" width="220" height="44" rx="22" fill="#fff" stroke="#e7e7ea"/><text x="540" y="287">CANCELS_AT_PERIOD_END</text>
+    <rect x="720" y="260" width="120" height="44" rx="22" fill="#fff" stroke="#e7e7ea"/><text x="780" y="287">ENDED</text>
+    <rect x="470" y="40" width="140" height="44" rx="22" fill="#fff" stroke="#e7e7ea"/><text x="540" y="67" fill="#8b8c92">ABANDONED</text>
+  </g>
+  <g stroke="#8b8c92" stroke-width="1.5" fill="none" marker-end="url(#a)">
+    <path d="M180 62H228"/>
+    <path d="M390 62H468"/>
+    <path d="M330 84L480 142"/>
+    <path d="M470 172H372"/>
+    <path d="M372 152H468"/>
+    <path d="M610 156H698"/>
+    <path d="M700 176H612"/>
+    <path d="M540 188V258"/>
+    <path d="M650 282H718"/>
+    <path d="M780 184V258"/>
+    <path d="M100 84V320H760V306"/>
+  </g>
+  <g font-size="11" fill="#505157" text-anchor="middle">
+    <text x="204" y="54">approved</text>
+    <text x="430" y="54">30 min, no pay</text>
+    <text x="372" y="124" text-anchor="end">paid / mandate ok</text>
+    <text x="420" y="146">resume</text>
+    <text x="420" y="190">host pauses</text>
+    <text x="655" y="148">renewal fails</text>
+    <text x="655" y="194">fix billing</text>
+    <text x="596" y="228">cancel (Auto) or</text>
+    <text x="596" y="242">request approved</text>
+    <text x="684" y="276">period ends</text>
+    <text x="834" y="228">retries</text>
+    <text x="834" y="242">exhausted</text>
+    <text x="430" y="336">rejected</text>
+  </g>
+</svg>
+<figcaption>A pack goes from ACTIVE to ENDED when its credits run out or its validity passes. A Review cancellation keeps the plan ACTIVE until the host approves.</figcaption>
+</figure>
+<div class="tbl"><table>
+  <thead><tr><th>Status</th><th>Can book with plan</th><th>Billing</th></tr></thead>
+  <tbody>
+    <tr><td>ACTIVE</td><td>Yes, if credits are left</td><td>Renews on <code>currentPeriodEnd</code></td></tr>
+    <tr><td>CANCELS_AT_PERIOD_END</td><td>Yes, until the period ends</td><td>No more charges</td></tr>
+    <tr><td>PAST_DUE</td><td>No</td><td>Razorpay retries, and a fix billing link is sent</td></tr>
+    <tr><td>PAUSED</td><td>No</td><td>Stopped</td></tr>
+    <tr><td>PENDING_*, ENDED, ABANDONED</td><td>No</td><td>None</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="checkout">How checkout prices a booking</h2>
+<p class="answer">This runs inside the existing <code>proceedToPayment</code>, before the Razorpay order is created.</p>
+<pre><span class="c">// input: user U, event E, category C</span>
+1  plans  = U's plans (owned or shared) in ACTIVE | CANCELS_AT_PERIOD_END, not expired
+2  keep   = coverage includes E (event type or event id), club = E.club or co-host club
+3  keep   = has a CategoryPlanPolicy for C
+4  keep   = usage meter allows one more booking in the period containing E.startDate
+5  price  = FREE 0 · HALF base/2 · FULL base · CUSTOM_PERCENT base×(1−p) · CUSTOM_FLAT max(0, base−x)
+6  pick   = lowest price; on a tie, the pack expiring soonest, then a limited plan before unlimited
+7  write  = registration.appliedUserPlanId, PlanUsage(HELD)
+8  ₹0     → TICKET_GENERATED, no Razorpay order · &gt; ₹0 → order for the reduced amount
+9  paid   → usage CONSUMED · failed or expired → RELEASED
+10 cancel → RELEASED inside the club's window, otherwise it stays CONSUMED</pre>
+<ul>
+  <li><b>Coupons apply after the plan</b>, and only when the price is still above ₹0. Plans never combine with each other.</li>
+  <li><b>Credits are counted by event date</b>, so booking next month's run uses next month's allowance.</li>
+  <li>SweatPals has the same step: <code>memberships/eligible-for-bookable-service/:id</code> and <code>payments/public/plan-holders-plans</code>.</li>
+</ul>
+
+<h2 id="payments">Payments on peakst8</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Concern</th><th>SweatPals</th><th>peakst8</th></tr></thead>
+  <tbody>
+    <tr><td>Recurring</td><td>Stripe Subscriptions</td><td>Razorpay Subscriptions, with mandates by UPI AutoPay, card or eNACH</td></tr>
+    <tr><td>Packs</td><td>Stripe one-time payment</td><td>Razorpay Order: reuse <code>PaymentTransaction</code> and <code>RazorpayPayment</code></td></tr>
+    <tr><td>Renewal notice</td><td>24 hours before</td><td>A pre-debit notice at least 24 hours before is required for e-mandates. Send it by push, WhatsApp and email.</td></tr>
+    <tr><td>Large renewals</td><td>n/a</td><td>No extra authentication up to ₹15,000 under RBI e-mandate rules. Above that, check yearly plans.</td></tr>
+    <tr><td>Failed renewal</td><td>3 retries, then an email</td><td>Razorpay retries. On <code>subscription.halted</code>, move to PAST_DUE and send a fix billing link.</td></tr>
+    <tr><td>Payouts</td><td>Host's Stripe account</td><td>The platform collects. Plan revenue joins the weekly payout and the platform fee.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="data">Data model</h2>
+<p>The full draft is in <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/memberships/schema-draft.prisma"><code>schema-draft.prisma</code></a>. Merged with today's backend schema, it passes <code>prisma validate</code>.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Model</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Plan</td><td>Club, kind, coverage, usage limit, rules, cancellation policy</td></tr>
+    <tr><td>PlanPrice · PlanIntroOffer</td><td>Price options (recurring interval or one-time validity), joining fee, Razorpay plan id; intro period</td></tr>
+    <tr><td>PlanCoverage · CategoryPlanPolicy</td><td>What the plan covers; what holders pay per ticket category</td></tr>
+    <tr><td>UserPlan</td><td>Member's plan: status, period, credits, pause, cancel, commitment, Razorpay subscription id</td></tr>
+    <tr><td>PlanUsage</td><td>One row per booking (HELD, CONSUMED or RELEASED): the usage meter</td></tr>
+    <tr><td>PlanCharge</td><td>First payment, renewals, fix billing, switches, joining fee</td></tr>
+    <tr><td>PlanJoinRequest · PlanCancelRequest</td><td>Approval workflows</td></tr>
+    <tr><td>PlanShare · GuestPass</td><td>Shared seats; trial passes</td></tr>
+    <tr><td>UserPlanEvent</td><td>Append-only history of every member and host action</td></tr>
+    <tr><td>Existing tables</td><td><code>Registration.appliedUserPlanId</code>, <code>Category.isPlanHoldersOnly</code>, plus relations</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="api">API</h2>
+<div class="tbl"><table>
+  <thead><tr><th>peakst8 route</th><th>Modelled on (SweatPals)</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /plans/public/club/:clubId</code></td><td><code>memberships/public/community/:id</code></td></tr>
+    <tr><td><code>GET /plans/public/price/:id/offers</code></td><td><code>membership-offers/public/tier/:id</code></td></tr>
+    <tr><td><code>POST /plans/:planId/join</code></td><td>checkout and payment intent</td></tr>
+    <tr><td><code>GET /plans/me</code> · <code>/plans/me/eligible</code></td><td><code>memberships/current</code> · <code>eligible-for-bookable-service</code></td></tr>
+    <tr><td><code>POST /plans/me/:id/cancel</code> · <code>/shares</code> · <code>/guest-passes</code></td><td>app Manage menu</td></tr>
+    <tr><td><code>/plan-join-requests/me</code> · <code>/:id/withdraw</code></td><td><code>membership-join-requests/my</code> · <code>/withdraw</code></td></tr>
+    <tr><td><code>/plans/public/{claim,share,guest-pass,fix-billing,payment-method}/:token</code></td><td><code>memberships/public/{user-membership,shared-membership,guest-pass,fix-billing,payment-method-update}/:id</code></td></tr>
+    <tr><td>Host: <code>/host/clubs/:clubId/plans</code>, <code>/host/categories/:id/plan-policies</code></td><td>dashboard Plans</td></tr>
+    <tr><td>Host: <code>…/:userPlanId/{pause,resume,renew,deactivate,refund,switch,billing-date,credits,price,history}</code></td><td><code>user/:uid/membership/:id/{pause,renew,deactivate,history}</code></td></tr>
+    <tr><td>Webhook: extend the Razorpay handler with <code>subscription.*</code></td><td>Stripe webhooks</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="scope">Scope</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Area</th><th>V1</th><th>V2</th></tr></thead>
+  <tbody>
+    <tr><td>Plans</td><td>Membership (monthly or quarterly) and Pack (credits plus expiry), one price each</td><td>Several prices, yearly and other intervals</td></tr>
+    <tr><td>Coverage</td><td>Event types or events, per-category policy, apply to existing events</td><td>Plan-holders-only categories, roll-over</td></tr>
+    <tr><td>Member</td><td>Join, approval, pay, Passes → Plans, automatic pricing, cancel (Auto or Review), renewal notice</td><td>Shared plans, guest passes, intro offer, joining fee, minimum commitment</td></tr>
+    <tr><td>Host</td><td>Create, edit and archive; member list; cancel and refund; approve requests</td><td>Pause, switch, change price, date or credits, send plan, fix billing, upcoming renewals</td></tr>
+    <tr><td>Payments</td><td>Razorpay Subscriptions (UPI AutoPay and card), Orders for packs, webhooks, payout and fee</td><td>eNACH, prorated switches</td></tr>
+  </tbody>
+</table></div>
+<p><b>Not planned:</b> network or multi-club passes, appointments, a leads pipeline, migration from other platforms, members pausing their own plan.</p>
+
+<h2 id="open">Open questions</h2>
+<ul>
+  <li><b>Coverage unit:</b> is a weekly club run one event per session, or one multi-day event? Counting usage by event date assumes one registration per session.</li>
+  <li><b>Uniqueness:</b> <code>Registration @@unique([eventId, userId])</code> allows one booking per event. Does that fit how sessions are modelled?</li>
+  <li><b>Failed renewal:</b> do sessions already booked in the new period stand?</li>
+  <li><b>Platform fee:</b> the same <code>platformFeePercentage</code> as tickets, or a separate rate for recurring revenue?</li>
+  <li><b>Refunds:</b> full only, or partial-period too? Who can issue them?</li>
+  <li><b>Naming:</b> Plans, Memberships or Passes in the app?</li>
+  <li><b>Pilot:</b> which 2 or 3 clubs, and at what price points?</li>
+</ul>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq">
+  <dt>Does buying a plan book me into sessions?</dt><dd>No. Members book each session, and the plan benefit applies at checkout.</dd>
+  <dt>Can a member pause their own plan?</dt><dd>No. Only the host can pause, which is also how SweatPals works.</dd>
+  <dt>Can plans and coupons stack?</dt><dd>A coupon applies to the price after the plan, if that price is above ₹0. Two plans never combine.</dd>
+  <dt>What if a member cancels after a renewal?</dt><dd>There is no automatic refund. Access lasts to the end of the period, and any refund is at the club's discretion.</dd>
+</dl>
+
+<h2 id="evidence">Evidence</h2>
+<p>SweatPals help centre, read on 1 Nov 2026: <a href="https://help.sweatpals.com/31-joining-a-membership" target="_blank" rel="noopener">3.1</a>, <a href="https://help.sweatpals.com/32-managing-your-billing-and-payments" target="_blank" rel="noopener">3.2</a>, <a href="https://help.sweatpals.com/33-membership-access-and-cancellations" target="_blank" rel="noopener">3.3</a>, <a href="https://help.sweatpals.com/34-making-use-of-your-membership" target="_blank" rel="noopener">3.4</a>, <a href="https://help.sweatpals.com/51-membership-overview" target="_blank" rel="noopener">5.1</a>, <a href="https://help.sweatpals.com/52-creating-and-configuring-memberships" target="_blank" rel="noopener">5.2</a>, <a href="https://help.sweatpals.com/52a-additional-membership-settings" target="_blank" rel="noopener">5.2a</a>, <a href="https://help.sweatpals.com/53-managing-active-members" target="_blank" rel="noopener">5.3</a> and <a href="https://help.sweatpals.com/34-create-a-class-pack" target="_blank" rel="noopener">Class Packs</a>. Route names come from the JavaScript on SweatPals' public community pages. No logged-in or private calls were made. The full route list is in the <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/memberships/README.md#evidence">README</a>.</p>
+
+</article>
+</main>
+
+<footer>peakst8 · internal product note, 1 Nov 2026 · <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/memberships">Source</a></footer>
+</div>
+<script>
+(function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='memberships'});if(!n)return;
+var st=document.getElementById('status');st.innerHTML='<span>Status</span><b></b><span></span><span></span>';st.children[1].textContent=n.status;st.children[2].textContent=n.next?'Next: '+n.next:'';st.children[3].textContent='Updated '+n.updated+(n.owner?' · '+n.owner:'')}).catch(function(){})})();
+</script>
+</body>
+</html>
