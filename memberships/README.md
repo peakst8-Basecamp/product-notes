@@ -2,7 +2,7 @@
 
 **A peakst8 product feature.** Clubs sell **plans**: a recurring membership (for example ₹1,499 a month) or a prepaid pack (for example 10 runs). A member buys the plan once and then books each run, class or event as usual. At checkout, peakst8 applies the plan automatically, so the ticket is free, discounted or uses up one credit.
 
-[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Schema draft](schema-draft.prisma) · Internal · Draft · updated 1 Nov 2026
+[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) · [Schema draft](schema-draft.prisma) · Internal · Draft · updated 2 Nov 2026
 
 This note reverse-engineers SweatPals Memberships, which SweatPals now calls "Plans". It sets out exactly what they built, then maps it onto the peakst8 backend (Express, Prisma, Postgres and Razorpay). SweatPals has no public repo, so everything here comes from their public help centre and the network routes their public web app calls (see [Evidence](#evidence)).
 
@@ -15,6 +15,18 @@ This note reverse-engineers SweatPals Memberships, which SweatPals now calls "Pl
 5. **Renewal and exit.** A recurring plan renews automatically with a notice 24 hours before. Cancelling either takes effect straight away or goes to the host as a request, and access lasts until the end of the period. Only the host can pause, refund, switch or change a plan.
 
 The point is the separation: **a plan is not a ticket.** It is a pricing rule plus a usage meter, and it attaches to the existing registration flow.
+
+## Working prototype
+
+[`prototype/`](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) is a single page that runs the feature end to end in the peakst8 app's own design: dark theme, Outfit and Bricolage Grotesque, the blue `PrimaryButtonV2` gradient, the indigo-to-cyan selected pass row from `ChoosePassTab`, the gold step and offer gradient, the `EventCtaSection` price bar and the angled strike-through. The state is real, so changes on one side show up on the other:
+
+| Side | What you can do |
+| --- | --- |
+| **Member (phone)** | Browse plans on the club page · join with or without the intro offer · request to join an approval-only plan and withdraw it · pay through a mock Razorpay UPI AutoPay mandate · see "Member price" on events · check out at the plan price (₹0 skips payment) · view the ticket with its membership discount · see credits and renewal in Passes → Plans · cancel (Auto or Review) · fix a failed renewal |
+| **Host (dashboard)** | Plans list with MRR and holders · create and publish a plan (it appears on the club page and sets its price on covered passes) · change the plan price on any pass · pause, resume, add credits to or cancel the live member's plan · approve or decline join and cancel requests |
+| **Simulated time** | Skip to the next renewal (a pre-debit notice, then a charge or a failure) · make the next renewal fail · reset |
+
+The right-hand panel shows the member's `UserPlan` rows, the event log, and for the last checkout every step of the pricing rule: which plans were kept or dropped and why.
 
 ## Who we're building it for
 
@@ -277,6 +289,25 @@ user-to-membership/:id                              wallet/v1/user-memberships/ 
 UI button states (offer card): Join · Request to join · Request pending → Withdraw · Not approved · View
 ```
 
+**Static analysis with REA** (`rea-agents analyze-javascript-application`, 2 Nov 2026): SweatPals' public Next.js bundles for the membership, checkout, claim, guest-pass and fix-billing pages (56 files) were analysed as inert text and never executed. The run over the 5 membership chunks recovered 1,425 webpack modules (Evidence `ev_da05d85e…`). Coverage is partial by design: 51 files were outside the selected sources, and dynamic or obfuscated paths stay unresolved. The screens and states the prototype rebuilds come from the component names and translation keys in those modules:
+
+| SweatPals screen or state (component · translation keys) | Rebuilt in the prototype as |
+| --- | --- |
+| `host:offers.*` (offer card: buy, request, withdraw, not approved, view) | Club page plan cards and their five button states |
+| `checkout:membershipSelector.*`, `membershipTier.billingPeriod.*`, `membershipTier.signUpFee` | Join sheet, Plan step: billing options and sign-up fee |
+| `checkout:membershipOffer.*` (choose offer, continue at base price, duration) | Join sheet, Offer step |
+| `checkout:membershipCheckout.commitmentDisclosure`, `commitmentPeriod.*` | Minimum commitment note and cancel block |
+| `checkout:approvalInfo.requestPlan*`, `joinRequest.*` (in review, declined, withdraw) | Request step, pending card, withdraw |
+| `checkout:membershipUnavailable.*`, `membershipFirstTimeOnly.*`, `membershipLimited.*` | Rules in the schema (capacity, first-timers, one per member) |
+| `event:ticketBanner.memberPriceBadge*`, `event:membershipBanner.seePlansCta`, `MembersOnlyBanner`, `ChooseTickets` mode `members-only` | "Member price" on events, "See plans" prompt, plan-holders-only categories |
+| `checkout:plansAndTickets.withYourPlan`, `notIncludedWithPlan`, `pickPlanError` | Choose Pass: "With your plan" and "Not included with your plan" |
+| `checkout:summary.membershipDiscount`, `summary.introOffer`, `summary.renewalDiscount` | Checkout and ticket summary lines |
+| `checkout:orderConfirmation.membershipTitle`, `membershipConfirmedSubtitle`, `requestPendingTitle` | "You're in. Membership confirmed." and "Request sent" |
+| `checkout:membershipCard.benefitsApplyAutomatically` | Plan card in Passes → Plans |
+| Pages `/claim-membership/[id]`, `/fix-billing/[id]`, `/guest-pass/[id]`, `/user-membership/[id]/intake-form`, `/embed/[alias]/membership-checkout` | Claim and fix-billing flows in the spec (fix billing is in the prototype) |
+
+The English copy for these keys isn't in the bundles (it loads at runtime), so the prototype's wording is peakst8's own.
+
 **peakst8 backend** (`peakst8-Basecamp/peakst8-backend`, `prisma/schema.prisma`): there are no subscription or plan models yet. Payments use Razorpay Orders (`PaymentTransaction`, `RazorpayPayment`, `RefundTransaction`). The ticket unit is `Event` → `Category` → `Registration` → `Ticket`. Approvals use `ApprovalRequest`, and waivers use `Waiver` on `Category`.
 
 ## In this folder
@@ -285,4 +316,5 @@ UI button states (offer card): Join · Request to join · Request pending → Wi
 | --- | --- |
 | `README.md` | This note |
 | `index.html` | Note page for the site |
+| `prototype/index.html` | Working prototype (one self-contained page) |
 | `schema-draft.prisma` | Proposed Prisma models, to merge into `peakst8-backend/prisma/schema.prisma` |

@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Working prototype of peakst8 Club Memberships: join a plan, book with it, and run the host side. Reverse-engineered from SweatPals Plans.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/memberships/prototype/">
+<title>peakst8 Club Memberships</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap">
+<style>
+/* Layout: flow rail · live phone (or host dashboard) · state panel. Tokens are the peakst8 app's own (frontend globals.css, PrimaryButtonV2, ChoosePassTab, EventCtaSection). Dark only, like the app. */
+:root{
+  color-scheme:dark;
+  --bg:#060709; --bg-2:#1a202a;            /* events-layout-gradient stops */
+  --drawer:#050506; --surface:#121316; --bar:#2f3032; --step:#2d2d2e;
+  --fg:#fafafa; --muted:#a1a1aa; --dim:#71717a; --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.16);
+  --blue-a:#0469d4; --blue-b:#002750;      /* PrimaryButtonV2 */
+  --pass-a:#2e3192; --pass-b:#1bffff;      /* selected pass row */
+  --gold-a:#d8c6aa; --gold-b:#c97e05; --gold-ink:#3a3b40;  /* coupon banner, active step */
+  --ok:#34d399; --warn:#fbbf24; --bad:#ef4444;
+  --sans:"Outfit",system-ui,-apple-system,sans-serif;
+  --display:"Bricolage Grotesque","Outfit",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;-webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(141deg,var(--bg-2) 0%,var(--bg) 29%);background-attachment:fixed}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pass-b);outline-offset:2px}
+.wrap{max-width:1400px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.top .brand{display:flex;align-items:center;gap:12px}
+.top .brand svg{height:20px;width:auto}
+.top .brand span{color:var(--muted);font-size:13px;border-left:1px solid var(--line-2);padding-left:12px}
+.top .hint{color:var(--dim);font-size:12.5px}
+.grid{display:grid;grid-template-columns:210px minmax(0,1fr) 320px;gap:20px;align-items:start}
+@media (max-width:1180px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Rail */
+.rail{display:grid;gap:18px;position:sticky;top:max(16px,env(safe-area-inset-top,0px))}
+.rail h3{margin:0 0 6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500}
+.rail nav{display:grid;gap:2px}
+.rail button{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;background:none;border:0;border-radius:8px;padding:9px 10px;color:var(--muted);font-size:14px}
+.rail button:hover{background:rgba(255,255,255,.05);color:var(--fg)}
+.rail button[aria-current="page"]{background:rgba(255,255,255,.08);color:var(--fg)}
+.badge{min-width:20px;height:20px;border-radius:999px;padding:0 6px;display:inline-grid;place-items:center;font-size:11.5px;font-weight:600;color:var(--gold-ink);background:linear-gradient(108deg,var(--gold-a),var(--gold-b))}
+@media (max-width:1180px){
+  .rail{position:static;grid-template-columns:minmax(0,1fr)}
+  .rail .grp{min-width:0}
+  .rail nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .rail button{flex:none;border:1px solid var(--line-2);border-radius:999px;padding:7px 12px;font-size:13px}
+}
+
+/* Stage */
+.stage{display:grid;justify-items:center;min-width:0}
+.phone{width:min(100%,392px);height:780px;border-radius:44px;border:1px solid var(--line-2);background:var(--bg);background-image:linear-gradient(141deg,var(--bg-2) 0%,var(--bg) 29%);position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.phone .scroll{position:absolute;inset:0;overflow-y:auto;padding:18px 18px 110px}
+.dash{width:100%;min-height:780px;border-radius:24px;border:1px solid var(--line-2);background:#0b0c0e;position:relative;overflow:hidden}
+.dash .scroll{padding:22px clamp(16px,3vw,28px) 40px;overflow-x:auto}
+.sb{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);padding:0 6px 12px}
+.appbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back{width:34px;height:34px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);display:grid;place-items:center}
+.appbar b{font-size:16px;font-weight:600}
+
+/* Type */
+h1.d,h2.d{font-family:var(--display);font-weight:700;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1.d{font-size:30px;line-height:1.05}
+h2.d{font-size:20px;line-height:1.15}
+.sub{color:var(--muted);font-size:14.5px;line-height:1.5;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.num{font-variant-numeric:tabular-nums}
+.strike{position:relative;display:inline-block;color:var(--muted)}
+.strike::after{content:"";position:absolute;left:0;top:50%;width:100%;height:2px;background:currentColor;transform:rotate(-8deg)}
+
+/* Pieces */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:44px;padding:0 18px;border-radius:8px;border:0;font-weight:500;font-size:15px;color:var(--fg);background:linear-gradient(90deg,var(--blue-a),var(--blue-b));transition:opacity .15s,transform .1s}
+.btn:hover{opacity:.9}.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.block{width:100%;height:52px}
+.btn.ghost{background:transparent;border:1px solid var(--line-2)}
+.btn.danger{background:rgba(239,68,68,.16);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
+.btn.sm{height:34px;padding:0 12px;font-size:13px}
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid var(--line-2);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+.pill.warn{color:var(--warn);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+.pill.bad{color:#fca5a5;border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.08)}
+.pill.gold{color:var(--gold-ink);border:0;background:linear-gradient(108deg,var(--gold-a),var(--gold-b))}
+.card{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stack{display:grid;gap:12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hr{height:1px;background:var(--line);margin:4px 0}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.list{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.list li{display:flex;gap:10px;align-items:flex-start;color:var(--muted);line-height:1.45}
+.list li svg{flex:none;margin-top:2px}
+
+/* Club header */
+.club{display:flex;gap:12px;align-items:center}
+.club .logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#ff6b3d,#ffb547);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:18px;color:#1a0d05}
+.plan{display:grid;gap:10px;padding:16px;border-radius:16px;border:1px solid var(--line-2);background:rgba(255,255,255,.03);text-align:left;width:100%}
+.plan:hover{border-color:rgba(255,255,255,.3)}
+.plan .price{font-family:var(--display);font-weight:700;font-size:22px}
+.plan .per{color:var(--muted);font-size:13px;font-weight:400;font-family:var(--sans)}
+.plan .feat{display:flex;gap:6px;flex-wrap:wrap}
+.event{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;padding:10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.025);text-align:left;width:100%}
+.event .art{height:64px;border-radius:10px;background:linear-gradient(160deg,#1e3a5f,#0f172a);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:13px;line-height:1;text-align:center;color:#cfe8ff}
+.event b{font-size:14.5px;font-weight:600}
+.memberprice{font-size:12px;font-weight:600;color:var(--gold-ink);background:linear-gradient(108deg,var(--gold-a),var(--gold-b));border-radius:6px;padding:2px 6px}
+
+/* Pass rows (ChoosePassTab) */
+.pass{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;padding:12px 14px;border-radius:12px;border:0;outline:1px solid #6b7280;background:transparent}
+.pass:hover:not([aria-disabled="true"]){background:linear-gradient(90deg,var(--pass-a) -1.67%,var(--pass-b) 186.67%);outline-color:transparent}
+.pass[aria-checked="true"]{background:linear-gradient(90deg,var(--pass-a) -1.67%,var(--pass-b) 186.67%);outline-color:transparent}
+.pass[aria-disabled="true"]{opacity:.5;cursor:not-allowed}
+.pass .l{display:flex;gap:10px;align-items:center;min-width:0}
+.pass .t{display:grid;gap:2px;min-width:0}
+.pass .t span:last-child{color:var(--muted);font-size:13px}
+.pass[aria-checked="true"] .t span:last-child{color:#dbeafe}
+.pass .r{text-align:right;flex:none;display:grid;gap:2px;font-size:15px}
+.withplan{font-size:11.5px;color:var(--gold-a)}
+
+/* Sticky CTA bar (EventCtaSection) */
+.ctabar{position:absolute;left:0;right:0;bottom:0;padding:12px 14px 18px;background:linear-gradient(transparent,rgba(5,5,6,.9) 30%)}
+.ctabar .inner{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bar);border-radius:10px;padding:14px 16px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.ctabar .lbl{color:#9ca3af;font-size:13px}
+.ctabar .val{font-size:16px;font-weight:500}
+.banner-gold{display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:10px 10px 0 0;background:linear-gradient(108deg,var(--gold-a) -19%,var(--gold-b) 136%);color:var(--gold-ink);font-size:13px;font-weight:500}
+.banner-gold + .inner{border-radius:0 0 10px 10px}
+
+/* Sheet (RegisterEventDrawerFinal) */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:20;animation:fade .2s ease-out}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:92%;overflow-y:auto;z-index:21;background:var(--drawer);border:1px solid var(--line);border-bottom:0;border-radius:32px 32px 0 0;padding:22px 18px 22px;animation:up .32s cubic-bezier(.16,1,.3,1)}
+.sheet .head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px}
+.sheet .head .title{font-size:20px;font-weight:600}
+.x{width:32px;height:32px;border-radius:8px;border:0;background:none;color:var(--fg);opacity:.75;font-size:22px;line-height:1}
+.steps{display:flex;gap:6px;margin:4px 0 16px;overflow-x:auto}
+.steps span{flex:none;font-size:12px;padding:5px 10px;border-radius:999px;background:var(--step);color:var(--muted)}
+.steps span.on{color:var(--gold-ink);background:linear-gradient(108deg,#d8c6aa 0%,#f1d593 30%,#e6b85c 60%,#c97e05 100%);font-weight:600}
+.steps span.done{color:var(--fg)}
+.sum{display:grid;gap:8px;font-variant-numeric:tabular-nums}
+.sum .row{font-size:14px;color:var(--muted)}
+.sum .row b{color:var(--fg);font-weight:500}
+.sum .total{font-size:16px;color:var(--fg);font-weight:600}
+.note{font-size:12.5px;color:var(--dim);line-height:1.5}
+.offer{display:grid;gap:6px;padding:14px;border-radius:14px;border:1px solid rgba(216,198,170,.4);background:linear-gradient(140deg,rgba(216,198,170,.12),rgba(201,126,5,.08));text-align:left;width:100%}
+.offer[aria-checked="true"]{border-color:var(--gold-a);box-shadow:inset 0 0 0 1px var(--gold-a)}
+
+/* Razorpay mock */
+.rzp{position:absolute;inset:auto 14px 14px 14px;z-index:30;background:#fff;color:#111827;border-radius:16px;overflow:hidden;animation:up .3s cubic-bezier(.16,1,.3,1)}
+.rzp .hd{background:#0f172a;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.rzp .bd{padding:16px;display:grid;gap:10px}
+.rzp .opt{display:flex;justify-content:space-between;align-items:center;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;color:#111827;width:100%;text-align:left}
+.rzp .opt[aria-checked="true"]{border-color:#2563eb;box-shadow:inset 0 0 0 1px #2563eb}
+.rzp .pay{height:46px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-weight:600;font-size:15px}
+.rzp small{color:#6b7280;font-size:12px;line-height:1.45}
+
+/* Passes */
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.05);border-radius:10px;padding:4px}
+.tabs button{flex:1;height:34px;border:0;border-radius:8px;background:none;color:var(--muted);font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--bar);color:var(--fg)}
+.meter{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--pass-a),var(--pass-b))}
+.ticket{border-radius:16px;overflow:hidden;border:1px solid var(--line-2)}
+.ticket .top2{padding:16px;background:linear-gradient(135deg,#1e3a5f,#0f172a)}
+.ticket .qr{padding:16px;display:grid;justify-items:center;gap:8px;background:#fff;color:#111}
+
+/* Host dashboard */
+.dhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kpi{padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:grid;gap:4px}
+.kpi b{font-family:var(--display);font-size:22px;font-weight:700}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.tbl table{width:100%;min-width:640px;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-weight:500;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding:12px 14px;border-bottom:1px solid var(--line)}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl select,.field input,.field select{background:#141518;border:1px solid var(--line-2);border-radius:8px;height:36px;padding:0 10px}
+.form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:720px){.form{grid-template-columns:minmax(0,1fr)}}
+.field{display:grid;gap:6px}
+.field label{font-size:12.5px;color:var(--muted)}
+.field input,.field select{width:100%;height:40px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line-2);background:none;color:var(--muted);font-size:13px}
+.chip[aria-pressed="true"]{background:rgba(27,255,255,.1);border-color:rgba(27,255,255,.5);color:#cffafe}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px}
+.toggle input{width:18px;height:18px;accent-color:#1bffff}
+.menu{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Side panel */
+.panel{display:grid;gap:14px;position:sticky;top:max(16px,env(safe-area-inset-top,0px))}
+@media (max-width:1180px){.panel{position:static}}
+.panel .card{padding:14px}
+.panel h4{margin:0 0 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;font-size:13px}
+.kv dt{color:var(--dim)}.kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.log{display:grid;gap:8px;max-height:260px;overflow-y:auto;font-size:12.5px}
+.log div{display:grid;grid-template-columns:62px minmax(0,1fr);gap:8px;color:var(--muted);line-height:1.4}
+.log time{color:var(--dim);font-variant-numeric:tabular-nums}
+.rule{display:grid;gap:6px;font-size:12.5px;line-height:1.45;color:var(--muted);margin:0;padding-left:18px}
+.rule li.pass-ok::marker{color:var(--ok)}.rule li.fail::marker{color:var(--bad)}
+.ctrl{display:grid;gap:8px}
+.ctrl .row{font-size:13px}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#f4f4f5;color:#111;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:500;z-index:100;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:up .25s ease-out;max-width:calc(100% - 32px)}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.toast{animation-name:toastIn}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><svg role="img" aria-label="peakst8" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1276.26 357.96"><path d="M905.13,168.68c-12.71-10.47-30.25-16.93-52.63-19.37l-16.79-1.83c-10.26-1.22-17.66-3.53-22.21-6.95-4.54-3.41-6.82-8.28-6.82-14.62s2.8-11.94,8.39-16.08c5.59-4.14,13.52-6.21,23.78-6.21,11.42,0,20.11,2.44,26.05,7.31,5.94,4.88,9.27,10.85,9.97,17.91h43.71c-.7-20.95-8.28-36.79-22.73-47.52-14.46-10.72-33.34-16.08-56.65-16.08-15.16,0-28.5,2.38-40.04,7.13-11.54,4.75-20.58,11.76-27.1,21.02-6.53,9.26-9.79,20.71-9.79,34.36,0,17.06,5.71,30.77,17.13,41.12,11.42,10.36,27.86,16.63,49.31,18.82l16.44,1.83c12.82,1.46,21.86,4.15,27.1,8.04,5.25,3.9,7.87,9.02,7.87,15.35,0,7.56-3.5,13.52-10.49,17.91-6.99,4.39-16.21,6.58-27.63,6.58-13.99,0-24.25-2.8-30.77-8.41-6.53-5.6-10.14-11.82-10.84-18.64h-44.06c.93,20.47,8.8,36.49,23.61,48.06,14.8,11.57,35.26,17.36,61.37,17.36,16.78,0,31.35-2.62,43.71-7.86,12.35-5.24,21.97-12.73,28.85-22.48,6.87-9.74,10.32-21.2,10.32-34.36,0-17.78-6.35-31.92-19.06-42.4Z" style="fill:#fff;"/><path d="M343.42,78.41c-13.9-9.52-31.13-14.28-51.68-14.28-15.65,0-29.49,2.91-41.52,8.72-12.03,5.82-22.02,13.61-29.96,23.38-7.94,9.78-13.96,20.91-18.04,33.39-4.09,12.49-6.13,25.42-6.13,38.77v7.05c0,12.86,2.04,25.48,6.13,37.85,4.08,12.37,10.16,23.56,18.22,33.58,8.06,10.02,18.22,17.99,30.48,23.93,12.26,5.94,26.57,8.9,42.92,8.9s29.61-2.85,41.87-8.53c12.26-5.69,22.36-13.73,30.31-24.12,7.94-10.39,13.31-22.51,16.12-36.36h-45.2c-2.1,7.42-6.89,13.67-14.37,18.74-7.48,5.07-17.05,7.6-28.73,7.6s-21.72-2.78-29.43-8.35c-7.71-5.57-13.44-13.23-17.17-23-2.44-6.38-4.07-13.37-4.91-20.96h142.96v-18.92c0-17.81-3.5-34.44-10.51-49.91-7.01-15.46-17.46-27.95-31.36-37.48ZM243.15,152.81c.96-5.67,2.38-10.87,4.26-15.58,3.86-9.65,9.51-17.13,16.99-22.45,7.47-5.32,16.58-7.98,27.33-7.98s19.62,2.48,26.63,7.42c7.01,4.95,12.32,12,15.94,21.15,2.06,5.21,3.51,11.03,4.4,17.44h-95.56Z" style="fill:#fff;"/><polygon points="764.74 65.42 707.58 65.42 645.88 168.2 645.88 1.79 594.3 1.79 594.3 275.54 645.88 275.54 645.88 178.42 667.77 178.42 706.48 275.54 764.74 275.54 708.7 157.08 764.74 65.42" style="fill:#fff;"/><path d="M529.98,87.79c-4.9-5.87-10.63-10.79-17.22-14.7-10.02-5.94-21.25-8.91-33.71-8.91-16.37,0-30.96,4.67-43.78,14-12.82,9.33-22.9,22.06-30.23,38.18-7.33,16.12-10.99,34.37-10.99,54.73s3.66,38.18,10.99,54.31c7.33,16.12,17.4,28.85,30.23,38.18,12.82,9.33,27.29,14,43.42,14,12.7,0,24.12-2.97,34.26-8.91,6.55-3.84,12.22-8.67,17.04-14.46v23.37h48.36V65.36h-48.36v22.43ZM520.46,210.55c-8.31,10.47-19.18,15.7-32.61,15.7-8.55,0-16.25-2.4-23.08-7.21-6.84-4.81-12.15-11.31-15.94-19.51-3.79-8.2-5.68-17.82-5.68-28.85s1.89-20.22,5.68-28.43c3.78-8.2,9.03-14.71,15.75-19.52,6.71-4.81,14.47-7.21,23.26-7.21s16.85,2.33,23.45,7c6.59,4.67,11.84,11.24,15.75,19.73,3.9,8.49,5.86,18.1,5.86,28.85,0,15.84-4.16,29-12.46,39.46Z" style="fill:#fff;"/><path d="M143.07,78.18c-12.82-9.33-27.29-14-43.41-14-12.7,0-24.12,2.97-34.26,8.91-6.55,3.84-12.22,8.67-17.04,14.46v-23.37H0v293.79h48.36v-103.99c4.9,5.87,10.63,10.79,17.22,14.7,10.02,5.94,21.25,8.91,33.71,8.91,16.37,0,30.96-4.67,43.78-14,12.82-9.33,22.9-22.06,30.23-38.18,7.33-16.12,10.99-34.37,10.99-54.73s-3.66-38.18-10.99-54.31c-7.33-16.12-17.4-28.85-30.23-38.18ZM129.51,199.52c-3.78,8.2-9.03,14.71-15.75,19.52-6.71,4.81-14.47,7.21-23.26,7.21s-16.85-2.33-23.45-7c-6.59-4.67-11.84-11.24-15.75-19.73-3.9-8.49-5.86-18.1-5.86-28.85,0-15.84,4.16-29,12.46-39.46,8.31-10.47,19.18-15.7,32.61-15.7,8.55,0,16.25,2.4,23.08,7.21,6.84,4.81,12.15,11.31,15.94,19.51,3.79,8.2,5.68,17.82,5.68,28.85s-1.89,20.22-5.68,28.43Z" style="fill:#fff;"/><path d="M1246.63,0h-85.7c-16.36,0-29.63,13.51-29.63,30.17v84.2c0,10.68-4.56,20.83-12.49,27.81h0c-7.93,6.98-12.49,17.13-12.49,27.81v74.56c0,16.66,13.26,30.17,29.63,30.17h85.7c16.36,0,29.63-13.51,29.63-30.17v-74.56c0-10.68,4.56-20.83,12.49-27.81,7.93-6.98,12.49-17.13,12.49-27.81V30.17c0-16.66-13.26-30.17-29.63-30.17ZM1199.08,213.23c0,4.61-3.67,8.35-8.2,8.35h-24.18c-4.53,0-8.2-3.74-8.2-8.35v-33.16c0-17.78,14.16-32.2,31.62-32.2h.75c4.53,0,8.2,3.74,8.2,8.35v57.01ZM1224.06,93.3c0,17.99-14.33,32.58-32,32.58-4.74,0-8.57-3.91-8.57-8.73v-55.28c0-4.82,3.84-8.73,8.57-8.73h23.42c4.74,0,8.57,3.91,8.57,8.73v31.43Z" style="fill:#fff;"/><path d="M1024.4,275.26h5.32c-.91,0-1.77-.03-2.66-.04-.89.01-1.75.04-2.66.04Z" style="fill:#fff;"/><path d="M987.25,0h-48.61v196.97c0,19.54,2.9,35.07,8.72,46.57,5.81,11.5,14.71,19.67,26.72,24.49,11.42,4.59,25.95,6.97,43.54,7.19,17.58-.22,32.12-2.6,43.54-7.19,12-4.82,20.91-12.99,26.72-24.49,5.82-11.5,8.72-27.02,8.72-46.57v-61.83h-48.61l.37,59.79c0,9.9-2.65,17.5-7.98,22.82-1.46,1.47-3.85,3.14-6.55,4.8-12.43,7.64-28.51,5.7-38.81-4.64-.05-.05-.11-.11-.16-.16-5.32-5.32-7.98-12.92-7.98-22.82l.18-85.9h109.53v-44.85h-109.44l.1-64.18Z" style="fill:#fff;"/></svg><span>Club Memberships · working prototype</span></div>
+    <div class="hint">Everything is live: join a plan, book a run, then switch to the host side and change it.</div>
+  </header>
+  <div class="grid">
+    <aside class="rail" id="rail"></aside>
+    <main class="stage" id="stage"></main>
+    <aside class="panel" id="panel"></aside>
+  </div>
+</div>
+<div id="toastHost"></div>
+
+<script>
+(function(){
+'use strict';
+/* ───────────────────────── Data (mirrors schema-draft.prisma) ───────────────────────── */
+const DAY=86400000;
+const START=new Date('2026-11-02T09:00:00+05:30');
+const fmt=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const d=t=>new Date(t).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+const dLong=t=>new Date(t).toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+const addMonths=(t,n)=>{const x=new Date(t);x.setMonth(x.getMonth()+n);return x.getTime()};
+const INTERVAL={MONTHLY:{label:'month',months:1},QUARTERLY:{label:'quarter',months:3}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function seed(){
+  const now=START.getTime();
+  return {
+    now, failNextRenewal:false, view:'club', sheet:null, toast:null, lastPricing:null, seq:1,
+    user:{id:'u1',name:'Aarav Menon',phone:'+91 98450 21734'},
+    club:{name:'Find Your Fit',city:'Bengaluru',members:412},
+    plans:[
+      {id:'p1',kind:'MEMBERSHIP',name:'FYF Unlimited',description:'Every Find Your Fit training run, as often as you like.',coverage:['TRAINING'],limitPeriod:'UNLIMITED',usageLimit:null,
+       prices:[{id:'pp1',label:'Monthly',amount:1499,billing:'RECURRING',interval:'MONTHLY',joiningFee:0},{id:'pp2',label:'Quarterly',amount:3999,billing:'RECURRING',interval:'QUARTERLY',joiningFee:0}],
+       intro:{priceId:'pp1',amount:199,days:14},approval:false,cancellation:'AUTO',minCommitment:0,featured:true,published:true},
+      {id:'p2',kind:'MEMBERSHIP',name:'8 Runs a Month',description:'Two runs a week, any training session.',coverage:['TRAINING'],limitPeriod:'PER_MONTH',usageLimit:8,
+       prices:[{id:'pp3',label:'Monthly',amount:999,billing:'RECURRING',interval:'MONTHLY',joiningFee:0}],intro:null,approval:false,cancellation:'REVIEW',minCommitment:3,featured:false,published:true},
+      {id:'p3',kind:'PACK',name:'10-Run Pack',description:'Ten training runs, valid 90 days from purchase.',coverage:['TRAINING'],limitPeriod:'TOTAL',usageLimit:10,
+       prices:[{id:'pp4',label:'One-time',amount:2199,billing:'ONE_TIME',validityDays:90,joiningFee:0}],intro:null,approval:false,cancellation:'AUTO',minCommitment:0,featured:false,published:true},
+      {id:'p4',kind:'MEMBERSHIP',name:'Pacer Squad',description:'Coached sub-50 10K group. The coach approves every request.',coverage:['TRAINING','SINGLE_DAY'],limitPeriod:'UNLIMITED',usageLimit:null,
+       prices:[{id:'pp5',label:'Monthly',amount:2499,billing:'RECURRING',interval:'MONTHLY',joiningFee:500}],intro:null,approval:true,cancellation:'AUTO',minCommitment:0,featured:false,published:true},
+    ],
+    events:[
+      {id:'e1',type:'TRAINING',name:'Saturday Cubbon Park 5K',short:'SAT\n5K',date:now+5*DAY,place:'Cubbon Park, Gate 2',
+       categories:[{id:'c1',name:'General',info:'Run with the pack, 5:30 AM start',base:299,policies:{p1:{policy:'FREE'},p2:{policy:'FREE'},p3:{policy:'FREE'},p4:{policy:'FREE'}}},
+                   {id:'c2',name:'With breakfast',info:'Post-run breakfast at Airlines Hotel',base:549,policies:{p1:{policy:'CUSTOM_FLAT',value:299},p4:{policy:'CUSTOM_FLAT',value:299}}}]},
+      {id:'e2',type:'TRAINING',name:'Tuesday Track Intervals',short:'TUE\nTRACK',date:now+8*DAY,place:'Kanteerava Stadium track',
+       categories:[{id:'c3',name:'General',info:'6 × 800 m, 6:00 AM',base:249,policies:{p1:{policy:'FREE'},p2:{policy:'FREE'},p3:{policy:'FREE'},p4:{policy:'FREE'}}}]},
+      {id:'e3',type:'SINGLE_DAY',name:'Monsoon 10K Social',short:'10K\nSOCIAL',date:now+34*DAY,place:'Lalbagh West Gate',
+       categories:[{id:'c4',name:'Timed 10K',info:'Chip timing, medal, finisher tee',base:799,policies:{p1:{policy:'HALF'},p4:{policy:'FREE'}}},
+                   {id:'c5',name:'Fun run 3K',info:'Untimed, families welcome',base:399,policies:{}}]},
+    ],
+    userPlans:[], joinRequests:[], bookings:[], usages:[],
+    members:[ // other holders, for the host view
+      {id:'m1',name:'Priya Raghavan',planId:'p1',priceId:'pp1',status:'ACTIVE',periodEnd:now+18*DAY,used:6},
+      {id:'m2',name:'Karthik S',planId:'p2',priceId:'pp3',status:'ACTIVE',periodEnd:now+9*DAY,used:7},
+      {id:'m3',name:'Neha Kulkarni',planId:'p1',priceId:'pp2',status:'PAUSED',periodEnd:now+61*DAY,used:0},
+      {id:'m4',name:'Rohan Das',planId:'p3',priceId:'pp4',status:'ACTIVE',periodEnd:now+40*DAY,used:4},
+      {id:'m5',name:'Ishita Bose',planId:'p1',priceId:'pp1',status:'PAST_DUE',periodEnd:now-1*DAY,used:9},
+    ],
+    otherRequests:[{id:'r9',name:'Vikram Iyer',planId:'p4',priceId:'pp5',status:'PENDING',at:now-1*DAY}],
+    log:[{t:now,m:'Demo started. Aarav has no plan yet.'}],
+  };
+}
+let S=seed();
+
+const planById=id=>S.plans.find(p=>p.id===id);
+const priceById=id=>{for(const p of S.plans){const x=p.prices.find(r=>r.id===id);if(x)return x}return null};
+const eventById=id=>S.events.find(e=>e.id===id);
+const log=m=>S.log.unshift({t:S.now,m});
+function toast(m){S.toast=m;clearTimeout(toast.t);toast.t=setTimeout(()=>{S.toast=null;renderToast()},2600);renderToast()}
+
+/* ───────────────────────── Rules (README: "How checkout prices a booking") ───────────────────────── */
+const BOOKABLE=['ACTIVE','CANCELS_AT_PERIOD_END'];
+function priceFor(policy,base){
+  switch(policy.policy){
+    case 'FREE':return 0;case 'HALF':return Math.round(base/2);case 'FULL':return base;
+    case 'CUSTOM_PERCENT':return Math.round(base*(1-policy.value/100));case 'CUSTOM_FLAT':return Math.max(0,base-policy.value);
+  } return base;
+}
+function policyLabel(p){if(!p)return 'No benefit';return {FREE:'Free',HALF:'Half price',FULL:'Full price',CUSTOM_PERCENT:p.value+'% off',CUSTOM_FLAT:fmt(p.value)+' off'}[p.policy]}
+function periodFor(up,eventDate){ // the billing period that contains the event date
+  const price=priceById(up.priceId);
+  if(price.billing==='ONE_TIME')return {start:up.startedAt,end:up.periodEnd};
+  let s=up.periodStart,e=up.periodEnd;const m=INTERVAL[price.interval].months;
+  while(eventDate>=e){s=e;e=addMonths(e,m)}
+  return {start:s,end:e};
+}
+function usedIn(up,from,to){return S.usages.filter(u=>u.userPlanId===up.id&&u.status!=='RELEASED'&&u.eventDate>=from&&u.eventDate<to).length}
+function allowance(up,eventDate){
+  const plan=planById(up.planId);
+  if(plan.limitPeriod==='UNLIMITED')return {left:Infinity,limit:null};
+  if(plan.limitPeriod==='TOTAL'){const used=S.usages.filter(u=>u.userPlanId===up.id&&u.status!=='RELEASED').length;const lim=(up.creditsOverride??plan.usageLimit);return {left:lim-used,limit:lim,used}}
+  const p=periodFor(up,eventDate);const used=usedIn(up,p.start,p.end);const lim=(up.creditsOverride??plan.usageLimit);return {left:lim-used,limit:lim,used,period:p};
+}
+/* Returns every candidate with the step that kept or dropped it, so the panel can show the reasoning. */
+function evaluate(event,cat){
+  const steps=[];const cands=[];
+  if(!S.userPlans.length){steps.push({ok:false,t:'No plans on this account, so the ticket is full price.'});return {best:null,cands,steps}}
+  for(const up of S.userPlans){
+    const plan=planById(up.planId);const tag=plan.name;
+    if(!BOOKABLE.includes(up.status)){steps.push({ok:false,t:`${tag}: status ${up.status}, so it can't be used.`});continue}
+    if(plan.kind==='PACK'&&event.date>up.periodEnd){steps.push({ok:false,t:`${tag}: expires ${d(up.periodEnd)}, before this event.`});continue}
+    if(up.status==='CANCELS_AT_PERIOD_END'&&event.date>=up.periodEnd){steps.push({ok:false,t:`${tag}: ends ${d(up.periodEnd)}, before this event.`});continue}
+    if(!plan.coverage.includes(event.type)){steps.push({ok:false,t:`${tag}: doesn't cover ${event.type.toLowerCase().replace('_',' ')} events.`});continue}
+    const pol=cat.policies[plan.id];
+    if(!pol){steps.push({ok:false,t:`${tag}: the host set no plan price on "${cat.name}".`});continue}
+    const a=allowance(up,event.date);
+    if(a.left<=0){steps.push({ok:false,t:`${tag}: ${a.limit} of ${a.limit} used${a.period?' for '+d(a.period.start)+' – '+d(a.period.end):''}.`});continue}
+    const price=priceFor(pol,cat.base);
+    cands.push({up,plan,pol,price,left:a.left,limit:a.limit});
+    steps.push({ok:true,t:`${tag}: ${policyLabel(pol)} → ${fmt(price)}${a.limit?` (${a.left} of ${a.limit} left)`:''}.`});
+  }
+  cands.sort((x,y)=>x.price-y.price||(x.plan.kind==='PACK'?-1:0)-(y.plan.kind==='PACK'?-1:0)||((x.limit?0:1)-(y.limit?0:1)));
+  const best=cands[0]||null;
+  if(best)steps.push({ok:true,t:`Picked ${best.plan.name}: lowest price${cands.length>1?' of '+cands.length:''}.`});
+  else steps.push({ok:false,t:'No plan applies, so the ticket is full price.'});
+  return {best,cands,steps};
+}
+
+/* ───────────────────────── Actions ───────────────────────── */
+function startPlan(planId,priceId,{intro=false,source='PURCHASE'}={}){
+  const plan=planById(planId),price=priceById(priceId);
+  const startedAt=S.now;
+  let periodEnd;
+  if(price.billing==='ONE_TIME')periodEnd=S.now+price.validityDays*DAY;
+  else if(intro)periodEnd=S.now+plan.intro.days*DAY;
+  else periodEnd=addMonths(S.now,INTERVAL[price.interval].months);
+  const up={id:'up'+(S.seq++),planId,priceId,status:'ACTIVE',source,startedAt,periodStart:S.now,periodEnd,introActive:intro,charges:[],history:[]};
+  const first=intro?plan.intro.amount:price.amount;
+  up.charges.push({type:'FIRST_PAYMENT',amount:first+(price.joiningFee||0),at:S.now});
+  up.history.push({t:S.now,m:'Joined'+(intro?' on intro offer':'')});
+  S.userPlans.push(up);
+  log(`${S.user.name.split(' ')[0]} joined ${plan.name} (${price.label}${intro?', intro '+fmt(plan.intro.amount):''}). Charged ${fmt(first+(price.joiningFee||0))}.`);
+  return up;
+}
+function requestJoin(planId,priceId){
+  S.joinRequests.push({id:'jr'+(S.seq++),planId,priceId,status:'PENDING',at:S.now});
+  log(`Join request sent for ${planById(planId).name}. Host notified.`);
+}
+function book(event,cat,choice){
+  const price=choice?choice.price:cat.base;
+  const b={id:'b'+(S.seq++),eventId:event.id,catId:cat.id,price,base:cat.base,userPlanId:choice?choice.up.id:null,at:S.now};
+  S.bookings.push(b);
+  if(choice){
+    S.usages.push({id:'us'+(S.seq++),userPlanId:choice.up.id,bookingId:b.id,eventDate:event.date,status:'CONSUMED',saved:cat.base-price});
+    choice.up.history.push({t:S.now,m:`Used for ${event.name}`});
+  }
+  log(`Booked ${event.name} · ${cat.name}: ${choice?`${fmt(price)} with ${choice.plan.name} (saved ${fmt(cat.base-price)})`:fmt(price)}.`);
+  return b;
+}
+function cancelBooking(b){
+  const e=eventById(b.eventId);
+  S.bookings=S.bookings.filter(x=>x!==b);
+  const u=S.usages.find(x=>x.bookingId===b.id);
+  if(u){u.status='RELEASED';log(`Cancelled ${e.name}. Plan credit released.`)} else log(`Cancelled ${e.name}.`);
+}
+function advanceToRenewal(){
+  const live=S.userPlans.filter(u=>['ACTIVE','CANCELS_AT_PERIOD_END','PAST_DUE'].includes(u.status)||u.status==='PAUSED');
+  const next=live.filter(u=>u.status!=='PAUSED').map(u=>u.periodEnd).sort((a,b)=>a-b)[0];
+  if(!next){toast('No plan is due. Join a plan first.');return}
+  S.now=next;
+  for(const up of S.userPlans){
+    if(up.periodEnd>S.now||up.status==='PAUSED'||up.status==='ENDED')continue;
+    const plan=planById(up.planId),price=priceById(up.priceId);
+    if(up.status==='CANCELS_AT_PERIOD_END'){up.status='ENDED';up.history.push({t:S.now,m:'Ended'});log(`${plan.name} ended as scheduled.`);continue}
+    if(price.billing==='ONE_TIME'){up.status='ENDED';up.history.push({t:S.now,m:'Expired'});log(`${plan.name} expired.`);continue}
+    if(up.status==='PAST_DUE')continue;
+    log(`Pre-debit notice sent 24 h before: ${fmt(up.priceOverride??price.amount)} for ${plan.name}.`);
+    if(S.failNextRenewal){
+      up.status='PAST_DUE';up.history.push({t:S.now,m:'Renewal failed'});S.failNextRenewal=false;
+      log(`Renewal of ${plan.name} failed (UPI mandate declined). Razorpay will retry; fix-billing link sent.`);
+    } else {
+      const amt=up.priceOverride??price.amount;
+      up.periodStart=up.periodEnd;up.periodEnd=addMonths(up.periodEnd,INTERVAL[price.interval].months);up.introActive=false;up.creditsOverride=undefined;
+      up.charges.push({type:'RENEWAL',amount:amt,at:S.now});up.history.push({t:S.now,m:'Renewed '+fmt(amt)});
+      log(`${plan.name} renewed: charged ${fmt(amt)}. New period ${d(up.periodStart)} – ${d(up.periodEnd)}.`);
+    }
+  }
+  render();
+}
+function fixBilling(up){
+  const plan=planById(up.planId),price=priceById(up.priceId);
+  const amt=up.priceOverride??price.amount;
+  up.status='ACTIVE';up.periodStart=up.periodEnd;up.periodEnd=addMonths(up.periodEnd,INTERVAL[price.interval].months);up.introActive=false;
+  up.charges.push({type:'FIX_BILLING',amount:amt,at:S.now});up.history.push({t:S.now,m:'Fixed billing '+fmt(amt)});
+  log(`Billing fixed for ${plan.name}: ${fmt(amt)} paid through the fix-billing link.`);
+}
+
+/* ───────────────────────── Icons ───────────────────────── */
+const I={
+  back:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>',
+  check:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.4"><path d="M5 12l5 5 9-11"/></svg>',
+  dot:'<svg width="16" height="16" viewBox="0 0 24 24" fill="#71717a"><circle cx="12" cy="12" r="3"/></svg>',
+  tick:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 10C0 4.477 4.477 0 10 0s10 4.477 10 10-4.477 10-10 10S0 15.523 0 10Zm13.703-1.86a.77.77 0 1 0-1.252-.895L9.132 11.89 7.467 10.226a.77.77 0 0 0-1.088 1.087l2.308 2.308a.77.77 0 0 0 1.17-.097l3.846-5.384Z" fill="#fff"/></svg>',
+  ring:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9.5" stroke="#fff"/></svg>',
+  pin:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-12a7 7 0 1 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  cal:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  spark:'<svg width="16" height="16" viewBox="0 0 24 24" fill="#3a3b40"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>',
+};
+
+/* ───────────────────────── Shared bits ───────────────────────── */
+const statusPill=s=>{const map={ACTIVE:['ok','Active'],CANCELS_AT_PERIOD_END:['warn','Cancels at period end'],PAST_DUE:['bad','Payment failed'],PAUSED:['warn','Paused'],ENDED:['','Ended'],PENDING:['warn','Request pending'],APPROVED:['ok','Approved'],REJECTED:['bad','Not approved']};const [c,l]=map[s]||['',s];return `<span class="pill ${c}">${l}</span>`};
+function priceLine(price){return price.billing==='ONE_TIME'?`${fmt(price.amount)} <span class="per">one-time · ${price.validityDays} days</span>`:`${fmt(price.amount)} <span class="per">/ ${INTERVAL[price.interval].label}</span>`}
+function limitText(plan){return plan.limitPeriod==='UNLIMITED'?'Unlimited bookings':plan.limitPeriod==='TOTAL'?`${plan.usageLimit} bookings`:`${plan.usageLimit} bookings a ${plan.limitPeriod.replace('PER_','').toLowerCase()}`}
+function coverText(plan){return plan.coverage.map(c=>({TRAINING:'Training runs',SINGLE_DAY:'Race days'}[c]||c)).join(' + ')}
+function heldPlan(planId){return S.userPlans.find(u=>u.planId===planId&&u.status!=='ENDED')}
+function reqFor(planId){return [...S.joinRequests].reverse().find(r=>r.planId===planId&&r.status!=='WITHDRAWN')}
+function planButton(plan){ // SweatPals offer-card states: Join · Request to join · Request pending/Withdraw · Not approved · View
+  if(heldPlan(plan.id))return {label:'View',kind:'ghost',act:'passes'};
+  const r=reqFor(plan.id);
+  if(plan.approval&&r){if(r.status==='PENDING')return {label:'Request pending · Withdraw',kind:'ghost',act:'withdraw:'+r.id};if(r.status==='REJECTED')return {label:'Not approved',kind:'ghost',disabled:true};if(r.status==='APPROVED')return {label:'Approved · Complete payment',kind:'',act:'plan:'+plan.id}}
+  return {label:plan.approval?'Request to join':'Join',kind:'',act:'plan:'+plan.id};
+}
+
+/* ───────────────────────── Views: member ───────────────────────── */
+const V={};
+V.club=()=>{
+  const plans=S.plans.filter(p=>p.published).sort((a,b)=>(b.featured?1:0)-(a.featured?1:0));
+  return `<div class="stack" style="gap:18px">
+    <div class="club"><div class="logo">FYF</div><div><h1 class="d" style="font-size:24px">${esc(S.club.name)}</h1><p class="sub">${S.club.members} members · ${esc(S.club.city)}</p></div></div>
+    <p class="sub">Weekly community runs around Cubbon Park and Lalbagh. Plans make every run one tap.</p>
+    <div class="stack"><div class="row"><h2 class="d">Plans</h2><span class="dim" style="font-size:12.5px">${plans.length} available</span></div>
+    ${plans.map(p=>{const pr=p.prices[0];const b=planButton(p);return `<div class="plan">
+      <div class="row" style="align-items:flex-start"><div style="display:grid;gap:4px"><b style="font-size:16px">${esc(p.name)}</b><span class="muted" style="font-size:13px">${esc(p.description)}</span></div>${p.featured?'<span class="pill gold">Popular</span>':''}</div>
+      <div class="price">${priceLine(pr)}${p.prices.length>1?` <span class="per">· or ${fmt(p.prices[1].amount)}/${INTERVAL[p.prices[1].interval].label}</span>`:''}</div>
+      <div class="feat"><span class="pill">${coverText(p)}</span><span class="pill">${limitText(p)}</span>${p.intro?`<span class="pill gold">${fmt(p.intro.amount)} first ${p.intro.days} days</span>`:''}${p.approval?'<span class="pill">Approval needed</span>':''}${p.kind==='PACK'?'<span class="pill">Pack</span>':''}</div>
+      <button class="btn ${b.kind} sm" style="justify-self:start" ${b.disabled?'disabled':''} data-act="${b.act||''}">${b.label}</button></div>`}).join('')}
+    </div>
+    <div class="stack"><h2 class="d">Upcoming</h2>${S.events.map(eventRow).join('')}</div>
+  </div>`;
+};
+function eventRow(e){
+  const best=S.events&&e.categories.map(c=>evaluate(e,c).best).filter(Boolean).sort((a,b)=>a.price-b.price)[0];
+  const from=Math.min(...e.categories.map(c=>c.base));
+  return `<button class="event" data-act="event:${e.id}"><div class="art">${e.short.replace('\n','<br>')}</div><div style="display:grid;gap:4px;min-width:0">
+    <b>${esc(e.name)}</b><span class="muted" style="font-size:12.5px">${dLong(e.date)} · ${esc(e.place)}</span>
+    <span style="display:flex;gap:8px;align-items:center;font-size:13px">${best?`<span class="memberprice">Member price ${best.price===0?'Free':fmt(best.price)}</span><span class="strike">${fmt(from)}</span>`:`<span>From ${fmt(from)}</span>`}</span></div></button>`;
+}
+V.event=(id)=>{
+  const e=eventById(id);const booked=S.bookings.find(b=>b.eventId===e.id);
+  const evals=e.categories.map(c=>({c,ev:evaluate(e,c)}));
+  const bestAny=evals.map(x=>x.ev.best).filter(Boolean).sort((a,b)=>a.price-b.price)[0];
+  const coveredByAnyPlan=S.plans.some(p=>p.published&&p.coverage.includes(e.type)&&e.categories.some(c=>c.policies[p.id]));
+  const from=Math.min(...e.categories.map(c=>c.base));
+  return `<div class="stack" style="gap:16px">
+    <div class="appbar"><button class="back" data-act="go:club" aria-label="Back">${I.back}</button><b>${esc(S.club.name)}</b></div>
+    <div style="height:170px;border-radius:18px;background:linear-gradient(160deg,#1e3a5f,#0b1220);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:34px;line-height:.95;text-align:center;color:#cfe8ff;letter-spacing:-.02em">${e.short.replace('\n','<br>')}</div>
+    <h1 class="d">${esc(e.name)}</h1>
+    <div class="stack" style="gap:6px"><span class="muted" style="display:flex;gap:6px;align-items:center">${I.cal}${dLong(e.date)} · 5:30 AM</span><span class="muted" style="display:flex;gap:6px;align-items:center">${I.pin}${esc(e.place)}</span></div>
+    ${bestAny?`<div class="card" style="border-color:rgba(216,198,170,.35)"><div class="row"><span>${I.spark}</span><span style="flex:1">Your <b>${esc(bestAny.plan.name)}</b> applies automatically at checkout.</span></div></div>`
+      : coveredByAnyPlan?`<div class="card"><div class="row"><span class="muted" style="flex:1">Members run this free or cheaper.</span><button class="btn ghost sm" data-act="go:club">See plans</button></div></div>`:''}
+    <div class="stack" style="gap:8px"><b>Passes</b>${evals.map(({c,ev})=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line)"><div style="display:grid;gap:2px"><span>${esc(c.name)}</span><span class="dim" style="font-size:12.5px">${esc(c.info)}</span></div><div style="text-align:right;display:grid;gap:2px">${ev.best?`<b>${ev.best.price===0?'Free':fmt(ev.best.price)}</b><span class="strike" style="font-size:12.5px">${fmt(c.base)}</span>`:`<b>${fmt(c.base)}</b>`}</div></div>`).join('')}</div>
+  </div>
+  <div class="ctabar">${bestAny&&!booked?`<div class="banner-gold">${I.spark}<span>${bestAny.price===0?'Free':fmt(bestAny.price)} with ${esc(bestAny.plan.name)}</span></div>`:''}
+    <div class="inner"><div style="display:grid;gap:2px"><span class="lbl">${booked?'You’re in':'1 Pass'}</span><span class="val">${booked?esc(e.categories.find(c=>c.id===booked.catId).name):bestAny?`<span class="strike">${fmt(from)}</span> <b>${bestAny.price===0?'Free':fmt(bestAny.price)}</b>`:fmt(from)}</span></div>
+    ${booked?`<button class="btn" data-act="ticket:${booked.id}" style="height:40px">View Ticket</button>`:`<button class="btn" data-act="checkout:${e.id}" style="height:40px">Register</button>`}</div></div>`;
+};
+V.passes=()=>{
+  const tab=S.passTab||'plans';
+  const plans=S.userPlans.filter(u=>u.status!=='ENDED');const ended=S.userPlans.filter(u=>u.status==='ENDED');
+  const pend=S.joinRequests.filter(r=>r.status==='PENDING'||r.status==='APPROVED');
+  return `<div class="stack" style="gap:16px">
+    <h1 class="d">Passes</h1>
+    <div class="tabs" role="tablist"><button role="tab" aria-selected="${tab==='tickets'}" data-act="tab:tickets">Tickets · ${S.bookings.length}</button><button role="tab" aria-selected="${tab==='plans'}" data-act="tab:plans">Plans · ${plans.length}</button></div>
+    ${tab==='tickets'?(S.bookings.length?S.bookings.map(b=>{const e=eventById(b.eventId);const up=S.userPlans.find(u=>u.id===b.userPlanId);return `<button class="event" data-act="ticket:${b.id}"><div class="art">${e.short.replace('\n','<br>')}</div><div style="display:grid;gap:4px"><b>${esc(e.name)}</b><span class="muted" style="font-size:12.5px">${dLong(e.date)}</span><span style="font-size:12.5px">${up?`<span class="memberprice">Booked with ${esc(planById(up.planId).name)}</span>`:fmt(b.price)}</span></div></button>`}).join(''):`<div class="card"><p class="sub">No tickets yet. Book a run from the club page.</p></div>`)
+    :`${pend.map(r=>{const p=planById(r.planId);return `<div class="card stack"><div class="row"><b>${esc(p.name)}</b>${statusPill(r.status)}</div><p class="sub" style="font-size:13.5px">${r.status==='PENDING'?'The coach reviews every request. We’ll notify you on WhatsApp when it’s decided.':'Approved. Complete payment to start your plan.'}</p>${r.status==='APPROVED'?`<button class="btn sm" style="justify-self:start" data-act="plan:${p.id}">Complete payment</button>`:`<button class="btn ghost sm" style="justify-self:start" data-act="withdraw:${r.id}">Withdraw request</button>`}</div>`}).join('')}
+      ${plans.length?plans.map(planCard).join(''):(pend.length?'':`<div class="card stack"><p class="sub">You don’t have a plan with ${esc(S.club.name)} yet.</p><button class="btn sm" style="justify-self:start" data-act="go:club">Explore plans</button></div>`)}
+      ${ended.length?`<div class="stack"><span class="eyebrow">Past plans</span>${ended.map(u=>`<div class="row card"><span>${esc(planById(u.planId).name)}</span>${statusPill('ENDED')}</div>`).join('')}</div>`:''}`}
+  </div>`;
+};
+function planCard(up){
+  const plan=planById(up.planId),price=priceById(up.priceId);const a=allowance(up,S.now);
+  const renewTxt=price.billing==='ONE_TIME'?`Expires ${d(up.periodEnd)}`:up.status==='CANCELS_AT_PERIOD_END'?`Access until ${d(up.periodEnd)}`:up.status==='PAUSED'?'Billing paused by the club':up.status==='PAST_DUE'?'Renewal payment failed':`Renews ${d(up.periodEnd)} · ${fmt(up.introActive?price.amount:(up.priceOverride??price.amount))}`;
+  return `<div class="card stack" style="gap:14px;border-color:rgba(27,255,255,.18);background:linear-gradient(160deg,rgba(46,49,146,.22),rgba(255,255,255,.02))">
+    <div class="row" style="align-items:flex-start"><div style="display:grid;gap:4px"><span class="eyebrow">${esc(S.club.name)}</span><b style="font-size:18px">${esc(plan.name)}</b><span class="muted" style="font-size:13px">${renewTxt}</span></div>${statusPill(up.status)}</div>
+    ${a.limit?`<div class="stack" style="gap:6px"><div class="row" style="font-size:13px"><span class="muted">${plan.kind==='PACK'?'Credits':'This period'}</span><span class="num">${Math.max(0,a.left)} of ${a.limit} left</span></div><div class="meter"><i style="width:${Math.max(0,a.left)/a.limit*100}%"></i></div></div>`:`<div class="row" style="font-size:13px"><span class="muted">Bookings</span><span>Unlimited</span></div>`}
+    ${up.introActive?`<div class="note">Intro offer until ${d(up.periodEnd)}, then ${fmt(price.amount)}/${INTERVAL[price.interval].label}.</div>`:''}
+    <div class="note">Benefits apply automatically when you book a covered run.</div>
+    ${up.status==='PAST_DUE'?`<button class="btn block" data-act="fix:${up.id}">Fix billing · ${fmt(up.priceOverride??price.amount)}</button>`:`<button class="btn ghost sm" style="justify-self:start" data-act="manage:${up.id}">Manage</button>`}
+  </div>`;
+}
+V.manage=(id)=>{
+  const up=S.userPlans.find(u=>u.id===id);if(!up)return V.passes();
+  const plan=planById(up.planId),price=priceById(up.priceId);
+  const canCancel=['ACTIVE'].includes(up.status);
+  const commitEnd=plan.minCommitment?addMonths(up.startedAt,plan.minCommitment):0;
+  return `<div class="stack" style="gap:16px">
+    <div class="appbar"><button class="back" data-act="go:passes" aria-label="Back">${I.back}</button><b>Manage plan</b></div>
+    ${planCard(up)}
+    <div class="card"><dl class="kv"><dt>Price</dt><dd>${priceLine(price).replace(/<[^>]+>/g,'')}</dd><dt>Covers</dt><dd>${coverText(plan)}</dd><dt>Limit</dt><dd>${limitText(plan)}</dd><dt>Cancellation</dt><dd>${plan.cancellation==='AUTO'?'Cancel any time':'Club reviews requests'}</dd>${plan.minCommitment?`<dt>Commitment</dt><dd>${plan.minCommitment} months, until ${d(commitEnd)}</dd>`:''}<dt>Paid so far</dt><dd>${fmt(up.charges.reduce((s,c)=>s+c.amount,0))}</dd></dl></div>
+    <div class="card"><b style="display:block;margin-bottom:8px">History</b><div class="log">${[...up.history].reverse().map(h=>`<div><time>${d(h.t)}</time><span>${esc(h.m)}</span></div>`).join('')}</div></div>
+    ${up.status==='ACTIVE'?`<button class="btn danger block" data-act="cancelask:${up.id}">${plan.cancellation==='AUTO'?'Cancel plan':'Request to cancel'}</button>`:''}
+    ${up.cancelRequested?`<div class="card"><p class="sub" style="font-size:13.5px">Cancellation requested ${d(up.cancelRequested)}. The club has been notified.</p></div>`:''}
+    <p class="note">Only the club can pause a plan or change its price. Message ${esc(S.club.name)} from the club page.</p>
+  </div>`;
+};
+V.ticket=(id)=>{
+  const b=S.bookings.find(x=>x.id===id);if(!b)return V.passes();
+  const e=eventById(b.eventId),c=e.categories.find(x=>x.id===b.catId);const up=S.userPlans.find(u=>u.id===b.userPlanId);
+  return `<div class="stack" style="gap:16px">
+    <div class="appbar"><button class="back" data-act="go:passes" aria-label="Back">${I.back}</button><b>Ticket</b></div>
+    <div class="ticket"><div class="top2 stack" style="gap:6px"><span class="eyebrow" style="color:#9cc3ff">${esc(S.club.name)}</span><h2 class="d">${esc(e.name)}</h2><span class="muted">${dLong(e.date)} · ${esc(e.place)}</span><span style="font-size:13px">${esc(c.name)} · ${up?`<span class="memberprice">Booked with ${esc(planById(up.planId).name)}</span>`:fmt(b.price)}</span></div>
+    <div class="qr">${qr(b.id)}<span style="font-size:12px;color:#555">Show this at check-in</span></div></div>
+    <div class="card sum"><div class="row"><span>Ticket</span><b>${fmt(b.base)}</b></div>${up?`<div class="row"><span>Membership discount</span><b>−${fmt(b.base-b.price)}</b></div>`:''}<div class="hr"></div><div class="row total"><span>Paid</span><span>${fmt(b.price)}</span></div></div>
+    <button class="btn ghost block" data-act="cancelbook:${b.id}">Cancel ticket</button>
+    ${up?`<p class="note">Cancelling more than 12 hours before the run gives the credit back to your plan.</p>`:''}
+  </div>`;
+};
+function qr(seedStr){let h=0;for(const ch of seedStr)h=(h*31+ch.charCodeAt(0))>>>0;const n=21,s=6;let r='';for(let y=0;y<n;y++)for(let x=0;x<n;x++){const corner=(x<7&&y<7)||(x>n-8&&y<7)||(x<7&&y>n-8);let on;if(corner){const cx=x<7?x:x-(n-7),cy=y<7?y:y-(n-7);on=cx===0||cy===0||cx===6||cy===6||(cx>1&&cx<5&&cy>1&&cy<5)}else{h=(h*1103515245+12345)>>>0;on=(h>>16)&1}if(on)r+=`<rect x="${x*s}" y="${y*s}" width="${s}" height="${s}"/>`}return `<svg width="${n*s}" height="${n*s}" viewBox="0 0 ${n*s} ${n*s}" fill="#111" role="img" aria-label="Ticket QR code">${r}</svg>`}
+
+/* ───────────────────────── Sheets (member) ───────────────────────── */
+const SH={};
+SH.plan=(st)=>{ // join flow: Plan → Offer → Review → Pay
+  const plan=planById(st.planId);const price=priceById(st.priceId||plan.prices[0].id);
+  const approved=plan.approval&&reqFor(plan.id)?.status==='APPROVED';
+  const hasIntro=!!plan.intro&&plan.intro.priceId===price.id&&!S.userPlans.some(u=>u.planId===plan.id); // once per member
+  const steps=['Plan',...(hasIntro?['Offer']:[]),plan.approval&&!approved?'Request':'Review'];
+  const step=st.step||'Plan';
+  const stepsHtml=`<div class="steps">${steps.map(s=>`<span class="${s===step?'on':steps.indexOf(s)<steps.indexOf(step)?'done':''}">${s}</span>`).join('')}</div>`;
+  const head=`<div class="head"><div><div class="title">${esc(plan.name)}</div><div class="muted" style="font-size:14px">${esc(S.club.name)}</div></div><button class="x" data-act="close" aria-label="Close">×</button></div>`;
+  if(step==='Plan'){
+    return head+stepsHtml+`<div class="stack" style="gap:14px">
+      <p class="sub">${esc(plan.description)}</p>
+      <ul class="list"><li>${I.check}<span>${coverText(plan)} at ${esc(S.club.name)}</span></li><li>${I.check}<span>${limitText(plan)}${plan.limitPeriod.startsWith('PER_')?', resets each billing period':''}</span></li><li>${I.check}<span>Benefits apply automatically when you book</span></li>${plan.cancellation==='AUTO'?`<li>${I.check}<span>Cancel any time; access lasts to the end of the period</span></li>`:`<li>${I.dot}<span>Cancellations are reviewed by the club</span></li>`}</ul>
+      <div class="stack" style="gap:10px" role="radiogroup" aria-label="Billing">${plan.prices.map(p=>`<button class="pass" role="radio" aria-checked="${p.id===price.id}" data-act="price:${p.id}"><span class="l">${p.id===price.id?I.tick:I.ring}<span class="t"><span>${esc(p.label)}</span><span>${p.billing==='ONE_TIME'?'Valid '+p.validityDays+' days from purchase':'Renews every '+INTERVAL[p.interval].label}${p.joiningFee?' · '+fmt(p.joiningFee)+' sign-up fee':''}</span></span></span><span class="r num">${fmt(p.amount)}</span></button>`).join('')}</div>
+      ${plan.minCommitment?`<p class="note">This plan has a ${plan.minCommitment}-month minimum commitment. You can cancel after ${d(addMonths(S.now,plan.minCommitment))}.</p>`:''}
+      <button class="btn block" data-act="step:${hasIntro?'Offer':(plan.approval&&!approved?'Request':'Review')}">Continue</button></div>`;
+  }
+  if(step==='Offer'){
+    const chose=st.intro!==false;
+    return head+stepsHtml+`<div class="stack" style="gap:14px"><h2 class="d">Choose an offer</h2>
+      <button class="offer" aria-checked="${chose}" data-act="intro:on"><div class="row"><span class="pill gold">Intro offer</span><span class="num" style="font-size:18px;font-weight:600">${fmt(plan.intro.amount)}</span></div><span>First ${plan.intro.days} days for ${fmt(plan.intro.amount)}</span><span class="muted" style="font-size:13px">Then ${fmt(price.amount)}/${INTERVAL[price.interval].label} from ${d(S.now+plan.intro.days*DAY)}. Once per member.</span></button>
+      <button class="pass" aria-checked="${!chose}" data-act="intro:off"><span class="l">${!chose?I.tick:I.ring}<span class="t"><span>Continue at base price</span><span>${fmt(price.amount)} today</span></span></span></button>
+      <button class="btn block" data-act="step:Review">Continue</button></div>`;
+  }
+  if(step==='Request'){
+    return head+stepsHtml+`<div class="stack" style="gap:14px"><h2 class="d">Request to join</h2>
+      <p class="sub">The coach reviews every request for ${esc(plan.name)}. You won’t be charged until you’re approved.</p>
+      <ul class="list"><li>${I.check}<span>Instant updates on WhatsApp</span></li><li>${I.check}<span>Pay after approval: ${fmt(price.amount)}/${INTERVAL[price.interval].label}${price.joiningFee?' + '+fmt(price.joiningFee)+' sign-up fee':''}</span></li></ul>
+      <div class="field"><label for="why">Recent 10K time (optional)</label><input id="why" placeholder="e.g. 54:20"></div>
+      <button class="btn block" data-act="sendrequest">Send request</button></div>`;
+  }
+  // Review
+  const intro=hasIntro&&st.intro!==false;
+  const today=(intro?plan.intro.amount:price.amount)+(price.joiningFee||0);
+  return head+stepsHtml+`<div class="stack" style="gap:14px"><h2 class="d">Review</h2>
+    <div class="card sum"><div class="row"><span>${esc(plan.name)} · ${esc(price.label)}</span><b>${fmt(price.amount)}</b></div>
+      ${intro?`<div class="row"><span>Intro offer · first ${plan.intro.days} days</span><b>−${fmt(price.amount-plan.intro.amount)}</b></div>`:''}
+      ${price.joiningFee?`<div class="row"><span>Sign-up fee</span><b>${fmt(price.joiningFee)}</b></div>`:''}
+      <div class="hr"></div><div class="row total"><span>Pay today</span><span>${fmt(today)}</span></div></div>
+    <p class="note">${price.billing==='ONE_TIME'?`One payment. Valid until ${d(S.now+price.validityDays*DAY)}.`:`Then ${fmt(price.amount)} every ${INTERVAL[price.interval].label} from ${d(intro?S.now+plan.intro.days*DAY:addMonths(S.now,INTERVAL[price.interval].months))} through UPI AutoPay. You get a reminder 24 hours before each charge.`}${plan.minCommitment?` Minimum commitment ${plan.minCommitment} months.`:''}</p>
+    <label class="toggle"><span style="font-size:13.5px">I agree to the club waiver and plan terms</span><input type="checkbox" id="agree" ${st.agree?'checked':''} data-act="agree"></label>
+    <button class="btn block" data-act="pay" ${st.agree?'':'disabled'}>Pay ${fmt(today)}</button></div>`;
+};
+SH.checkout=(st)=>{
+  const e=eventById(st.eventId);
+  const cats=e.categories.map(c=>({c,ev:evaluate(e,c)}));
+  const sel=cats.find(x=>x.c.id===st.catId)||cats[0];
+  S.lastPricing={event:e.name,cat:sel.c.name,steps:sel.ev.steps,base:sel.c.base,final:sel.ev.best?sel.ev.best.price:sel.c.base};
+  const best=sel.ev.best;const total=best?best.price:sel.c.base;
+  const anyPlan=S.userPlans.some(u=>BOOKABLE.includes(u.status));
+  return `<div class="head"><div><div class="title">Registration</div><div class="muted" style="font-size:14px">Almost game time! Pick your pass.</div></div><button class="x" data-act="close" aria-label="Close">×</button></div>
+    <div class="steps"><span class="on">Choose Pass</span><span>Waiver</span></div>
+    <div class="stack" style="gap:12px">
+    ${anyPlan?`<span class="eyebrow">With your plan</span>`:''}
+    ${cats.map(({c,ev})=>`<button class="pass" role="radio" aria-checked="${c.id===sel.c.id}" data-act="cat:${c.id}"><span class="l">${c.id===sel.c.id?I.tick:I.ring}<span class="t"><span>${esc(c.name)}</span><span>${ev.best?`${esc(ev.best.plan.name)} · ${policyLabel(ev.best.pol)}`:anyPlan?'Not included with your plan':esc(c.info)}</span></span></span><span class="r num">${ev.best?`<b>${ev.best.price===0?'Free':fmt(ev.best.price)}</b><span class="strike" style="font-size:12.5px">${fmt(c.base)}</span>`:fmt(c.base)}</span></button>`).join('')}
+    ${!anyPlan&&S.plans.some(p=>p.published&&p.coverage.includes(e.type))?`<button class="card row" style="text-align:left;width:100%;border-color:rgba(216,198,170,.35)" data-act="go:club"><span>${I.spark}</span><span style="flex:1;font-size:13.5px">Members run this free. <b>See plans</b></span></button>`:''}
+    <div class="card sum"><div class="row"><span>Ticket</span><b>${fmt(sel.c.base)}</b></div>${best?`<div class="row"><span>Membership discount</span><b>−${fmt(sel.c.base-best.price)}</b></div>`:''}<div class="hr"></div><div class="row total"><span>Total</span><span>${fmt(total)}</span></div></div>
+    ${best&&best.limit?`<p class="note">Uses 1 of your ${best.left} remaining ${best.plan.kind==='PACK'?'credits':'bookings this period'}.</p>`:''}
+    <button class="btn block" data-act="confirmbook">${total===0?'Confirm · Free':'Pay '+fmt(total)}</button></div>`;
+};
+SH.cancel=(st)=>{
+  const up=S.userPlans.find(u=>u.id===st.upId);const plan=planById(up.planId);
+  const commitEnd=plan.minCommitment?addMonths(up.startedAt,plan.minCommitment):0;
+  const blocked=commitEnd&&S.now<commitEnd;
+  return `<div class="head"><div class="title">${plan.cancellation==='AUTO'?'Cancel plan':'Request to cancel'}</div><button class="x" data-act="close" aria-label="Close">×</button></div>
+  <div class="stack" style="gap:14px">
+    ${blocked?`<p class="sub">${esc(plan.name)} has a ${plan.minCommitment}-month minimum commitment. You can cancel from ${d(commitEnd)}.</p><button class="btn ghost block" data-act="close">OK</button>`
+    :plan.cancellation==='AUTO'?`<p class="sub">Your plan stays active until <b>${d(up.periodEnd)}</b>. You can keep booking until then, and you won’t be charged again.</p><p class="note">There is no refund for the current period.</p><button class="btn danger block" data-act="docancel">Cancel plan</button><button class="btn ghost block" data-act="close">Keep plan</button>`
+    :`<p class="sub">${esc(S.club.name)} reviews cancellations for this plan. Your plan stays active while they decide.</p><div class="field"><label for="reason">Reason (optional)</label><input id="reason" placeholder="Moving cities"></div><button class="btn danger block" data-act="docancel">Send request</button>`}
+  </div>`;
+};
+SH.joined=(st)=>{const up=S.userPlans.find(u=>u.id===st.upId);const plan=planById(up.planId);return `<div class="stack" style="gap:14px;text-align:center;justify-items:center;padding:12px 0">
+  <div style="width:64px;height:64px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(90deg,var(--pass-a),var(--pass-b))">${I.tick}</div>
+  <h2 class="d" style="font-size:24px">You’re in. Membership confirmed.</h2><p class="sub">${esc(plan.name)} is active. Benefits apply automatically when you book a covered run.</p>
+  <button class="btn block" data-act="event:e1">Book Saturday’s 5K</button><button class="btn ghost block" data-act="passes">View my plan</button></div>`};
+SH.requested=()=>`<div class="stack" style="gap:14px;text-align:center;justify-items:center;padding:12px 0"><div style="width:64px;height:64px;border-radius:999px;display:grid;place-items:center;background:var(--step);font-size:26px">⏳</div><h2 class="d" style="font-size:24px">Request sent</h2><p class="sub">The coach will review it. You’ll get a WhatsApp message when it’s decided, and you pay only after approval.</p><button class="btn ghost block" data-act="close">Done</button></div>`;
+
+/* Razorpay mock — mandate for recurring, order for one-time/tickets */
+function rzpHtml(st){
+  const rec=st.recurring;const m=st.method||'upi';
+  return `<div class="scrim" style="z-index:29"></div><div class="rzp" role="dialog" aria-label="Razorpay checkout"><div class="hd"><div style="display:grid"><b>${esc(S.club.name)}</b><span style="font-size:12px;opacity:.7">via peakst8 · Razorpay</span></div><b>${fmt(st.amount)}</b></div>
+    <div class="bd">${rec?`<small><b style="color:#111">AutoPay mandate</b> · up to ${fmt(st.maxAmount)} every ${st.every}. You can cancel the mandate in your UPI app.</small>`:''}
+      <button class="opt" aria-checked="${m==='upi'}" data-act="rzp:upi"><span>UPI${rec?' AutoPay':''}</span><span style="color:#6b7280">aarav@okhdfc</span></button>
+      <button class="opt" aria-checked="${m==='card'}" data-act="rzp:card"><span>Card</span><span style="color:#6b7280">•••• 4417</span></button>
+      <button class="pay" data-act="rzp:ok">${rec?'Approve mandate & pay':'Pay'} ${fmt(st.amount)}</button>
+      <button class="opt" style="justify-content:center;border:0;color:#6b7280" data-act="rzp:cancel">Cancel</button></div></div>`;
+}
+
+/* ───────────────────────── Views: host ───────────────────────── */
+function holders(planId){return S.members.filter(m=>m.planId===planId&&m.status!=='ENDED').length+S.userPlans.filter(u=>u.planId===planId&&u.status!=='ENDED').length}
+function mrr(){let t=0;const add=(priceId,status,override)=>{const p=priceById(priceId);if(!p||!['ACTIVE','CANCELS_AT_PERIOD_END'].includes(status))return;if(p.billing==='ONE_TIME')return;t+=(override??p.amount)/INTERVAL[p.interval].months};S.members.forEach(m=>add(m.priceId,m.status));S.userPlans.forEach(u=>add(u.priceId,u.status,u.priceOverride));return t}
+function allRequests(){return [...S.joinRequests.map(r=>({...r,name:S.user.name,mine:true})),...S.otherRequests]}
+const pendingCount=()=>allRequests().filter(r=>r.status==='PENDING').length+S.userPlans.filter(u=>u.cancelRequested&&u.status==='ACTIVE').length;
+V['h-plans']=()=>`<div class="dhead"><div><span class="eyebrow">Dashboard · ${esc(S.club.name)}</span><h1 class="d">Plans</h1></div><button class="btn sm" data-act="go:h-create">+ Create plan</button></div>
+  <div class="kpis"><div class="kpi"><span class="dim">Monthly recurring</span><b class="num">${fmt(mrr())}</b></div><div class="kpi"><span class="dim">Active holders</span><b class="num">${S.plans.reduce((s,p)=>s+holders(p.id),0)}</b></div><div class="kpi"><span class="dim">Payment failed</span><b class="num">${S.members.filter(m=>m.status==='PAST_DUE').length+S.userPlans.filter(u=>u.status==='PAST_DUE').length}</b></div><div class="kpi"><span class="dim">Requests waiting</span><b class="num">${pendingCount()}</b></div></div>
+  <div class="tbl"><table><thead><tr><th>Plan</th><th>Price</th><th>Covers</th><th>Limit</th><th>Rules</th><th>Holders</th><th>Status</th></tr></thead><tbody>
+  ${S.plans.map(p=>`<tr><td><b>${esc(p.name)}</b><div class="dim" style="font-size:12px">${p.kind==='PACK'?'Pack':'Membership'}</div></td><td class="num">${p.prices.map(x=>priceLine(x).replace(/<[^>]+>/g,'')).join('<br>')}</td><td>${coverText(p)}</td><td>${limitText(p)}</td><td style="font-size:12.5px" class="muted">${[p.approval&&'Approval',p.intro&&'Intro offer',p.minCommitment&&p.minCommitment+'-mo commitment',p.cancellation==='REVIEW'&&'Review cancels'].filter(Boolean).join(' · ')||'—'}</td><td class="num">${holders(p.id)}</td><td><button class="btn ghost sm" data-act="toggleplan:${p.id}">${p.published?'Published':'Unlisted'}</button></td></tr>`).join('')}
+  </tbody></table></div>`;
+V['h-create']=()=>{const f=S.form||(S.form={kind:'MEMBERSHIP',name:'Weekend Warrior',description:'Every Saturday and Sunday run.',coverage:['TRAINING'],limitPeriod:'PER_MONTH',usageLimit:8,amount:799,interval:'MONTHLY',validityDays:60,approval:false,intro:false,introAmount:99,introDays:7,cancellation:'AUTO',policy:'FREE'});
+  return `<div class="dhead"><div><span class="eyebrow">Plans</span><h1 class="d">Create plan</h1></div><button class="btn ghost sm" data-act="go:h-plans">Back to plans</button></div>
+  <div class="form">
+    <div class="field" style="grid-column:1/-1"><label>Kind</label><div class="chips">${['MEMBERSHIP','PACK'].map(k=>`<button class="chip" aria-pressed="${f.kind===k}" data-act="f-kind:${k}">${k==='PACK'?'Pack':'Membership'}</button>`).join('')}</div></div>
+    <div class="field"><label for="f-name">Name</label><input id="f-name" data-f="name" value="${esc(f.name)}"></div>
+    <div class="field"><label for="f-desc">Description</label><input id="f-desc" data-f="description" value="${esc(f.description)}"></div>
+    <div class="field" style="grid-column:1/-1"><label>Covers</label><div class="chips">${[['TRAINING','Training runs'],['SINGLE_DAY','Race days']].map(([k,l])=>`<button class="chip" aria-pressed="${f.coverage.includes(k)}" data-act="f-cov:${k}">${l}</button>`).join('')}</div></div>
+    <div class="field"><label for="f-limit">Usage limit</label><select id="f-limit" data-f="limitPeriod">${(f.kind==='PACK'?[['TOTAL','Total credits']]:[['UNLIMITED','Unlimited'],['PER_WEEK','Per week'],['PER_MONTH','Per month']]).map(([k,l])=>`<option value="${k}" ${f.limitPeriod===k?'selected':''}>${l}</option>`).join('')}</select></div>
+    <div class="field"><label for="f-count">Bookings</label><input id="f-count" type="number" min="1" data-f="usageLimit" value="${f.usageLimit}" ${f.limitPeriod==='UNLIMITED'?'disabled':''}></div>
+    <div class="field"><label for="f-amt">Price (₹)</label><input id="f-amt" type="number" min="0" data-f="amount" value="${f.amount}"></div>
+    ${f.kind==='PACK'?`<div class="field"><label for="f-val">Valid for (days)</label><input id="f-val" type="number" min="1" data-f="validityDays" value="${f.validityDays}"></div>`:`<div class="field"><label for="f-int">Billing</label><select id="f-int" data-f="interval"><option value="MONTHLY" ${f.interval==='MONTHLY'?'selected':''}>Monthly</option><option value="QUARTERLY" ${f.interval==='QUARTERLY'?'selected':''}>Quarterly</option></select></div>`}
+    <div class="field"><label for="f-pol">Plan price on covered passes</label><select id="f-pol" data-f="policy"><option value="FREE" ${f.policy==='FREE'?'selected':''}>Free</option><option value="HALF" ${f.policy==='HALF'?'selected':''}>Half price</option><option value="CUSTOM_PERCENT" ${f.policy==='CUSTOM_PERCENT'?'selected':''}>30% off</option></select></div>
+    <div class="field"><label for="f-can">Cancellation</label><select id="f-can" data-f="cancellation"><option value="AUTO" ${f.cancellation==='AUTO'?'selected':''}>Members cancel themselves</option><option value="REVIEW" ${f.cancellation==='REVIEW'?'selected':''}>Review each request</option></select></div>
+    <label class="toggle"><span>Approval required</span><input type="checkbox" data-fb="approval" ${f.approval?'checked':''}></label>
+    ${f.kind==='MEMBERSHIP'?`<label class="toggle"><span>Intro offer: ${fmt(f.introAmount)} for ${f.introDays} days</span><input type="checkbox" data-fb="intro" ${f.intro?'checked':''}></label>`:''}
+  </div>
+  <div class="card" style="margin-top:16px"><span class="eyebrow">Members will see</span><div class="row" style="margin-top:8px"><div><b>${esc(f.name||'Untitled plan')}</b><div class="muted" style="font-size:13px">${f.coverage.map(c=>({TRAINING:'Training runs',SINGLE_DAY:'Race days'}[c])).join(' + ')||'Nothing covered yet'} · ${f.limitPeriod==='UNLIMITED'?'Unlimited':f.usageLimit+' bookings'+(f.limitPeriod==='TOTAL'?'':' a '+f.limitPeriod.replace('PER_','').toLowerCase())}</div></div><b class="num">${fmt(f.amount)}${f.kind==='PACK'?'':' / '+INTERVAL[f.interval].label}</b></div></div>
+  <div class="row" style="margin-top:16px;justify-content:flex-end"><span class="dim" style="font-size:12.5px">Publishing sets this plan price on every covered pass. You can change it per pass under Plan pricing.</span><button class="btn" data-act="createplan" ${f.coverage.length&&f.name.trim()?'':'disabled'}>Publish plan</button></div>`;
+};
+V['h-pricing']=()=>`<div class="dhead"><div><span class="eyebrow">Experiences</span><h1 class="d">Plan pricing</h1><p class="sub">What each plan's holders pay for every pass. Changes apply to the next checkout.</p></div></div>
+  ${S.events.map(e=>`<div class="stack" style="margin-bottom:18px"><div class="row"><b>${esc(e.name)}</b><span class="dim" style="font-size:12.5px">${dLong(e.date)} · ${e.type==='TRAINING'?'Training':'Race day'}</span></div>
+  <div class="tbl"><table><thead><tr><th>Pass</th><th>Base</th>${S.plans.map(p=>`<th>${esc(p.name)}</th>`).join('')}</tr></thead><tbody>
+  ${e.categories.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td class="num">${fmt(c.base)}</td>${S.plans.map(p=>{const pol=c.policies[p.id];const cov=p.coverage.includes(e.type);const v=pol?(pol.policy==='CUSTOM_FLAT'?'FLAT'+pol.value:pol.policy==='CUSTOM_PERCENT'?'PCT'+pol.value:pol.policy):'NONE';return `<td>${cov?`<select aria-label="${esc(p.name)} price on ${esc(c.name)}" data-pol="${e.id}|${c.id}|${p.id}"><option value="NONE" ${v==='NONE'?'selected':''}>No benefit</option><option value="FREE" ${v==='FREE'?'selected':''}>Free</option><option value="HALF" ${v==='HALF'?'selected':''}>Half</option><option value="FULL" ${v==='FULL'?'selected':''}>Full</option><option value="PCT30" ${v==='PCT30'?'selected':''}>30% off</option><option value="FLAT299" ${v==='FLAT299'?'selected':''}>₹299 off</option></select><div class="dim num" style="font-size:12px;margin-top:4px">${pol?fmt(priceFor(pol,c.base)):fmt(c.base)}</div>`:'<span class="dim" style="font-size:12px">Not covered</span>'}</td>`}).join('')}</tr>`).join('')}
+  </tbody></table></div></div>`).join('')}`;
+V['h-members']=()=>{const rows=[...S.userPlans.map(u=>({id:u.id,name:S.user.name,planId:u.planId,priceId:u.priceId,status:u.status,periodEnd:u.periodEnd,used:allowance(u,S.now),live:true,up:u})),...S.members.map(m=>({...m,live:false}))];
+  return `<div class="dhead"><div><span class="eyebrow">Members</span><h1 class="d">Plan holders</h1><p class="sub">Aarav is the live member from the phone. Try pausing or changing their credits, then go back to the member side.</p></div></div>
+  <div class="tbl"><table><thead><tr><th>Member</th><th>Plan</th><th>Status</th><th>Renews / ends</th><th>Usage</th><th>Actions</th></tr></thead><tbody>
+  ${rows.map(r=>{const p=planById(r.planId);const usage=r.live?(r.used.limit?`${r.used.limit-Math.max(0,r.used.left)} / ${r.used.limit}`:'Unlimited'):(p.usageLimit?`${r.used} / ${p.usageLimit}`:`${r.used} runs`);
+   return `<tr${r.live?' style="background:rgba(27,255,255,.04)"':''}><td><b>${esc(r.name)}</b>${r.live?' <span class="pill" style="height:20px">Live</span>':''}</td><td>${esc(p.name)}</td><td>${statusPill(r.status)}${r.live&&r.up.cancelRequested&&r.status==='ACTIVE'?' <span class="pill warn">Cancel requested</span>':''}</td><td class="num">${r.status==='ENDED'?'—':d(r.periodEnd)}</td><td class="num">${usage}</td>
+   <td>${r.live?`<div class="menu">${r.status==='ACTIVE'||r.status==='CANCELS_AT_PERIOD_END'?`<button class="btn ghost sm" data-act="h-pause:${r.id}">Pause</button>`:''}${r.status==='PAUSED'?`<button class="btn ghost sm" data-act="h-resume:${r.id}">Resume</button>`:''}${p.usageLimit&&r.status!=='ENDED'?`<button class="btn ghost sm" data-act="h-credits:${r.id}">+2 credits</button>`:''}${r.status==='ACTIVE'&&r.up.cancelRequested?`<button class="btn ghost sm" data-act="h-approvecancel:${r.id}">Approve cancel</button>`:''}${r.status!=='ENDED'?`<button class="btn ghost sm" data-act="h-end:${r.id}">Cancel now</button>`:''}${r.status==='PAST_DUE'?`<button class="btn ghost sm" data-act="fix:${r.id}">Fix billing</button>`:''}</div>`:`<span class="dim" style="font-size:12px">Sample member</span>`}</td></tr>`}).join('')}
+  </tbody></table></div>`};
+V['h-requests']=()=>{const reqs=allRequests().filter(r=>r.status==='PENDING');const cancels=S.userPlans.filter(u=>u.cancelRequested&&u.status==='ACTIVE');
+  return `<div class="dhead"><div><span class="eyebrow">Members</span><h1 class="d">Requests</h1><p class="sub">Join requests for approval-only plans, and cancellations for plans that review them.</p></div></div>
+  ${reqs.length||cancels.length?'':`<div class="card"><p class="sub">Nothing waiting. On the member side, request to join Pacer Squad.</p></div>`}
+  <div class="stack">${reqs.map(r=>{const p=planById(r.planId),pr=priceById(r.priceId);return `<div class="card row" style="flex-wrap:wrap"><div style="display:grid;gap:2px"><b>${esc(r.name)}${r.mine?' <span class="pill" style="height:20px">Live</span>':''}</b><span class="muted" style="font-size:13px">Wants ${esc(p.name)} · ${fmt(pr.amount)}/${INTERVAL[pr.interval].label} · ${d(r.at)}</span></div><div class="menu"><button class="btn sm" data-act="h-approve:${r.id}">Approve</button><button class="btn ghost sm" data-act="h-reject:${r.id}">Decline</button></div></div>`}).join('')}
+  ${cancels.map(u=>`<div class="card row" style="flex-wrap:wrap"><div style="display:grid;gap:2px"><b>${esc(S.user.name)} <span class="pill" style="height:20px">Live</span></b><span class="muted" style="font-size:13px">Asked to cancel ${esc(planById(u.planId).name)} · ${d(u.cancelRequested)}</span></div><div class="menu"><button class="btn sm" data-act="h-approvecancel:${u.id}">Approve cancel</button></div></div>`).join('')}</div>`};
+
+/* ───────────────────────── Render ───────────────────────── */
+const NAV=[
+  ['Member · phone',[['club','Club page'],['event:e1','Saturday 5K'],['event:e3','Monsoon 10K'],['passes','Passes · Plans']]],
+  ['Host · dashboard',[['h-plans','Plans'],['h-create','Create plan'],['h-pricing','Plan pricing'],['h-members','Members'],['h-requests','Requests']]],
+];
+function renderRail(){
+  document.getElementById('rail').innerHTML=NAV.map(([g,items])=>`<div class="grp"><h3>${g}</h3><nav>${items.map(([id,l])=>`<button data-act="${id.startsWith('event:')?id:'go:'+id}" ${S.view===id||(S.view==='event'&&S.viewArg&&id==='event:'+S.viewArg)?'aria-current="page"':''}><span>${l}</span>${id==='h-requests'&&pendingCount()?`<span class="badge">${pendingCount()}</span>`:''}</button>`).join('')}</nav></div>`).join('');
+}
+function renderStage(){
+  const host=S.view.startsWith('h-');
+  const body=S.view==='event'?V.event(S.viewArg):S.view==='manage'?V.manage(S.viewArg):S.view==='ticket'?V.ticket(S.viewArg):V[S.view]();
+  let sheet='';
+  if(!host&&S.sheet){sheet=`<div class="scrim" data-act="close"></div><div class="sheet" role="dialog" aria-modal="true">${SH[S.sheet.type](S.sheet)}</div>`;if(S.sheet.rzp)sheet+=rzpHtml(S.sheet.rzp)}
+  const stage=document.getElementById('stage');
+  const prevScroll=stage.querySelector('.scroll')?.scrollTop||0;const same=stage.dataset.v===S.view+(S.viewArg||'');
+  stage.innerHTML=host?`<div class="dash"><div class="scroll">${body}</div></div>`:`<div class="phone"><div class="scroll"><div class="sb"><span>9:41</span><span>peakst8</span><span>5G ▮▮▮</span></div>${body.split('<div class="ctabar">')[0]}</div>${body.includes('<div class="ctabar">')?'<div class="ctabar">'+body.split('<div class="ctabar">')[1]:''}${sheet}</div>`;
+  stage.dataset.v=S.view+(S.viewArg||'');
+  if(same)stage.querySelector('.scroll').scrollTop=prevScroll;
+}
+function renderPanel(){
+  const lp=S.lastPricing;
+  document.getElementById('panel').innerHTML=`
+  <div class="card"><h4>Simulated time</h4><div class="ctrl">
+    <div class="row"><span class="muted">Today</span><b class="num">${dLong(S.now)}</b></div>
+    <button class="btn sm" data-act="renew">Skip to next renewal</button>
+    <label class="toggle" style="padding:8px 10px"><span style="font-size:13px">Next renewal fails</span><input type="checkbox" data-act="failtoggle" ${S.failNextRenewal?'checked':''}></label>
+    <button class="btn ghost sm" data-act="reset">Reset demo</button></div></div>
+  <div class="card"><h4>Aarav’s plans (UserPlan)</h4>${S.userPlans.length?S.userPlans.map(u=>{const p=planById(u.planId),a=allowance(u,S.now);return `<dl class="kv" style="margin-bottom:10px"><dt>${esc(p.name)}</dt><dd>${u.status}</dd><dt>Period</dt><dd>${d(u.periodStart)} – ${d(u.periodEnd)}</dd><dt>Usage</dt><dd>${a.limit?`${a.limit-Math.max(0,a.left)} of ${a.limit}`:'unlimited'}</dd><dt>Charged</dt><dd>${fmt(u.charges.reduce((s,c)=>s+c.amount,0))}</dd></dl>`}).join(''):'<p class="dim" style="margin:0;font-size:13px">None yet. Join a plan on the club page.</p>'}</div>
+  <div class="card"><h4>Last checkout pricing</h4>${lp?`<p style="margin:0 0 8px;font-size:13px">${esc(lp.event)} · ${esc(lp.cat)}: <b class="num">${fmt(lp.base)} → ${fmt(lp.final)}</b></p><ol class="rule">${lp.steps.map(s=>`<li class="${s.ok?'pass-ok':'fail'}">${esc(s.t)}</li>`).join('')}</ol>`:'<p class="dim" style="margin:0;font-size:13px">Open checkout on any event to see how the plan price is chosen.</p>'}</div>
+  <div class="card"><h4>Event log</h4><div class="log">${S.log.slice(0,40).map(l=>`<div><time>${d(l.t)}</time><span>${esc(l.m)}</span></div>`).join('')}</div></div>`;
+}
+function renderToast(){document.getElementById('toastHost').innerHTML=S.toast?`<div class="toast" role="status">${esc(S.toast)}</div>`:''}
+function render(){renderRail();renderStage();renderPanel();renderToast()}
+
+/* ───────────────────────── Events ───────────────────────── */
+function go(view,arg){S.view=view;S.viewArg=arg||null;S.sheet=null;render();const sc=document.querySelector('#stage .scroll');if(sc)sc.scrollTop=0}
+document.addEventListener('click',ev=>{
+  const el=ev.target.closest('[data-act]');if(!el)return;
+  const [a,arg]=el.dataset.act.split(/:(.*)/s);if(!a)return;
+  if(el.type==='checkbox'&&a!=='agree'&&a!=='failtoggle')return;
+  const sh=S.sheet;
+  switch(a){
+    case 'go':go(arg);break;
+    case 'event':go('event',arg);break;
+    case 'passes':S.passTab='plans';go('passes');break;
+    case 'tab':S.passTab=arg;render();break;
+    case 'ticket':go('ticket',arg);break;
+    case 'manage':go('manage',arg);break;
+    case 'close':S.sheet=null;render();break;
+    case 'plan':{const p=planById(arg);if(S.view.startsWith('h-'))go('club');S.sheet={type:'plan',planId:p.id,priceId:p.prices[0].id,step:'Plan'};render();break}
+    case 'price':sh.priceId=arg;render();break;
+    case 'step':sh.step=arg;render();break;
+    case 'intro':sh.intro=arg==='on';render();break;
+    case 'agree':sh.agree=el.checked;render();break;
+    case 'sendrequest':requestJoin(sh.planId,sh.priceId);S.sheet={type:'requested'};render();break;
+    case 'withdraw':{const r=S.joinRequests.find(x=>x.id===arg);r.status='WITHDRAWN';log(`Join request for ${planById(r.planId).name} withdrawn.`);toast('Request withdrawn');render();break}
+    case 'pay':{const plan=planById(sh.planId),price=priceById(sh.priceId);const intro=plan.intro&&plan.intro.priceId===price.id&&sh.intro!==false&&!S.userPlans.some(u=>u.planId===plan.id);
+      const amt=(intro?plan.intro.amount:price.amount)+(price.joiningFee||0);
+      sh.rzp={amount:amt,recurring:price.billing==='RECURRING',maxAmount:price.amount,every:price.billing==='RECURRING'?INTERVAL[price.interval].label:'',then:'join',intro};render();break}
+    case 'checkout':S.sheet={type:'checkout',eventId:arg};render();break;
+    case 'cat':sh.catId=arg;render();break;
+    case 'confirmbook':{const e=eventById(sh.eventId);const c=e.categories.find(x=>x.id===sh.catId)||e.categories[0];const ev2=evaluate(e,c);const total=ev2.best?ev2.best.price:c.base;
+      if(total===0){const b=book(e,c,ev2.best);S.sheet=null;toast('Registration complete');go('ticket',b.id)}
+      else{sh.catId=c.id;sh.rzp={amount:total,recurring:false,then:'book'};render()}break}
+    case 'rzp':{if(arg==='upi'||arg==='card'){sh.rzp.method=arg;render();break}
+      if(arg==='cancel'){sh.rzp=null;render();break}
+      const r=sh.rzp;
+      if(r.then==='join'){
+        const plan=planById(sh.planId);const up=startPlan(sh.planId,sh.priceId,{intro:r.intro});
+        const jr=reqFor(plan.id);if(jr&&jr.status==='APPROVED')jr.status='CONVERTED';
+        S.sheet={type:'joined',upId:up.id};render();
+      } else {const e=eventById(sh.eventId);const c=e.categories.find(x=>x.id===sh.catId);const ev2=evaluate(e,c);const b=book(e,c,ev2.best);S.sheet=null;toast('Payment successful');go('ticket',b.id)}
+      break}
+    case 'cancelask':S.sheet={type:'cancel',upId:arg};render();break;
+    case 'docancel':{const up=S.userPlans.find(u=>u.id===sh.upId);const plan=planById(up.planId);
+      if(plan.cancellation==='AUTO'){up.status='CANCELS_AT_PERIOD_END';up.history.push({t:S.now,m:'Cancelled; access until '+d(up.periodEnd)});log(`${plan.name} cancelled. Access until ${d(up.periodEnd)}; no more charges.`);toast('Plan cancelled')}
+      else{up.cancelRequested=S.now;up.history.push({t:S.now,m:'Requested cancellation'});log(`Cancellation request for ${plan.name} sent to the host.`);toast('Request sent')}
+      S.sheet=null;render();break}
+    case 'cancelbook':{const b=S.bookings.find(x=>x.id===arg);cancelBooking(b);toast('Ticket cancelled');go('passes');break}
+    case 'fix':{const up=S.userPlans.find(u=>u.id===arg);if(up){fixBilling(up);toast('Billing fixed. Plan active again.');render()}break}
+    case 'renew':advanceToRenewal();break;
+    case 'failtoggle':S.failNextRenewal=el.checked;log(S.failNextRenewal?'Next renewal set to fail.':'Next renewal set to succeed.');renderPanel();break;
+    case 'reset':S=seed();go('club');toast('Demo reset');break;
+    // host
+    case 'toggleplan':{const p=planById(arg);p.published=!p.published;log(`Host ${p.published?'published':'unlisted'} ${p.name}.`);render();break}
+    case 'f-kind':S.form.kind=arg;S.form.limitPeriod=arg==='PACK'?'TOTAL':'PER_MONTH';render();break;
+    case 'f-cov':{const c=S.form.coverage;const i=c.indexOf(arg);i>=0?c.splice(i,1):c.push(arg);render();break}
+    case 'createplan':{const f=S.form;const id='p'+(S.seq++),pid='pp'+(S.seq++);
+      const plan={id,kind:f.kind,name:f.name.trim(),description:f.description.trim(),coverage:[...f.coverage],limitPeriod:f.limitPeriod,usageLimit:f.limitPeriod==='UNLIMITED'?null:Number(f.usageLimit),
+        prices:[f.kind==='PACK'?{id:pid,label:'One-time',amount:Number(f.amount),billing:'ONE_TIME',validityDays:Number(f.validityDays),joiningFee:0}:{id:pid,label:f.interval==='MONTHLY'?'Monthly':'Quarterly',amount:Number(f.amount),billing:'RECURRING',interval:f.interval,joiningFee:0}],
+        intro:f.kind==='MEMBERSHIP'&&f.intro?{priceId:pid,amount:Number(f.introAmount),days:Number(f.introDays)}:null,approval:f.approval,cancellation:f.cancellation,minCommitment:0,featured:false,published:true};
+      S.plans.push(plan);
+      const pol=f.policy==='CUSTOM_PERCENT'?{policy:'CUSTOM_PERCENT',value:30}:{policy:f.policy};
+      S.events.forEach(e=>{if(plan.coverage.includes(e.type))e.categories.forEach(c=>{c.policies[id]={...pol}})});
+      log(`Host published ${plan.name} and set "${policyLabel(pol)}" on every covered pass.`);S.form=null;toast(plan.name+' is live on the club page');go('h-plans');break}
+    case 'h-pause':{const up=S.userPlans.find(u=>u.id===arg);up.status='PAUSED';up.pausedAt=S.now;up.history.push({t:S.now,m:'Paused by the club'});log(`Host paused ${planById(up.planId).name} for ${S.user.name}. Billing and access stopped.`);toast('Plan paused');render();break}
+    case 'h-resume':{const up=S.userPlans.find(u=>u.id===arg);const paused=S.now-(up.pausedAt||S.now);up.periodEnd+=paused;up.status='ACTIVE';up.history.push({t:S.now,m:'Resumed by the club'});log(`Host resumed ${planById(up.planId).name}. End date moved by ${Math.round(paused/DAY)} days.`);toast('Plan resumed');render();break}
+    case 'h-credits':{const up=S.userPlans.find(u=>u.id===arg);const a=allowance(up,S.now);up.creditsOverride=(up.creditsOverride??planById(up.planId).usageLimit)+2;up.history.push({t:S.now,m:'Club added 2 credits'});log(`Host added 2 credits to ${S.user.name}'s ${planById(up.planId).name} (${a.left+2} left).`);toast('2 credits added');render();break}
+    case 'h-end':{const up=S.userPlans.find(u=>u.id===arg);up.status='ENDED';up.periodEnd=S.now;up.history.push({t:S.now,m:'Cancelled by the club'});log(`Host cancelled ${planById(up.planId).name} for ${S.user.name} immediately.`);toast('Plan cancelled');render();break}
+    case 'h-approvecancel':{const up=S.userPlans.find(u=>u.id===arg);up.status='CANCELS_AT_PERIOD_END';up.history.push({t:S.now,m:'Club approved cancellation'});log(`Host approved cancellation. ${planById(up.planId).name} ends ${d(up.periodEnd)}.`);toast('Cancellation approved');render();break}
+    case 'h-approve':case 'h-reject':{const r=S.joinRequests.find(x=>x.id===arg)||S.otherRequests.find(x=>x.id===arg);r.status=a==='h-approve'?'APPROVED':'REJECTED';log(`Host ${a==='h-approve'?'approved':'declined'} ${r.name||S.user.name}'s request for ${planById(r.planId).name}.`);toast(a==='h-approve'?'Approved. Member can now pay.':'Request declined');render();break}
+  }
+});
+document.addEventListener('input',ev=>{const el=ev.target;
+  if(el.dataset.f&&S.form){S.form[el.dataset.f]=el.type==='number'?Number(el.value):el.value;if(el.tagName==='SELECT')render();else{const card=document.querySelector('#stage .card');if(card){const keep=document.activeElement.id;render();const k=document.getElementById(keep);if(k){k.focus();const v=k.value;if(k.setSelectionRange&&k.type==='text')k.setSelectionRange(v.length,v.length)}}}}
+  if(el.dataset.fb&&S.form){S.form[el.dataset.fb]=el.checked;render()}
+});
+document.addEventListener('change',ev=>{const el=ev.target;
+  if(el.dataset.pol){const [eid,cid,pid]=el.dataset.pol.split('|');const c=eventById(eid).categories.find(x=>x.id===cid);const v=el.value;
+    if(v==='NONE')delete c.policies[pid];else if(v.startsWith('PCT'))c.policies[pid]={policy:'CUSTOM_PERCENT',value:Number(v.slice(3))};else if(v.startsWith('FLAT'))c.policies[pid]={policy:'CUSTOM_FLAT',value:Number(v.slice(4))};else c.policies[pid]={policy:v};
+    log(`Host set ${planById(pid).name} on ${eventById(eid).name} · ${c.name} to ${c.policies[pid]?policyLabel(c.policies[pid]):'no benefit'}.`);render()}
+});
+render();
+})();
+</script>
+
+</body>
+</html>

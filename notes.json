@@ -49,10 +49,11 @@
       "status": "Draft",
       "next": "Pick pilot clubs and lock V1 scope",
       "owner": "",
-      "updated": "2026-11-01",
+      "updated": "2026-11-02",
       "summary": "Clubs sell recurring memberships and prepaid packs. Members book each session as usual and peakst8 applies the plan at checkout. Reverse-engineered from SweatPals Plans, mapped onto the peakst8 backend with a Prisma schema draft.",
       "links": {
         "Product note": "memberships/",
+        "Prototype": "memberships/prototype/",
         "Schema draft": "https://github.com/peakst8-Basecamp/product-notes/blob/main/memberships/schema-draft.prisma"
       },
       "milestones": []
