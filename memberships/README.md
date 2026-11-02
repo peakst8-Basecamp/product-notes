@@ -2,7 +2,7 @@
 
 **A peakst8 product feature.** Clubs sell **plans**: a recurring membership (for example ₹1,499 a month) or a prepaid pack (for example 10 runs). A member buys the plan once and then books each run, class or event as usual. At checkout, peakst8 applies the plan automatically, so the ticket is free, discounted or uses up one credit.
 
-[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) · [Schema draft](schema-draft.prisma) · Internal · Draft · updated 2 Nov 2026
+[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) · [What we reverse-engineered](coverage/README.md) · [Schema draft](schema-draft.prisma) · Internal · Draft · updated 2 Nov 2026
 
 This note reverse-engineers SweatPals Memberships, which SweatPals now calls "Plans". It sets out exactly what they built, then maps it onto the peakst8 backend (Express, Prisma, Postgres and Razorpay). SweatPals has no public repo, so everything here comes from their public help centre and the network routes their public web app calls (see [Evidence](#evidence)).
 
@@ -15,6 +15,10 @@ This note reverse-engineers SweatPals Memberships, which SweatPals now calls "Pl
 5. **Renewal and exit.** A recurring plan renews automatically with a notice 24 hours before. Cancelling either takes effect straight away or goes to the host as a request, and access lasts until the end of the period. Only the host can pause, refund, switch or change a plan.
 
 The point is the separation: **a plan is not a ticket.** It is a pricing rule plus a usage meter, and it attaches to the existing registration flow.
+
+## What we reverse-engineered
+
+[`coverage/`](coverage/README.md) lists all 99 SweatPals membership features, one row each, with who configures it (club admin, member, system or peakst8 admin), the peakst8 setting, the phase and prototype status. It also sets out the rule that club admins configure plans for their own audience: club settings, plan settings (including audience rules) and pass settings, plus who on the team can do what. Treat it as the build checklist.
 
 ## Working prototype
 
@@ -317,4 +321,5 @@ The English copy for these keys isn't in the bundles (it loads at runtime), so t
 | `README.md` | This note |
 | `index.html` | Note page for the site |
 | `prototype/index.html` | Working prototype (one self-contained page) |
+| `coverage/` | Reverse-engineering coverage: `features.json` (source), `build.py`, generated `README.md` and `index.html` |
 | `schema-draft.prisma` | Proposed Prisma models, to merge into `peakst8-backend/prisma/schema.prisma` |

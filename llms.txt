@@ -22,5 +22,6 @@
 
 - [Product note](https://peakst8-basecamp.github.io/product-notes/memberships/): concepts, member and host flows, plan lifecycle, checkout pricing, payments, data model, API, scope, open questions, SweatPals evidence
 - [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/): member and host screens in the peakst8 app design, with live plan pricing, renewals and host actions
+- [What we reverse-engineered](https://peakst8-basecamp.github.io/product-notes/memberships/coverage/): all 99 SweatPals membership features with who configures each on peakst8 (club admins set plans for their own audience), the setting, phase and prototype status
 
 - [Status of every note](https://peakst8-basecamp.github.io/product-notes/notes.json)
