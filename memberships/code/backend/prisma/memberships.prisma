@@ -1,5 +1,5 @@
-// peakst8 Club Memberships: schema draft
-// Merge into peakst8-backend/prisma/schema.prisma. Conventions follow that file:
+// peakst8 Club Memberships: Prisma models
+// Paste into peakst8-backend/prisma/schema.prisma, then apply the "Changes to existing models" at the bottom.
 // uuid ids, snake_case @@map, updatedAt/createdAt on every model, soft delete via isDeleted/isArchived,
 // money as Float (as Category.baseAmount does today).
 

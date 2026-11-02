@@ -1,369 +1,154 @@
 # peakst8 Club Memberships
 
-**A peakst8 product feature.** Clubs sell **plans**: a recurring membership (for example ₹1,499 a month) or a prepaid pack (for example 10 runs). A member buys the plan once and then books each run, class or event as usual. At checkout, peakst8 applies the plan automatically, so the ticket is free, discounted or uses up one credit.
+**A peakst8 product feature.** Clubs sell monthly memberships and prepaid run packs on peakst8, with perks and brand offers their members can see. Members pay once, keep booking each session as they do today, and the plan applies at checkout. Clubs get predictable monthly income, and their regulars get a reason to stay.
 
-[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) · [What we reverse-engineered](coverage/README.md) · [Schema draft](schema-draft.prisma) · Internal · Draft · updated 2 Nov 2026
+[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) · [Code and architecture](code/) · [Feature checklist](coverage/README.md) · Status: Draft · Owner: _to assign_ · updated 2 Nov 2026
 
-This note reverse-engineers SweatPals Memberships, which SweatPals now calls "Plans". It sets out exactly what they built, then maps it onto the peakst8 backend (Express, Prisma, Postgres and Razorpay). SweatPals has no public repo, so everything here comes from their public help centre and the network routes their public web app calls (see [Evidence](#evidence)).
+## 1. The problem
 
-## In one minute
+Community fitness clubs on peakst8 run the same sessions every week, but they sell them one ticket at a time.
 
-1. **The host creates a plan.** They choose what it covers (event types or specific events), how much it can be used (unlimited, N in total, or N per week or month), the price and billing (recurring, or a one-time payment with an expiry) and the rules (approval needed, first-timers only, capacity, and so on).
-2. **The host sets a plan price on each ticket category.** For every category, plan holders get it free, at half price, at full price, or at a custom ₹ or % amount.
-3. **The member joins the plan** from the club page: they pay, or request approval, then pay. The plan appears in the app under **Passes → Plans**.
-4. **The member books events the normal way.** At checkout, peakst8 finds their eligible plan, reprices the ticket and records one use.
-5. **Renewal and exit.** A recurring plan renews automatically with a notice 24 hours before. Cancelling either takes effect straight away or goes to the host as a request, and access lasts until the end of the period. Only the host can pause, refund, switch or change a plan.
-
-The point is the separation: **a plan is not a ticket.** It is a pricing rule plus a usage meter, and it attaches to the existing registration flow.
-
-## Launch prerequisite: renewal reminders
-
-Renewal reminders are a separate feature type, and they ship **before** memberships go live for any club. A club can't sell a recurring plan until all 12 prerequisite reminder features work end to end ([list](coverage/README.md#r-renewal-reminders-17--launch-prerequisite)):
-
-- **Pre-debit notice** at least 24 hours before every recurring charge (RBI e-mandate rule; SweatPals does the same), plus club-chosen earlier reminders (for example 3 days, or 7 days for yearly prices).
-- **After the charge:** a receipt on success, and a payment-failed notice with a fix-billing link on each retry.
-- **Before trouble:** mandate at risk (cancelled, expired or card expiring) and intro offer ending (first full-price charge coming).
-- **Rules:** club-set channels (push, email, WhatsApp on the club's credits) and send hour; mandatory notices can't be muted; queued reminders are recomputed on pause, date or price change and cancel; every send is logged on the member's plan.
-
-The backend already has scheduled jobs, the email outbox, WhatsApp and push. The existing `NotificationDelivery` log is tied to registrations and only knows `ABANDONED_CART`, so reminders get their own `PlanReminderDelivery` table and a per-club `ClubMembershipSettings` row (both in [`schema-draft.prisma`](schema-draft.prisma)).
-
-## Discounts (club admins switch them on)
-
-Discount codes are off by default. A club admin turns them on **per plan** under **Dashboard → Discounts**, then creates codes for campaigns, students or partners. Members enter a code on the plan's Review step.
-
-| Setting | Options |
-| --- | --- |
-| **Plans that take codes** | On or off per plan (`Plan.allowDiscountCodes`) |
-| **Code** | % off or ₹ off; the plans it applies to |
-| **Applies to** | First payment only (SweatPals' rule) · every charge (e.g. a student rate) · first N charges |
-| **Limits** | Max uses, expiry, one per member; switch a code off at any time |
-| **Rules** | Can't be combined with an intro offer; the discount shows as its own line on the review and receipts; an every-charge code carries into renewals and pre-debit notices |
-
-This reuses the backend's existing `Coupon` model, linked to plans through `CouponToPlan`. Later (V2): audience discounts tied to a plan audience rule (students, women, a company).
-
-## Member perks
-
-People keep paying a monthly fee when they can see what it gets them. Perks are their own feature type ([list](coverage/README.md#p-member-perks-15)), and club admins choose them per plan under **Dashboard → Perks**:
-
-| Perk | What the member sees | Phase |
+| Who | Today | What it costs them |
 | --- | --- | --- |
-| **Savings** | "You saved ₹X this period · ₹Y since joining" on the plan card, and a recap with each renewal receipt | V1 |
-| **Early access** | Book a set number of hours before an event opens to everyone; non-members see when it opens | V1 |
-| **Guest passes** | A number of free passes per period to bring a friend; the friend claims a link and books free, and becomes a lead for the club | V1 |
-| **Partner perks** | Offers from the club's partners (store, café, physio), locked on the club page until you hold a plan that unlocks them | V1 |
-| **Club perks page** | A small listing page per club for its brand partnerships: logo, category, offer, how to redeem; search and category filters; 'Reveal code' for unlocked perks; locked cards say which plan unlocks them; members-only perks stay hidden; shareable link | V1 |
-| **Members-only sessions, WhatsApp group** | Sessions only plan holders can book; a group for holders | V1 |
-| **Later** | Waitlist priority, referral reward, member badge on leaderboards, race photos first, streaks and milestones | V2 |
+| **Club admins** | Every weekly run is a separate event with its own ticket. Income depends on how many people book that week. Regulars who'd happily pay monthly either pay per session or pay the organiser directly, outside peakst8. **Assumption:** off-platform UPI collections are common; confirm in pilot interviews. | Unpredictable income, and no record of who the paying regulars are. Brand partnerships the club has built have nowhere to live, so they can't be used to sell anything. |
+| **Regular members** | A full checkout for every session, at the same price as someone coming once. Nothing shows what being a regular is worth. | Friction every week, no reward for loyalty, an easy reason to drift to another club. |
+| **peakst8** | Revenue is a platform fee on each ticket (`Club.platformFeePercentage`, 3% by default). In October 2026 the platform had 244 users and ₹3,85,203 GMV across organisers (source: "Organiser and Event Summary – October" sheet). | GMV moves with each week's bookings. When clubs collect memberships off-platform, peakst8 loses both the revenue and the member relationship. |
 
-Most of these clubs are social clubs with access to brands, so the perks page is where a club shows those partnerships off, to members and to people deciding whether to join. Club admins add each brand (partner, category, offer, code, how to redeem, who sees it) and choose which plans unlock it; each 'Reveal code' tap is counted so the club can report back to the brand.
+SweatPals, a US community-fitness platform, built exactly this and treats it as core: "Plans create predictable revenue and simplify member access across all experiences" (SweatPals help centre 5.1). We reverse-engineered their feature in full; see the [feature checklist](coverage/README.md).
 
-Schema: `Plan.earlyAccessHours`, `Plan.waitlistPriority`, `Plan.guestPassesPerCycle`, `Event.publicOpensAt`, and `ClubPerk` (with `category`, `visibility`, `revealCount`) + `PlanPerk` for brand perks.
+## 2. Who it's for
 
-## What we reverse-engineered
-
-[`coverage/`](coverage/README.md) lists all 99 SweatPals membership features, one row each, with who configures it (club admin, member, system or peakst8 admin), the peakst8 setting, the phase and prototype status. It also sets out the rule that club admins configure plans for their own audience: club settings, plan settings (including audience rules) and pass settings, plus who on the team can do what. Treat it as the build checklist.
-
-## Working prototype
-
-[`prototype/`](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) is a single page that runs the feature end to end in the peakst8 app's own design: dark theme, Outfit and Bricolage Grotesque, the blue `PrimaryButtonV2` gradient, the indigo-to-cyan selected pass row from `ChoosePassTab`, the gold step and offer gradient, the `EventCtaSection` price bar and the angled strike-through. The state is real, so changes on one side show up on the other:
-
-| Side | What you can do |
-| --- | --- |
-| **Member (phone)** | Browse the club perks page (search, categories, reveal codes) · enter a discount code at checkout · see savings, early access, guest passes and partner perks (locked until you join) · browse plans on the club page · join with or without the intro offer · request to join an approval-only plan and withdraw it · pay through a mock Razorpay UPI AutoPay mandate · see "Member price" on events · check out at the plan price (₹0 skips payment) · view the ticket with its membership discount · see credits and renewal in Passes → Plans · cancel (Auto or Review) · fix a failed renewal |
-| **Host (dashboard)** | Turn discount codes on per plan, create and switch off codes · choose each plan's perks (early access, guest passes, partner perks) and add partner perks · plans list with MRR and holders · create and publish a plan (it appears on the club page and sets its price on covered passes) · change the plan price on any pass · pause, resume, add credits to or cancel the live member's plan · approve or decline join and cancel requests |
-| **Simulated time** | Skip to the next renewal (a pre-debit notice, then a charge or a failure) · make the next renewal fail · reset |
-
-The right-hand panel shows the member's `UserPlan` rows, the event log, and for the last checkout every step of the pricing rule: which plans were kept or dropped and why.
-
-## Who we're building it for
-
-| | |
-| --- | --- |
-| **Clubs** | Weekly run clubs, strength and HIIT communities, yoga and pilates collectives on peakst8 that run the same sessions every week |
-| **Why they want it** | Predictable monthly revenue instead of per-session ticketing, and members who keep coming back |
-| **Members** | Regulars who attend 4 to 12 times a month and want one payment, not a checkout every session |
-| **Not for V1** | One-off races and festivals (single tickets work well there), and multi-club or network passes |
-
-## Concepts
-
-| SweatPals term | peakst8 term | What it is |
-| --- | --- | --- |
-| Plan (Membership or Class Pack) | **Plan**, `kind = MEMBERSHIP` or `PACK` | The product a club sells. One club, many plans. |
-| Tier | **Plan price** | A price option on a plan, for example ₹1,499 a month or ₹14,999 a year. SweatPals' API returns `membership.tiers[]`. |
-| Offer (intro offer) | **Intro offer** | A discounted first period on a price, once per member, for example ₹199 for the first 2 weeks, then ₹1,499 a month (`membership-offers/public/tier/:id`). |
-| Booking pools + limits | **Coverage + usage limit** | Which events the plan covers, and how many bookings it allows in each period or in total. |
-| Plan policy (per experience) | **Category plan policy** | What a plan holder pays for a given ticket category: `FREE`, `HALF`, `FULL`, `CUSTOM_PERCENT` or `CUSTOM_FLAT`. |
-| user-to-membership | **Member plan** (`UserPlan`) | One member's copy of a plan: status, current period, credits left, renewal date. |
-| Membership join request | **Plan join request** | Used when a plan needs approval. The member can withdraw it. |
-| Shared plan | **Plan share** | The holder invites others (for example family) to use the plan's benefits. |
-| Guest pass | **Guest pass** | The holder sends a free trial booking to a friend. |
-| Send plan | **Send plan** | The host sends a plan to someone: free, free for a period, or full payment. |
-| Fix billing | **Fix billing** | Recover a failed renewal: this cycle, prorated, or a custom amount. |
-
-## Member flows
-
-### 1. Discover and join
-
-| Step | What the member sees | What the system does |
-| --- | --- | --- |
-| 1 | The club page has a **Plans** section. Each card shows name, price and billing, what it covers and its limits. | `GET /plans/public/club/:clubId` lists published, unarchived and listed plans. Unlisted plans are reachable only by direct link (`/plans/public/:planId`). |
-| 2 | Tap **Join**. If the plan needs approval, the button reads **Request to join**. | The button state comes from the member's `UserPlan` and join request. The four states SweatPals uses are **Join**, **Request to join**, **Request pending · Withdraw** and **Not approved** (disabled). If they already hold the plan, the button reads **View**. |
-| 3 | Confirm the price, the billing frequency, any intro offer, the minimum commitment disclaimer, the waiver and the questionnaire. | The eligibility checks run here: first-timers only, one per member, capacity, intro offer already used. |
-| 4 | Pay. | A recurring plan creates a Razorpay Subscription, and the member authorises a UPI AutoPay or card mandate. A pack creates a normal Razorpay Order, the same as a ticket today. |
-| 5 | Confirmation email and receipt. The plan shows under **Passes → Plans**. | The webhook moves the `UserPlan` to `ACTIVE` and opens period 1. |
-
-### 2. Use the plan
-
-- **Plan screen:** status, renewal or expiry date, what it covers, credits left this period, who it's shared with, guest passes left.
-- **Booking:** the member opens any event and picks a category. If they hold an eligible plan, checkout shows **"Booked with <plan>"** and the plan price. When the price comes to ₹0, Razorpay is skipped. The member still books each event, because nothing is booked automatically.
-- **Book with plan only:** a category can be set so that only plan holders can book it (members-only sessions).
-
-### 3. Renew, cancel, rejoin
-
-- **Renewal:** automatic on the billing date, with a push, WhatsApp or email notice 24 hours before (this matches the RBI pre-debit notice). A promo code applies only to the first charge, and renewals are full price.
-- **Cancel:** Passes → Plan → Manage → Cancel. The plan's cancellation policy decides what happens: either it cancels straight away (`AUTO`) or it sends a request to the host (`REVIEW`, and the host is notified). A minimum commitment blocks cancelling until it has passed.
-- **After cancelling:** a recurring plan keeps working until the end of the period paid for, and a pack works until its credits run out or it expires. There is no automatic refund.
-- **Change plan:** the member cancels and joins the new plan. Only the host can switch a member's plan directly.
-
-### 4. Claim flows (no account needed beforehand)
-
-| Flow | How it starts | What the member does |
-| --- | --- | --- |
-| **Sent plan** | The host uses Send plan by email or phone | Opens the link, fills in name, phone and email and the intake form, adds a payment mandate if the plan isn't free, then claims it |
-| **Shared plan** | The holder taps "Invite to my plan" | Opens the invite, fills in their details and the intake form, then taps **Claim**. Their benefits draw on the holder's plan. |
-| **Guest pass** | The holder sends a pass link or QR code (app only) | The guest opens it, fills in the intake form, claims it and books one eligible event for free. Staff can also redeem it at check-in. |
-| **Fix billing** | Failed renewal email | Opens a self-serve link and pays the outstanding amount |
-
-SweatPals runs all four as public, token-based endpoints (`/public/user-membership/:id/claim`, `/public/shared-membership/:id/claim`, `/public/guest-pass/:id/claim`, `memberships/public/fix-billing/:id`). peakst8 should do the same with signed, single-use tokens.
-
-## Host flows
-
-### Create a plan (dashboard → Plans → + Create)
-
-| Section | Fields |
-| --- | --- |
-| **Basics** | Kind (Membership or Pack), name and description (both required), cover image |
-| **Coverage** | Event types (Training, Single day and others from `EVENT_TYPE`) or a list of specific events. A recurring club run is the usual target. |
-| **Usage limit** | Unlimited, a total count (for packs) or a count per day, week, month or year (for memberships). Optionally roll unused bookings over into the next period. |
-| **Apply to existing events** | One action that sets a plan policy on every category of the events the plan covers: Free, Half, Full, or Custom ₹ or %. |
-| **Pricing and billing** | One or more prices. Each is **recurring** (weekly, monthly, every 4 weeks, quarterly, half-yearly or yearly) or **one-time**, with validity: never expires, from purchase, from first use, or a fixed end date. |
-| **Extras** | Intro offer, joining fee, minimum commitment (in cycles) |
-| **Rules** | One purchase per member, first-timers only, capacity (maximum active holders), approval required, unlisted, featured, shareable (with a seat count), guest passes (per cycle, eligible events, first-timers only or anyone), WhatsApp group link, waiver, questionnaire |
-| **Cancellation** | Automatic or review each request |
-
-### Set the plan price on a ticket category
-
-The event editor gets a new **Plan pricing** row under each category: for each of the club's live plans, choose Free, Half, Full or Custom. New categories default to **Full** (no benefit) until the host sets them. SweatPals has the same rule: a plan only takes effect on events where a policy is set.
-
-### Manage members (Members → ⋮ on a member's plan)
-
-| Action | Effect |
-| --- | --- |
-| **Pause / resume** | Billing stops, access stops, and price and credits are kept. The end date moves out by the length of the pause (for recurring plans). Pauses are indefinite or end on a set date. Only the host can pause. |
-| **Cancel** | Access lasts until the end of the period |
-| **Refund** | Refund the last charge, then keep the plan active, cancel it now or pause it |
-| **Change billing date** | This cycle only or every cycle, with an optional extra charge |
-| **Change credits** | Set the credits left in the current period |
-| **Change price** | This cycle only or every future cycle |
-| **Switch plan** | Move the member to another plan, with an optional extra charge (upgrade or downgrade) |
-| **Share plan** | Add people to a shareable plan (shows, for example, 2/4 seats taken). Resend or revoke invites. |
-| **Send payment update link** | The member updates their mandate or card |
-| **Fix billing** | View renewal attempts, then charge this cycle, prorated from today, or a custom amount by link, QR code or card |
-| **Approve / reject join requests** | For plans with approval required |
-| **Send plan** | Choose a plan, enter the person's email or phone, choose Free, Free for a period or Full payment, then send |
-
-### Money views
-
-- **Upcoming renewals:** the next 30 days of renewals, **at risk** (no mandate, or the mandate expires before the charge), and projected revenue.
-- **Plan revenue** feeds the existing weekly club payout report (`ClubWeeklyPayoutReport`) and the platform fee invoice, the same way ticket GMV does today.
-
-## Member plan lifecycle
-
-```
-                   ┌────────────── rejected ──────────────┐
- join (approval) → PENDING_APPROVAL ── approved ──┐          ▼
- join (no approval) ─────────────────────────────►PENDING_PAYMENT ──(30 min, no payment)──► ABANDONED
-                                                    │ paid / mandate authorised
-                                                    ▼
-                    resume ┌──────────────────── ACTIVE ◄──────── fix billing / retry ok ──┐
-                     ┌─────┤                       │  │  │                                 │
-                     │  PAUSED ◄── host pauses ────┘  │  └── renewal charge fails ──► PAST_DUE
-                     │                                │                                    │
-                     └────────────►                   │ cancel (AUTO), or request approved │ retries exhausted
-                                                      ▼                                    ▼
-                                         CANCELS_AT_PERIOD_END ─── period ends ──► ENDED ◄──┘
- PACK: ACTIVE ── credits used up, or validity date passes ──► ENDED
- Member CANCEL (REVIEW policy) adds a CancelRequest; the plan stays ACTIVE until the host approves.
-```
-
-| Status | Can book with plan | Billing |
-| --- | --- | --- |
-| `PENDING_APPROVAL` | No | None |
-| `PENDING_PAYMENT` | No | Order or mandate open |
-| `ACTIVE` | Yes, if credits are left | Renews on `currentPeriodEnd` |
-| `PAST_DUE` | No (SweatPals blocks cancelling here too) | Razorpay retries, and a Fix billing link is sent |
-| `PAUSED` | No | Stopped |
-| `CANCELS_AT_PERIOD_END` | Yes, until the period ends | No further charges |
-| `ENDED` | No | None |
-| `ABANDONED` | No | None |
-
-## How checkout prices a booking
-
-This is the core of the feature. It runs inside the existing `proceedToPayment` flow, before the Razorpay order is created.
-
-```
-input: user U, event E, category C
-1. plans = U's UserPlans (owned, or shared to U) with status ∈ {ACTIVE, CANCELS_AT_PERIOD_END}
-           and now < currentPeriodEnd (or validUntil for packs)
-2. keep plans whose coverage includes E (by event type or explicit event id) and whose club = E.clubId (or E.coHostClubId)
-3. keep plans with a CategoryPlanPolicy for C, or apply the plan's default policy if "apply to all" was used
-4. keep plans whose usage meter allows one more booking in the period that contains E.startDate
-5. price each: FREE → 0 · HALF → base/2 · FULL → base · CUSTOM_PERCENT → base × (1 − p) · CUSTOM_FLAT → max(0, base − x)
-6. pick the lowest price; on a tie, prefer a pack that expires soonest, then a limited plan before an unlimited one
-7. registration.appliedUserPlanId = chosen; create a PlanUsage row (status HELD)
-8. price 0 → TICKET_GENERATED with no Razorpay order; price > 0 → normal order for the reduced amount
-9. on payment success → PlanUsage CONSUMED · on order expiry or failure → RELEASED
-10. on registration cancel → RELEASED if within the club's cancellation window, otherwise it stays CONSUMED (late cancel)
-```
-
-- **Coupons stack after plans.** The coupon applies to the price after the plan, and only when that price is above ₹0.
-- **One plan per registration.** Plans never combine with each other.
-- **Credits are counted by event date, not booking date.** Booking next month's run uses next month's allowance, which matches SweatPals' "limits reset per period".
-- SweatPals exposes this as `memberships/eligible-for-bookable-service/:id` and `payments/public/plan-holders-plans {eventId, eventInstanceDate}`, which is the same idea.
-
-## Payments on peakst8 (India)
-
-| Concern | SweatPals | peakst8 |
-| --- | --- | --- |
-| Processor | Stripe (Connect) | **Razorpay**, already in the stack (`razorpay@2.9`) |
-| Recurring plans | Stripe Subscriptions | **Razorpay Subscriptions** (Plan, then Subscription), with mandates by **UPI AutoPay**, card or eNACH |
-| Packs | Stripe one-time payment | **Razorpay Order**: reuse the `PaymentTransaction` and `RazorpayPayment` flow |
-| Renewal notice | App notification 24 hours before | Required anyway: RBI asks for a pre-debit notice at least 24 hours ahead for e-mandates. Send it by push, WhatsApp and email. |
-| Large renewals | n/a | RBI e-mandate rules allow charges without extra authentication up to ₹15,000. Above that, the member has to authenticate each charge (to verify for yearly plans). |
-| Failed renewal | 3 automatic retries, then "Payment failed" email | Razorpay retries the subscription. On `subscription.halted`, move to `PAST_DUE` and send a Fix billing link. |
-| Payouts | Funds go to the host's Stripe account | Platform collects, as today. Plan revenue joins the weekly payout and the platform fee (`Club.platformFeePercentage`). |
-| GST | Sales tax integration | Reuse the category GST approach (`isAmountInclusiveGST`, `ClubRegistrationInfo.gstPercentage`) on plan prices. |
-
-Webhooks to add next to the existing Razorpay handler: `subscription.authenticated`, `subscription.activated`, `subscription.charged`, `subscription.pending`, `subscription.halted`, `subscription.cancelled`, `subscription.completed`, `payment.failed`.
-
-## Data model (summary)
-
-The full draft is in [`schema-draft.prisma`](schema-draft.prisma). New tables:
-
-| Model | Purpose |
-| --- | --- |
-| `Plan` | The product: club, kind, name, coverage, usage limit, rules, cancellation policy |
-| `PlanPrice` | A price option (SweatPals' "tier"): amount, billing interval or validity, joining fee, Razorpay plan id |
-| `PlanIntroOffer` | A discounted first period on a price |
-| `PlanCoverage` | Event types or explicit events the plan covers |
-| `CategoryPlanPolicy` | What plan holders pay for a ticket category |
-| `UserPlan` | A member's plan: status, period dates, credits, pause, cancellation and commitment state, Razorpay subscription id |
-| `PlanUsage` | One row per booking that used the plan (`HELD`, `CONSUMED` or `RELEASED`): the usage meter and audit trail |
-| `PlanCharge` | Each charge (first payment, renewal, fix billing, switch, joining fee) linked to a Razorpay payment |
-| `PlanJoinRequest` | Approval workflow |
-| `PlanCancelRequest` | Review-each-request cancellations |
-| `PlanShare` | Shared seats on a plan |
-| `GuestPass` | Trial passes |
-| `UserPlanEvent` | Append-only history (paused, resumed, price changed, switched and so on), the same as SweatPals' `/membership/:id/history` |
-
-Changes to existing tables: `Registration.appliedUserPlanId`, `Category.isPlanHoldersOnly`, and relations from `Club`, `User`, `Event` and `Category`.
-
-## API (proposed, following the existing routes, controllers, services and repositories layout)
-
-| peakst8 route | SweatPals route it's modelled on |
-| --- | --- |
-| `GET /plans/public/club/:clubId` | `GET memberships/public/community/:id` |
-| `GET /plans/public/:planId` | `GET memberships/public/:id` |
-| `GET /plans/public/price/:priceId/offers` | `GET membership-offers/public/tier/:id` |
-| `POST /plans/:planId/join` → `{ orderId \| subscriptionId }` | checkout and payment-intent flow |
-| `GET /plans/me?active=true` | `GET memberships/current?active=` |
-| `GET /plans/me/eligible?eventId&categoryId` | `GET memberships/eligible-for-bookable-service/:id`, `POST payments/public/plan-holders-plans` |
-| `POST /plans/me/:userPlanId/cancel` | app "Manage → Cancel" |
-| `GET /plan-join-requests/me` · `POST /plan-join-requests/:id/withdraw` | `GET membership-join-requests/my` · `POST …/:id/withdraw` |
-| `POST /plans/me/:userPlanId/shares` · `DELETE …/shares/:shareId` | "Invite to my membership" |
-| `POST /plans/me/:userPlanId/guest-passes` | guest pass send (app) |
-| `GET/POST /plans/public/claim/:token` (+ `/intake-form`, `/setup-mandate`) | `public/user-membership/:id/claim`, `…/claim/setup-intent`, `…/intake-form` |
-| `GET/POST /plans/public/share/:token/claim` | `public/shared-membership/:id/claim` |
-| `GET/POST /plans/public/guest-pass/:token/claim` | `public/guest-pass/:id/claim` |
-| `GET/POST /plans/public/fix-billing/:token` (+ `/intent`) | `memberships/public/fix-billing/:id` (+ `/intent`) |
-| `GET/POST /plans/public/payment-method/:token` | `memberships/public/payment-method-update/:id` |
-| Host: `POST/PATCH/GET /host/clubs/:clubId/plans`, `PUT /host/categories/:id/plan-policies` | dashboard Plans |
-| Host: `GET /host/clubs/:clubId/members/:userId/plans/:userPlanId/history` | `user/:uid/membership/:id/history` |
-| Host: `POST …/pause` · `…/resume` · `…/renew` · `…/deactivate` · `…/refund` · `…/switch` · `…/billing-date` · `…/credits` · `…/price` | `user/:uid/membership/:id/pause`, `…/renew`, `…/deactivate` |
-| Host: `POST /host/clubs/:clubId/plans/send` | Send plan |
-| Host: `GET /host/clubs/:clubId/plans/upcoming-renewals` | Transactions → Upcoming billings |
-| Webhook: `POST /payment/razorpay/webhook` (extend with `subscription.*`) | Stripe webhooks |
-
-## Scope
-
-| | V1 (the first clubs) | V2 | Later or not |
+| | Who | What they're trying to get done | What they need from this |
 | --- | --- | --- | --- |
-| **Before launch** | Renewal reminders: pre-debit notice, receipt, payment failed, mandate at risk, intro ending, club reminder settings, delivery log | Low credits, pause ending | |
-| **Plans** | Membership (monthly or quarterly) and Pack (N credits plus expiry), one price each | Several prices per plan, yearly, every 4 weeks, half-yearly | Network or multi-club passes |
-| **Coverage** | Event types or specific events, plus a per-category policy (Free, Half, Full, Custom) and "apply to existing events" | Plan-holders-only categories, roll-over | Appointments (peakst8 has none yet) |
-| **Member** | Join, approval, pay, Passes → Plans, automatic pricing at checkout, cancel (Auto or Review), renewal notice; perks: savings, early access, guest passes, partner perks | Shared plans, guest passes, intro offer, joining fee, minimum commitment | Members pausing their own plan (SweatPals doesn't allow it either) |
-| **Host** | Create, edit and archive plans, member list with status, cancel, refund, approve join and cancel requests | Pause and resume, switch, change price, date or credits, Send plan, Fix billing, upcoming renewals | Leads pipeline, migrating from other platforms |
-| **Payments** | Razorpay Subscriptions (UPI AutoPay and card), Razorpay Orders for packs, webhooks, payout and platform fee | eNACH, prorated switches | Stacking promo codes with intro offers |
+| **Primary: club admins** | Founders and community leads of social fitness clubs in Indian metros that run recurring sessions: run clubs (Find Your Fit), women's collectives (Sisters in Sweat), strength and HIIT groups, yoga and pilates collectives. Many already have brand partners. | Run the community without chasing money every week; reward regulars; show partners they have an engaged audience. | Plans they set up themselves for their own audience, perks and brand offers they control, discounts they can switch on, and money that arrives in the weekly payout. |
+| **Primary: regular members** | People who come 4 to 12 times a month. | Show up without paying every time; feel like part of the club. | One payment, no surprise charges, and a clear view of what the plan gives them (savings, early access, guest passes, brand perks). |
+| **Secondary** | Club staff and co-hosts; brand partners; peakst8 ops and finance. | Check people in and approve requests; reach the club's members; pay out and invoice correctly. | Approval queues and guest-pass redemption; a perks listing with reveal counts; plan revenue in the existing payout and platform-fee reports. |
+| **Not for (yet)** | One-off races and festivals; passes across several clubs; studios that need 1:1 appointment booking. | | Single tickets already work for races. Network passes and appointments need separate decisions. |
 
-## Open questions
+**Two people to design for** (illustrative, based on our pilot clubs):
 
-1. **Coverage unit.** peakst8's unit is `Event` plus `Category`. Do recurring club runs exist as one event per session (one event a week) or as one multi-day event? Usage counting by event date assumes one registration per session.
-2. **Registration uniqueness.** `@@unique([eventId, userId])` means one booking per event per member. Is that right for weekly sessions that are modelled as one event?
-3. **Who carries mandate risk.** If a renewal fails after the member has already booked sessions in the new period, do those bookings stand?
-4. **Platform fee on plans.** Is it the same `platformFeePercentage` as tickets, or a separate rate for recurring revenue?
-5. **Refund rules.** Are partial-period refunds allowed or only full ones? Who can refund (club host only, or peakst8 admin too)?
-6. **Naming in the app.** SweatPals renamed "Memberships" to "Plans". Which does peakst8 show: **Plans**, **Memberships** or **Passes**?
-7. **Pilot clubs.** Which 2 or 3 clubs, and at what price points?
+- **The club founder.** Runs a 400-member weekly run club with two volunteers. Has a coffee shop and a running store happy to give members a discount. Wants 100 regulars on a monthly plan so the club can pay pacers and book a track, and wants a page to point partners and new runners to.
+- **The regular.** Runs with the club twice a week. Pays ₹299 each Saturday and ₹249 each Tuesday. Would pay ₹1,499 a month if it meant no checkout, a free coffee after the long run, and booking the monthly 10K before it sells out.
 
-## Evidence
+## 3. Why now
 
-**SweatPals help centre (read 1 Nov 2026):** [3.1 Joining a Membership](https://help.sweatpals.com/31-joining-a-membership) · [3.2 Billing & Payments](https://help.sweatpals.com/32-managing-your-billing-and-payments) · [3.3 Access & Cancellations](https://help.sweatpals.com/33-membership-access-and-cancellations) · [3.4 Making Use of Your Membership](https://help.sweatpals.com/34-making-use-of-your-membership) · [5.1 Membership Overview](https://help.sweatpals.com/51-membership-overview) · [5.2 Creating & Configuring](https://help.sweatpals.com/52-creating-and-configuring-memberships) · [5.2a Additional Settings](https://help.sweatpals.com/52a-additional-membership-settings) · [5.3 Managing Active Members](https://help.sweatpals.com/53-managing-active-members) · [3.4 Create a Class Pack](https://help.sweatpals.com/34-create-a-class-pack)
+- **The clubs are already on peakst8 checkout.** The Embedded Ticketing pilots (Find Your Fit, Sisters in Sweat) run their bookings through peakst8, so a plan can apply to bookings they already take.
+- **Recurring payments work in India now.** Razorpay Subscriptions supports UPI AutoPay, cards and eNACH, and peakst8 already uses Razorpay.
+- **The backend has the pieces.** Scheduled jobs, the email outbox, WhatsApp and push notifications exist; memberships add models and rules on top, not new infrastructure.
+- **The model is proven.** SweatPals runs it for thousands of communities, and its design gives us a tested starting point.
+- **Waiting has a cost.** Every month a club collects memberships off-platform is a month of members and revenue peakst8 doesn't see.
 
-**SweatPals public web client** (route names from the JavaScript served on sweatpals.com community pages; no logged-in or private calls were made):
+## 4. What we're building
 
-```
-memberships/current?active=                         memberships/eligible-for-bookable-service/:id
-memberships/public/community/:communityId           (each membership has tiers[])
-memberships/public/:id                              membership-offers/public/tier/:tierId?offerId&communityId
-memberships/public/user-membership/:id              …/claim · …/claim/setup-intent · …/intake-form
-memberships/public/shared-membership/:id            …/claim · …/intake-form
-memberships/public/guest-pass/:id                   …/claim · …/intake-form
-memberships/public/payment-method-update/:id        …/setup-intent · …/complete
-memberships/public/fix-billing/:id                  …/intent
-membership-join-requests/my                         membership-join-requests/:id/withdraw
-payments/public/plan-holders-plans {eventId, eventInstanceDate}
-user/:userId/memberships                            user/:uid/membership/:id/{history,pause,renew,deactivate}
-user-to-membership/:id                              wallet/v1/user-memberships/ (Apple/Google wallet pass)
-UI button states (offer card): Join · Request to join · Request pending → Withdraw · Not approved · View
-```
+1. **Club admins create plans** for their own audience: a monthly or quarterly membership, or a prepaid pack of runs. They choose what it covers, how often it can be used, the price, who can buy it, and the rules (approval, capacity, cancellation).
+2. **Club admins set the plan price on each pass**: free, half price, or a custom amount off. That decides what a member pays at checkout.
+3. **Members join from the club page.** They pay once (a UPI AutoPay mandate for monthly plans) or request approval first. The plan sits in the app under Passes.
+4. **Members book sessions exactly as today.** Checkout sees the plan, applies the member price and records one use. At ₹0, there's no payment step.
+5. **Renewals are never a surprise.** A reminder goes out before every charge, a receipt after it, and a fix-payment link if it fails. Cancelling is in the member's hands (or the club reviews it, if the club chooses).
+6. **Members see what they get.** Savings so far, early booking, guest passes for friends, and the club's brand perks on a listing page anyone can browse. Club admins can switch on discount codes for campaigns, students or partners.
 
-**Static analysis with REA** (`rea-agents analyze-javascript-application`, 2 Nov 2026): SweatPals' public Next.js bundles for the membership, checkout, claim, guest-pass and fix-billing pages (56 files) were analysed as inert text and never executed. The run over the 5 membership chunks recovered 1,425 webpack modules (Evidence `ev_da05d85e…`). Coverage is partial by design: 51 files were outside the selected sources, and dynamic or obfuscated paths stay unresolved. The screens and states the prototype rebuilds come from the component names and translation keys in those modules:
+**Club admins configure all of it.** peakst8 only switches memberships on for a club and sets the platform fee. Settings sit at three levels: club (reminders, refund policy, perks page, team access), plan (pricing, coverage, audience, perks, discounts, cancellation) and pass (plan price). Full list in the [feature checklist](coverage/README.md#the-rule-club-admins-configure-it-for-their-audience).
 
-| SweatPals screen or state (component · translation keys) | Rebuilt in the prototype as |
+## 5. Goals and non-goals
+
+**Goals**
+
+1. Clubs earn predictable monthly income on peakst8 from their regulars.
+2. Regulars book with no friction and can see the value of their plan.
+3. No member is ever charged without a reminder first.
+4. Club admins can run plans, perks and discounts without help from peakst8.
+5. Clubs can show their brand partnerships in one place.
+
+**Non-goals**
+
+- Replacing single tickets. Plans sit alongside them.
+- Passes that work across several clubs.
+- Members pausing their own plan (only the club can pause, as in SweatPals).
+- Migrating memberships from other platforms in V1.
+- A leads pipeline or CRM.
+
+## 6. How we'll know it worked
+
+Targets are **assumptions** to confirm with the pilot clubs before launch; baselines come from the pilot clubs' last three months on peakst8.
+
+| Metric | Baseline | Target | When | Source |
+| --- | --- | --- | --- | --- |
+| Share of pilot clubs' GMV from plans | 0% | 30% | 90 days after launch | Plan charges vs ticket GMV per club |
+| Active plan holders per pilot club | 0 | 50 | 60 days | `UserPlan` status ACTIVE |
+| Sessions per month: holders vs pay-per-session regulars | Pull from pilot data | Holders attend 1.5× | 90 days | Registrations linked to plans |
+| Renewal success rate (first attempt) | n/a | 90% | Each month | Razorpay subscription charges |
+| Failed renewals recovered within 7 days | n/a | 50% | Each month | Fix-billing payments |
+| Monthly plan churn | n/a | Under 8% | From month 2 | Plans ended or cancelled |
+| **Guardrail:** complaints or disputes about unexpected charges | 0 | 0 | Always | Support log, Razorpay disputes |
+| **Guardrail:** pay-per-session checkout conversion | Pull from pilot data | No drop | 60 days | Existing registration funnel |
+
+## 7. Key journeys
+
+| As a … | I … | So that … | Done when |
+| --- | --- | --- | --- |
+| Club admin | create a monthly plan, set it to free on training runs and half price on race days, and publish it | my regulars can join | The plan shows on the club page and the right price appears at checkout on every covered pass |
+| Regular | join with UPI AutoPay and book Saturday's run | I stop paying each week | Checkout shows "Free with my plan" and skips payment; the ticket shows the member discount |
+| Regular | get a reminder before my renewal, then a receipt | I'm never surprised | The reminder arrives at least 24 hours before the charge, by the club's chosen channels |
+| Regular | cancel from the app | I'm in control | The plan stays active until the end of the period and no further charge happens |
+| Club admin | add a brand perk and choose which plans unlock it | partners reach my members | It appears on the club perks page, locked for non-members, with a reveal count I can share with the brand |
+| Club admin | turn on discount codes for one plan and create a student code | I can run campaigns | Members enter the code at checkout; it shows as its own line and follows the rules I set |
+| Club admin | see failed renewals and send a fix-payment link | I don't lose members to a card problem | The member pays from the link and the plan is active again |
+
+## 8. Scope and phases
+
+| Phase | What ships | Gate to move on |
+| --- | --- | --- |
+| **Prerequisite: renewal reminders** | Pre-debit notice before every charge (RBI e-mandate rule), receipt after it, payment-failed notice with fix link, mandate-at-risk and intro-ending notices, club reminder settings, delivery log. Reminders are a separate feature type and ship first. | All 12 prerequisite reminders pass end to end on staging with real Razorpay test mandates |
+| **V1: first pilot clubs** | Memberships and packs; plan price per pass; join, approval, pay; automatic pricing at checkout; cancel; host plan list, members, requests, refunds. Perks: savings, early access, guest passes, brand perks and the club perks page, members-only sessions. Discount codes switched on per plan. | Two pilot clubs live with at least 20 paying holders each; no unexpected-charge complaints |
+| **V2** | Several prices per plan, intro offers, joining fees, minimum commitment, shared plans, pause and switch, fix billing from the dashboard, upcoming renewals, waitlist priority, referral reward, member badge, audience discounts | V1 metrics on track at 60 days |
+| **Later / not planned** | Network passes, appointments, gift cards, leads pipeline, migration from other platforms | Separate product notes |
+
+The full feature-by-feature list, with who configures each one, is in the [feature checklist](coverage/README.md).
+
+## 9. Risks
+
+| Risk | Likelihood | Impact | What we'll do |
+| --- | --- | --- | --- |
+| Members feel surprised by a renewal charge | Medium | High | Reminders are a launch prerequisite; mandatory notices can't be muted; cancel is in the app |
+| UPI AutoPay mandates fail or lapse | Medium | Medium | Mandate-at-risk notice, Razorpay retries, fix-payment link, failed-payment grace setting per club |
+| Weekly sessions don't map cleanly to plans | Medium | High | Decide the session model first (open question 1); usage counts by event date |
+| Clubs over-discount and cut their own income | Low | Medium | Discounts off by default; can't combine with intro offers; usage caps |
+| Brand perks go stale | Medium | Low | Reveal counts and an active switch per perk; review prompt each quarter |
+| Payout, GST and platform fee on recurring revenue are unclear | Medium | Medium | Finance decision before V1 (open question 4) |
+
+## 10. Open questions and decisions
+
+| Question | Owner | Due | Decision |
+| --- | --- | --- | --- |
+| 1. Are weekly club runs one event per session, or one long event? (Usage counting and `@@unique([eventId, userId])` depend on it.) | Engineering | Before build | |
+| 2. If a renewal fails after a member booked sessions in the new period, do those bookings stand? | Product | Before V1 | |
+| 3. Do refunds cover part of a period, or only full charges? Who can issue them? | Product + finance | Before V1 | |
+| 4. Platform fee on plans: the same rate as tickets, or a separate rate for recurring revenue? | Finance | Before V1 | |
+| 5. What the app calls it: Plans, Memberships or Passes? | Product | Before design | |
+| 6. Which two pilot clubs, and at what prices? | Partnerships | Before V1 | |
+| 7. Does Razorpay send its own pre-debit notice for UPI AutoPay, and does ours replace or add to it? | Engineering | Before prerequisite | |
+| Renewal reminders ship before memberships go live | Product | | **Decided** 2 Nov 2026 |
+| Club admins configure plans, perks and discounts for their own audience | Product | | **Decided** 2 Nov 2026 |
+
+## 11. Build
+
+| What | Where |
 | --- | --- |
-| `host:offers.*` (offer card: buy, request, withdraw, not approved, view) | Club page plan cards and their five button states |
-| `checkout:membershipSelector.*`, `membershipTier.billingPeriod.*`, `membershipTier.signUpFee` | Join sheet, Plan step: billing options and sign-up fee |
-| `checkout:membershipOffer.*` (choose offer, continue at base price, duration) | Join sheet, Offer step |
-| `checkout:membershipCheckout.commitmentDisclosure`, `commitmentPeriod.*` | Minimum commitment note and cancel block |
-| `checkout:approvalInfo.requestPlan*`, `joinRequest.*` (in review, declined, withdraw) | Request step, pending card, withdraw |
-| `checkout:membershipUnavailable.*`, `membershipFirstTimeOnly.*`, `membershipLimited.*` | Rules in the schema (capacity, first-timers, one per member) |
-| `event:ticketBanner.memberPriceBadge*`, `event:membershipBanner.seePlansCta`, `MembersOnlyBanner`, `ChooseTickets` mode `members-only` | "Member price" on events, "See plans" prompt, plan-holders-only categories |
-| `checkout:plansAndTickets.withYourPlan`, `notIncludedWithPlan`, `pickPlanError` | Choose Pass: "With your plan" and "Not included with your plan" |
-| `checkout:summary.membershipDiscount`, `summary.introOffer`, `summary.renewalDiscount` | Checkout and ticket summary lines |
-| `checkout:orderConfirmation.membershipTitle`, `membershipConfirmedSubtitle`, `requestPendingTitle` | "You're in. Membership confirmed." and "Request sent" |
-| `checkout:membershipCard.benefitsApplyAutomatically` | Plan card in Passes → Plans |
-| Pages `/claim-membership/[id]`, `/fix-billing/[id]`, `/guest-pass/[id]`, `/user-membership/[id]/intake-form`, `/embed/[alias]/membership-checkout` | Claim and fix-billing flows in the spec (fix billing is in the prototype) |
+| Working prototype (member and host screens in the peakst8 app design) | [prototype/](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) |
+| Code for the engineer to pick up, and the architecture | [code/](code/) · [code/ARCHITECTURE.md](code/ARCHITECTURE.md) |
+| Feature checklist (every reverse-engineered feature, phase, who configures it) | [coverage/](coverage/README.md) |
+| Database schema draft (validated against the backend schema) | [code/backend/prisma/memberships.prisma](code/backend/prisma/memberships.prisma) |
 
-The English copy for these keys isn't in the bundles (it loads at runtime), so the prototype's wording is peakst8's own.
+## Appendix
 
-**peakst8 backend** (`peakst8-Basecamp/peakst8-backend`, `prisma/schema.prisma`): there are no subscription or plan models yet. Payments use Razorpay Orders (`PaymentTransaction`, `RazorpayPayment`, `RefundTransaction`). The ticket unit is `Event` → `Category` → `Registration` → `Ticket`. Approvals use `ApprovalRequest`, and waivers use `Waiver` on `Category`.
+**How we know what SweatPals built.** Nine SweatPals help-centre articles (read 1 Nov 2026) and static analysis of their public web bundles with REA on 2 Nov 2026: 56 files read as inert text, never executed, recovering the membership routes, components and screen states. Details and limits are in [code/ARCHITECTURE.md § Evidence](code/ARCHITECTURE.md#evidence) and the [feature checklist](coverage/README.md#where-the-evidence-came-from).
 
-## In this folder
+**In this folder**
 
 | Path | What it is |
 | --- | --- |
-| `README.md` | This note |
-| `index.html` | Note page for the site |
-| `prototype/index.html` | Working prototype (one self-contained page) |
-| `coverage/` | Reverse-engineering coverage: `features.json` (source), `build.py`, generated `README.md` and `index.html` |
-| `schema-draft.prisma` | Proposed Prisma models, to merge into `peakst8-backend/prisma/schema.prisma` |
+| `README.md` | This product note |
+| `index.html` | The note as a page on the site |
+| `prototype/` | Working prototype (one self-contained page) |
+| `coverage/` | Feature checklist: `features.json` (source), `build.py`, generated `README.md` and `index.html` |
+| `code/` | Code package and `ARCHITECTURE.md` for engineering |

@@ -30,7 +30,7 @@ GATE_WHY = [
     ("Regulation", "RBI's e-mandate rules require a pre-debit notice at least 24 hours before each recurring charge, and a notice after it. Without them, UPI AutoPay and card mandates can't be used."),
     ("Trust", "SweatPals sends a notice 24 hours before every renewal. Members who are charged without warning dispute the charge, which costs the club the member and the fee."),
     ("Recovery", "Failed renewals are only recovered if the member hears about it with a fix-billing link the same day."),
-    ("What exists today", "The backend has scheduled jobs (BullMQ upsertJobScheduler), the outbound email outbox, WhatsApp campaigns and Firebase push. NotificationDelivery is tied to registrations and has one type (ABANDONED_CART), so reminders get their own PlanReminderDelivery model and ClubMembershipSettings (see schema-draft.prisma)."),
+    ("What exists today", "The backend has scheduled jobs (BullMQ upsertJobScheduler), the outbound email outbox, WhatsApp campaigns and Firebase push. NotificationDelivery is tied to registrations and has one type (ABANDONED_CART), so reminders get their own PlanReminderDelivery model and ClubMembershipSettings (see code/backend/prisma/memberships.prisma)."),
 ]
 total = len(ROWS)
 
