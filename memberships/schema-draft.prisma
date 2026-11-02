@@ -101,6 +101,25 @@ enum GUEST_ELIGIBILITY {
   ANYONE
 }
 
+enum PLAN_REMINDER_TYPE {
+  PRE_DEBIT // launch prerequisite: >= 24 h before every recurring charge (RBI e-mandate)
+  CHARGED // launch prerequisite: post-debit receipt
+  PAYMENT_FAILED // launch prerequisite: with fix-billing link, on each retry
+  MANDATE_AT_RISK // launch prerequisite: mandate cancelled/expired or card expiring before the charge
+  INTRO_ENDING // launch prerequisite: first full-price charge is coming
+  PACK_EXPIRING
+  ACCESS_ENDING
+  LOW_CREDITS
+  PAUSE_ENDING
+}
+
+enum PLAN_REMINDER_STATUS {
+  SCHEDULED
+  SENT
+  FAILED
+  CANCELLED // superseded by a pause, date change, cancel or price change
+}
+
 model Plan {
   id                      String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   clubId                  String                   @db.Uuid
@@ -248,6 +267,7 @@ model UserPlan {
   guestPasses            GuestPass[]
   cancelRequests         PlanCancelRequest[]
   history                UserPlanEvent[]
+  reminders              PlanReminderDelivery[]
   registrations          Registration[]
   updatedAt              DateTime           @updatedAt
   createdAt              DateTime           @default(now())
@@ -376,10 +396,57 @@ model UserPlanEvent {
   @@map("user_plan_event")
 }
 
+
+/// Club admins' membership settings. One row per club; every plan inherits it.
+model ClubMembershipSettings {
+  clubId               String                 @id @db.Uuid
+  club                 Club                   @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  isEnabled            Boolean                @default(false) // switched on by peakst8 admin
+  plansVisibleTo       String                 @default("EVERYONE") // EVERYONE | CLUB_MEMBERS
+  reminderOffsetsHours Int[]                  @default([72, 24]) // 24 is always kept
+  yearlyReminderHours  Int[]                  @default([168, 24])
+  reminderChannels     NOTIFICATION_CHANNEL[] @default([EMAIL])
+  pushEnabled          Boolean                @default(true)
+  reminderSendHour     Int                    @default(9) // IST, never 21:00–08:00
+  optionalReminders    PLAN_REMINDER_TYPE[]   @default([PACK_EXPIRING, ACCESS_ENDING])
+  creditReleaseHours   Int                    @default(12)
+  lateCancelUsesCredit Boolean                @default(true)
+  failedPaymentGraceDays Int                  @default(0)
+  refundPolicyText     String?
+  seePlansBannerText   String?
+  updatedAt            DateTime               @updatedAt
+  createdAt            DateTime               @default(now())
+
+  @@map("club_membership_settings")
+}
+
+/// One row per reminder per charge per channel. Scheduled by a BullMQ job scheduler sweep;
+/// recomputed (old rows CANCELLED) when a plan is paused, resumed, re-dated, re-priced or cancelled.
+model PlanReminderDelivery {
+  id           String               @id @default(uuid()) @db.Uuid
+  userPlanId   String               @db.Uuid
+  userPlan     UserPlan             @relation(fields: [userPlanId], references: [id], onDelete: Cascade)
+  type         PLAN_REMINDER_TYPE
+  channel      String // EMAIL | WHATSAPP | PUSH
+  dueAt        DateTime // the charge, expiry or end this reminder is about
+  scheduledFor DateTime
+  status       PLAN_REMINDER_STATUS @default(SCHEDULED)
+  amount       Float?
+  sentAt       DateTime?
+  attemptCount Int                  @default(0)
+  errorMessage String?
+  updatedAt    DateTime             @updatedAt
+  createdAt    DateTime             @default(now())
+
+  @@unique([userPlanId, type, channel, dueAt])
+  @@index([status, scheduledFor])
+  @@map("plan_reminder_delivery")
+}
+
 // Changes to existing models
 // model Registration { appliedUserPlanId String? @db.Uuid; appliedUserPlan UserPlan? @relation(...); planUsage PlanUsage? }
 // model Category     { isPlanHoldersOnly Boolean @default(false); planPolicies CategoryPlanPolicy[] }
-// model Club         { plans Plan[] }
+// model Club         { plans Plan[]; membershipSettings ClubMembershipSettings? }
 // model Event        { planCoverage PlanCoverage[] }
 // model User         { userPlans UserPlan[]; planJoinRequests PlanJoinRequest[]; planShares PlanShare[] @relation("PlanShareMember"); guestPasses GuestPass[] @relation("GuestPassGuest") }
 // model Host         { reviewedPlanJoinRequests PlanJoinRequest[]; reviewedPlanCancelRequests PlanCancelRequest[] }

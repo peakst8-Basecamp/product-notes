@@ -12,12 +12,26 @@ AREAS = DATA["areas"]
 ROWS = DATA["features"]
 UPDATED = "2 Nov 2026"
 
+PHASE = {"Prereq": "Launch prerequisite", "V1": "V1", "V2": "V2", "Later": "Later", "No": "Not planned"}
+PREREQ_AREAS = [a[0] for a in AREAS if len(a) > 2 and a[2] == "prerequisite"]
 BY = {"club": "Club admin", "member": "Member", "admin": "peakst8 admin", "system": "System"}
 EV = {"help": "Help centre", "code": "Web code", "both": "Help + code", "inferred": "Inferred", "proposed": "peakst8 proposal"}
 
 counts = Counter(r["phase"] for r in ROWS)
 by_counts = Counter(r["by"] for r in ROWS)
 proto = sum(1 for r in ROWS if r["prototype"])
+prereq_rows = [r for r in ROWS if r["phase"] == "Prereq"]
+
+# Why renewal reminders gate the launch. Shown above the inventory on both outputs.
+GATE_TITLE = "Launch prerequisite: renewal reminders"
+GATE_LEAD = ("Renewal reminders are their own feature type, built and shipped before memberships go live for any club. "
+             "A club can't sell a recurring plan until every row marked Launch prerequisite works end to end.")
+GATE_WHY = [
+    ("Regulation", "RBI's e-mandate rules require a pre-debit notice at least 24 hours before each recurring charge, and a notice after it. Without them, UPI AutoPay and card mandates can't be used."),
+    ("Trust", "SweatPals sends a notice 24 hours before every renewal. Members who are charged without warning dispute the charge, which costs the club the member and the fee."),
+    ("Recovery", "Failed renewals are only recovered if the member hears about it with a fix-billing link the same day."),
+    ("What exists today", "The backend has scheduled jobs (BullMQ upsertJobScheduler), the outbound email outbox, WhatsApp campaigns and Firebase push. NotificationDelivery is tied to registrations and has one type (ABANDONED_CART), so reminders get their own PlanReminderDelivery model and ClubMembershipSettings (see schema-draft.prisma)."),
+]
 total = len(ROWS)
 
 # Club-admin settings, grouped by where they live. Kept here (not in features.json) because they
@@ -25,7 +39,7 @@ total = len(ROWS)
 CONFIG = [
     ("Club settings", "Dashboard → Settings → Memberships. One set per club; every plan inherits them.", [
         ("Plans section", "Show plans to everyone or to club members only; section title; plan order"),
-        ("Renewal reminders", "Channels for the 24-hour pre-debit notice: push, email, WhatsApp (WhatsApp uses the club's credits)"),
+        ("Renewal reminders", "When reminders go out (the 24-hour pre-debit notice is fixed; add e.g. 3 days, or 7 days for yearly), channels (push, email, WhatsApp on the club's credits), send hour, and which optional reminders are on. See the Renewal reminders feature type."),
         ("Credit release window", "Hours before start when a cancelled booking gives the credit back (default 12)"),
         ("Late cancel and no-show", "Whether a late cancel or no-show uses up the credit"),
         ("Failed payment grace", "Days a past-due member keeps booking before access stops (default 0)"),
@@ -82,9 +96,17 @@ md.append(f"**Part of [peakst8 Club Memberships](../README.md).** Every membersh
 md.append(f"[Page](https://peakst8-basecamp.github.io/product-notes/memberships/coverage/) · [Data](features.json) · Internal · updated {UPDATED}\n")
 md.append("## At a glance\n")
 md.append(f"- **{total} features** across {len(AREAS)} areas.")
+md.append(f"- **Launch prerequisite:** {counts['Prereq']} renewal-reminder features must ship before memberships go live.")
 md.append(f"- **Phase:** V1 {counts['V1']} · V2 {counts['V2']} · Later {counts['Later']} · not planned {counts['No']}.")
 md.append(f"- **Configured by:** club admins {by_counts['club']} · members {by_counts['member']} · system {by_counts['system']} · peakst8 admin {by_counts['admin']}.")
 md.append(f"- **In the prototype today:** {proto} of {total}.\n")
+md.append(f"## {GATE_TITLE}\n")
+md.append(GATE_LEAD + "\n")
+md.append("| Why | |\n| --- | --- |")
+for k, v in GATE_WHY:
+    md.append(f"| **{k}** | {md_cell(v)} |")
+md.append("")
+md.append(f"The {len(prereq_rows)} prerequisite features are listed first in the inventory, under **R. Renewal reminders**.\n")
 md.append("## The rule: club admins configure it for their audience\n")
 md.append("Nothing about a plan is fixed by peakst8. Each club's admins decide what they sell, to whom, at what price and on what terms. peakst8 sets only the platform fee and switches the feature on per club. Settings live at three levels, and a lower level never needs to repeat a higher one.\n")
 for title, where, items in CONFIG:
@@ -108,12 +130,13 @@ md.append("| Inferred | Follows from what we saw, not stated directly |")
 md.append("| peakst8 proposal | Not in SweatPals; added because club admins need it |")
 md.append("")
 md.append("## Inventory\n")
-for code, name in AREAS:
+for code, name, *_ in AREAS:
     rows = [r for r in ROWS if r["area"] == code]
-    md.append(f"### {code}. {name} ({len(rows)})\n")
+    tag = " · launch prerequisite" if code in PREREQ_AREAS else ""
+    md.append(f"### {code}. {name} ({len(rows)}){tag}\n")
     md.append("| Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |\n| --- | --- | --- | --- | --- | --- | --- |")
     for r in rows:
-        md.append(f"| **{md_cell(r['feature'])}** | {md_cell(r['sweatpals'])} | {EV[r['evidence']]}: {md_cell(r['source'])} | {BY[r['by']]} | {md_cell(r['setting'])} | {r['phase'] if r['phase'] != 'No' else 'Not planned'} | {'✓' if r['prototype'] else '–'} |")
+        md.append(f"| **{md_cell(r['feature'])}** | {md_cell(r['sweatpals'])} | {EV[r['evidence']]}: {md_cell(r['source'])} | {BY[r['by']]} | {md_cell(r['setting'])} | {PHASE[r['phase']]} | {'✓' if r['prototype'] else '–'} |")
     md.append("")
 md.append("## What we could not see\n")
 for u in UNKNOWN:
@@ -134,6 +157,7 @@ def cfg_html():
     return "\n".join(out)
 
 
+gate_rows = "\n".join(f"<div><b>{esc(k)}</b><p>{esc(v)}</p></div>" for k, v in GATE_WHY)
 perm_rows = "\n".join(f"<tr><td>{esc(k)}</td><td>{esc(v)}</td></tr>" for k, v in PERMS)
 unknown_li = "\n".join(f"<li>{esc(u)}</li>" for u in UNKNOWN)
 payload = json.dumps({"areas": AREAS, "features": ROWS}, ensure_ascii=False).replace("</", "<\\/")
@@ -190,7 +214,12 @@ h2{{margin:0;font-family:var(--serif);font-weight:400;font-size:34px;line-height
 .tbl tr.area td{{background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:400;padding-top:16px}}
 .src{{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:3px;overflow-wrap:anywhere}}
 .tag{{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:3px 9px;white-space:nowrap;background:var(--bg);color:var(--ink-2)}}
-.tag.V1{{background:var(--ink);color:var(--bg)}}.tag.No{{color:var(--ink-3)}}
+.tag.V1{{background:var(--ink);color:var(--bg)}}.tag.Prereq{{background:var(--signal);color:#fff}}
+.gate{{border-radius:22px;padding:22px;background:var(--fill);box-shadow:inset 0 0 0 2px var(--signal);display:grid;gap:14px}}
+.gate .why{{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}}
+.gate .why div{{background:var(--bg);border-radius:16px;padding:14px;display:grid;gap:6px;align-content:start}}
+.gate .why p{{margin:0;color:var(--ink-2);font-size:14px;line-height:1.5}}
+.tbl tr.area.pre td{{color:var(--signal)}}.tag.No{{color:var(--ink-3)}}
 .tag.club{{color:var(--signal)}}
 .yes{{color:var(--ok);background:var(--okbg)}}
 .filters{{display:flex;gap:16px;flex-wrap:wrap;align-items:center}}
@@ -214,8 +243,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{{outline:2px solid var(
   <span class="lbl">peakst8 Club Memberships · coverage</span>
   <h1>Everything we reverse-engineered, so nothing gets dropped.</h1>
   <p>Every membership feature found in SweatPals, mapped to who configures it on peakst8, the setting it becomes, the phase it ships in, and whether the prototype already runs it. Club admins configure all of it for their own audience.</p>
-  <div class="nums"><div><b>{total}</b><span>features</span></div><div><b>{counts['V1']}</b><span>in V1</span></div><div><b>{counts['V2']}</b><span>in V2</span></div><div><b>{by_counts['club']}</b><span>set by club admins</span></div><div><b>{proto}</b><span>in the prototype</span></div></div>
-  <nav class="toc"><a href="#config">Club admin settings</a><a href="#roles">Who can do what</a><a href="#inventory">Inventory</a><a href="#unknown">What we couldn't see</a><a href="../">Product note</a><a href="../prototype/">Prototype</a></nav>
+  <div class="nums"><div><b>{total}</b><span>features</span></div><div><b>{counts['Prereq']}</b><span>launch prerequisites</span></div><div><b>{counts['V1']}</b><span>in V1</span></div><div><b>{counts['V2']}</b><span>in V2</span></div><div><b>{by_counts['club']}</b><span>set by club admins</span></div><div><b>{proto}</b><span>in the prototype</span></div></div>
+  <nav class="toc"><a href="#gate">Renewal reminders</a><a href="#config">Club admin settings</a><a href="#roles">Who can do what</a><a href="#inventory">Inventory</a><a href="#unknown">What we couldn't see</a><a href="../">Product note</a><a href="../prototype/">Prototype</a></nav>
+</section>
+
+<section id="gate">
+  <h2>{esc(GATE_TITLE)}</h2>
+  <div class="gate"><p class="lead">{esc(GATE_LEAD)}</p><div class="why">{gate_rows}</div><p class="lead">The {len(prereq_rows)} prerequisite features are listed first in the inventory under <b>R. Renewal reminders</b>. <a href="#inventory" id="showpre">Show only prerequisites</a></p></div>
 </section>
 
 <section id="config">
@@ -255,11 +289,12 @@ button:focus-visible,a:focus-visible,input:focus-visible{{outline:2px solid var(
 (function(){{
   var D=JSON.parse(document.getElementById('data').textContent);
   var BY={json.dumps(BY)}, EV={json.dumps(EV)};
-  var PH={{V1:'V1',V2:'V2',Later:'Later',No:'Not planned'}};
+  var PH={json.dumps(PHASE)};
+  var PRE={json.dumps(PREREQ_AREAS)};
   var st={{phase:'all',by:'all',proto:'all',q:''}};
   function esc(s){{return String(s).replace(/[&<>"]/g,function(c){{return {{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}}[c]}})}}
   function group(id,key,opts){{var g=document.getElementById(id);opts.forEach(function(o){{var b=document.createElement('button');b.type='button';b.textContent=o[1];b.dataset.v=o[0];b.setAttribute('aria-pressed',o[0]==='all');b.addEventListener('click',function(){{st[key]=o[0];[].forEach.call(g.querySelectorAll('button'),function(x){{x.setAttribute('aria-pressed',x.dataset.v===o[0])}});draw()}});g.appendChild(b)}})}}
-  group('f-phase','phase',[['all','All'],['V1','V1'],['V2','V2'],['Later','Later'],['No','Not planned']]);
+  group('f-phase','phase',[['all','All'],['Prereq','Prerequisite'],['V1','V1'],['V2','V2'],['Later','Later'],['No','Not planned']]);
   group('f-by','by',[['all','All'],['club','Club admin'],['member','Member'],['system','System'],['admin','peakst8 admin']]);
   group('f-proto','proto',[['all','All'],['yes','Works now'],['no','Not yet']]);
   document.getElementById('q').addEventListener('input',function(e){{st.q=e.target.value.trim().toLowerCase();draw()}});
@@ -271,12 +306,14 @@ button:focus-visible,a:focus-visible,input:focus-visible{{outline:2px solid var(
         &&(st.proto==='all'||(st.proto==='yes')===r.prototype)
         &&(!st.q||(r.feature+' '+r.sweatpals+' '+r.setting+' '+r.source).toLowerCase().indexOf(st.q)>-1)}});
       if(!rows.length)return;n+=rows.length;
-      out.push('<tr class="area"><td colspan="6">'+a[0]+' · '+esc(a[1])+' · '+rows.length+'</td></tr>');
+      var pre=PRE.indexOf(a[0])>-1;
+      out.push('<tr class="area'+(pre?' pre':'')+'"><td colspan="6">'+a[0]+' · '+esc(a[1])+' · '+rows.length+(pre?' · launch prerequisite':'')+'</td></tr>');
       rows.forEach(function(r){{out.push('<tr><td>'+esc(r.feature)+'</td><td>'+esc(r.sweatpals)+'<span class="src">'+EV[r.evidence]+': '+esc(r.source)+'</span></td><td><span class="tag '+r.by+'">'+BY[r.by]+'</span></td><td>'+esc(r.setting)+'</td><td><span class="tag '+r.phase+'">'+PH[r.phase]+'</span></td><td>'+(r.prototype?'<span class="tag yes">✓ Works</span>':'<span class="tag">–</span>')+'</td></tr>')}});
     }});
     document.getElementById('rows').innerHTML=out.join('')||'<tr><td colspan="6">No features match these filters.</td></tr>';
     document.getElementById('shown').textContent='Showing '+n+' of '+D.features.length+' features';
   }}
+  document.getElementById('showpre').addEventListener('click',function(){{var b=document.querySelector('#f-phase button[data-v="Prereq"]');if(b)b.click()}});
   draw();
 }})();
 </script>
@@ -284,4 +321,4 @@ button:focus-visible,a:focus-visible,input:focus-visible{{outline:2px solid var(
 </html>
 """
 open(os.path.join(HERE, "index.html"), "w").write(html)
-print(f"Built README.md and index.html: {total} features, V1 {counts['V1']}, V2 {counts['V2']}, Later {counts['Later']}, No {counts['No']}, prototype {proto}")
+print(f"Built README.md and index.html: {total} features, Prereq {counts['Prereq']}, V1 {counts['V1']}, V2 {counts['V2']}, Later {counts['Later']}, No {counts['No']}, prototype {proto}")

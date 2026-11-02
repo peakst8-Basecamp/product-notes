@@ -6,10 +6,24 @@
 
 ## At a glance
 
-- **99 features** across 11 areas.
-- **Phase:** V1 57 · V2 27 · Later 11 · not planned 4.
-- **Configured by:** club admins 67 · members 8 · system 21 · peakst8 admin 3.
-- **In the prototype today:** 54 of 99.
+- **114 features** across 12 areas.
+- **Launch prerequisite:** 12 renewal-reminder features must ship before memberships go live.
+- **Phase:** V1 58 · V2 29 · Later 11 · not planned 4.
+- **Configured by:** club admins 74 · members 8 · system 29 · peakst8 admin 3.
+- **In the prototype today:** 54 of 114.
+
+## Launch prerequisite: renewal reminders
+
+Renewal reminders are their own feature type, built and shipped before memberships go live for any club. A club can't sell a recurring plan until every row marked Launch prerequisite works end to end.
+
+| Why | |
+| --- | --- |
+| **Regulation** | RBI's e-mandate rules require a pre-debit notice at least 24 hours before each recurring charge, and a notice after it. Without them, UPI AutoPay and card mandates can't be used. |
+| **Trust** | SweatPals sends a notice 24 hours before every renewal. Members who are charged without warning dispute the charge, which costs the club the member and the fee. |
+| **Recovery** | Failed renewals are only recovered if the member hears about it with a fix-billing link the same day. |
+| **What exists today** | The backend has scheduled jobs (BullMQ upsertJobScheduler), the outbound email outbox, WhatsApp campaigns and Firebase push. NotificationDelivery is tied to registrations and has one type (ABANDONED_CART), so reminders get their own PlanReminderDelivery model and ClubMembershipSettings (see schema-draft.prisma). |
+
+The 12 prerequisite features are listed first in the inventory, under **R. Renewal reminders**.
 
 ## The rule: club admins configure it for their audience
 
@@ -22,7 +36,7 @@ Dashboard → Settings → Memberships. One set per club; every plan inherits th
 | Setting | What the club admin chooses |
 | --- | --- |
 | **Plans section** | Show plans to everyone or to club members only; section title; plan order |
-| **Renewal reminders** | Channels for the 24-hour pre-debit notice: push, email, WhatsApp (WhatsApp uses the club's credits) |
+| **Renewal reminders** | When reminders go out (the 24-hour pre-debit notice is fixed; add e.g. 3 days, or 7 days for yearly), channels (push, email, WhatsApp on the club's credits), send hour, and which optional reminders are on. See the Renewal reminders feature type. |
 | **Credit release window** | Hours before start when a cancelled booking gives the credit back (default 12) |
 | **Late cancel and no-show** | Whether a late cancel or no-show uses up the credit |
 | **Failed payment grace** | Days a past-due member keeps booking before access stops (default 0) |
@@ -76,6 +90,28 @@ Event editor → each pass. One row per plan.
 | peakst8 proposal | Not in SweatPals; added because club admins need it |
 
 ## Inventory
+
+### R. Renewal reminders (17) · launch prerequisite
+
+| Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Pre-debit notice before every recurring charge** | Notification 24 hours before each renewal | Help + code: Help 3.3 | System | PLAN_REMINDER_TYPE.PRE_DEBIT, at least 24 h before PlanCharge due; required for RBI e-mandates | Launch prerequisite | ✓ |
+| **Reminder schedule** | Fixed at 24 hours | peakst8 proposal: Help 3.3 | Club admin | ClubMembershipSettings.reminderOffsets, e.g. 3 days + 1 day; 7 days for quarterly and yearly prices. The 24 h notice can't be switched off | Launch prerequisite | – |
+| **Channels and fallback** | App notification and email | peakst8 proposal: Help 3.3, 5.3 | Club admin | ClubMembershipSettings.reminderChannels: push, email, WhatsApp (uses club credits); email always sent as the record | Launch prerequisite | – |
+| **Send time and quiet hours** | Renewal timestamps follow the org time zone | Help centre: Help 5.2 (limitations) | Club admin | ClubMembershipSettings.reminderSendHour in IST (default 9 AM); never between 9 PM and 8 AM | Launch prerequisite | – |
+| **What the reminder says** | Not visible (copy loads at runtime) | peakst8 proposal: — | System | Club name, plan, amount, charge date, masked UPI/card, intro-to-full-price change, Manage and Cancel links | Launch prerequisite | – |
+| **Renewal receipt** | Confirmation email and receipt | Help + code: Help 3.1; payment-files/user-membership/ | System | PLAN_REMINDER_TYPE.CHARGED after subscription.charged: amount, period, next date, receipt | Launch prerequisite | – |
+| **Payment failed notice** | Automatic 'Payment Failed' email to resolve billing | Help centre: Help 5.3 | System | PLAN_REMINDER_TYPE.PAYMENT_FAILED with fix-billing link; repeated on each Razorpay retry | Launch prerequisite | ✓ |
+| **Mandate at risk** | Upcoming billings flags at-risk charges and no card on file | Help centre: Help 5.3 | System | PLAN_REMINDER_TYPE.MANDATE_AT_RISK before the charge: mandate cancelled, expired or card expiring, with update link | Launch prerequisite | – |
+| **Intro offer ending** | Intro rate then auto-enrols at the regular rate | Inferred: Help 5.2 | System | PLAN_REMINDER_TYPE.INTRO_ENDING before the first full-price charge (with the pre-debit notice) | Launch prerequisite | – |
+| **Mandatory vs optional reminders** | Not seen | peakst8 proposal: — | System | Pre-debit, charged and failed can't be muted; the rest follow the member's notification settings | Launch prerequisite | – |
+| **Reschedule on change** | Not seen | peakst8 proposal: — | System | Pause, resume, billing-date change, price change and cancel recompute or cancel queued reminders; one per charge, type and channel | Launch prerequisite | – |
+| **Delivery log** | Not seen | peakst8 proposal: — | Club admin | PlanReminderDelivery rows shown on the member's plan history; retries with attempt count | Launch prerequisite | – |
+| **Pack expiry reminder** | Members track remaining credits and expiry | Inferred: Help 3.4 (classes) | Club admin | PLAN_REMINDER_TYPE.PACK_EXPIRING, e.g. 7 days and 1 day before, with credits left | V1 | – |
+| **Access ending after cancel** | Access continues to period end; rejoin from the community page | Inferred: Help 3.3 | System | PLAN_REMINDER_TYPE.ACCESS_ENDING 3 days before, with a rejoin link | V1 | – |
+| **Host renewal digest** | Upcoming billings: renewals, at risk, projected revenue | Help centre: Help 5.3 | Club admin | Daily email to club admins: tomorrow's renewals, at-risk mandates, failed payments | V1 | – |
+| **Low credits** | Remaining credits shown in membership details | Inferred: Help 3.4 | Club admin | PLAN_REMINDER_TYPE.LOW_CREDITS when 1–2 bookings are left in the period | V2 | – |
+| **Pause ending** | Pause until a set date | Inferred: Help 5.3 | System | PLAN_REMINDER_TYPE.PAUSE_ENDING before billing restarts | V2 | – |
 
 ### A. Plan types and pricing (12)
 
@@ -153,7 +189,7 @@ Event editor → each pass. One row per plan.
 | **Credit back on cancel** | Inferred from usage limits and cancellation flows | Inferred: Help 5.2, 3.3 | Club admin | Club setting: hours before start to release the credit; late cancels keep it | V1 | ✓ |
 | **Members going** | Shows which members are going | Web code: event:membersGoing.* | Club admin | Reuse athlete list (Event.hideAthleteList) | Later | – |
 
-### F. Member plan management (7)
+### F. Member plan management (6)
 
 | Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -163,7 +199,6 @@ Event editor → each pass. One row per plan.
 | **Wallet pass** | Add membership to Apple or Google Wallet | Web code: wallet/v1/user-memberships/; common:actions.addToWallet | Member | Wallet pass for plans | Later | – |
 | **Update payment method** | App only for members; tokenised update link | Help + code: Help 3.2; memberships/public/payment-method-update/:id | Member | Change UPI/card mandate link | V2 | – |
 | **Upgrade or downgrade** | Member cancels and joins the new plan | Help centre: Help 3.3 | Member | Cancel + join; host Switch plan | V1 | ✓ |
-| **Renewal reminder** | Notification 24 hours before renewal | Help centre: Help 3.3 | System | Pre-debit notice (RBI); club picks channels | V1 | ✓ |
 
 ### G. Sharing, guests and perks (5)
 
@@ -192,13 +227,12 @@ Event editor → each pass. One row per plan.
 | **Member notes** | Team-only notes per member | Help centre: Help 5.3 | Club admin | Member notes | Later | – |
 | **Approve join and cancel requests** | Review queues | Help centre: Help 5.2, 5.2a | Club admin | Dashboard → Requests | V1 | ✓ |
 
-### I. Billing and recovery (9)
+### I. Billing and recovery (8)
 
 | Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Automatic renewal** | Charges the default method on the billing date | Help centre: Help 3.3 | System | Razorpay subscription.charged | V1 | ✓ |
 | **Retries on failure** | Up to 3 automatic retries | Help centre: Help 5.3 | System | Razorpay retries; club sets grace days | V1 | – |
-| **Payment failed email** | Automatic notice to resolve billing | Help centre: Help 5.3 | System | Email + WhatsApp with fix-billing link | V1 | ✓ |
 | **No cancel while past due** | A failed renewal can't be cancelled; support stops retries | Help centre: Help 5.3 | System | Rule on PAST_DUE | V1 | ✓ |
 | **Fix billing (host)** | View attempts; charge this cycle, prorated, or custom; card, reader, QR, link | Help centre: Help 5.3 | Club admin | Members → Fix billing | V2 | ✓ |
 | **Fix billing (self-serve)** | Public page to pay the outstanding renewal | Web code: /fix-billing/[userToMembershipId]; memberships/public/fix-billing/:id(/intent) | Member | Fix-billing link | V1 | ✓ |

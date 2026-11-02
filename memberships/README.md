@@ -16,6 +16,17 @@ This note reverse-engineers SweatPals Memberships, which SweatPals now calls "Pl
 
 The point is the separation: **a plan is not a ticket.** It is a pricing rule plus a usage meter, and it attaches to the existing registration flow.
 
+## Launch prerequisite: renewal reminders
+
+Renewal reminders are a separate feature type, and they ship **before** memberships go live for any club. A club can't sell a recurring plan until all 12 prerequisite reminder features work end to end ([list](coverage/README.md#r-renewal-reminders-17--launch-prerequisite)):
+
+- **Pre-debit notice** at least 24 hours before every recurring charge (RBI e-mandate rule; SweatPals does the same), plus club-chosen earlier reminders (for example 3 days, or 7 days for yearly prices).
+- **After the charge:** a receipt on success, and a payment-failed notice with a fix-billing link on each retry.
+- **Before trouble:** mandate at risk (cancelled, expired or card expiring) and intro offer ending (first full-price charge coming).
+- **Rules:** club-set channels (push, email, WhatsApp on the club's credits) and send hour; mandatory notices can't be muted; queued reminders are recomputed on pause, date or price change and cancel; every send is logged on the member's plan.
+
+The backend already has scheduled jobs, the email outbox, WhatsApp and push. The existing `NotificationDelivery` log is tied to registrations and only knows `ABANDONED_CART`, so reminders get their own `PlanReminderDelivery` table and a per-club `ClubMembershipSettings` row (both in [`schema-draft.prisma`](schema-draft.prisma)).
+
 ## What we reverse-engineered
 
 [`coverage/`](coverage/README.md) lists all 99 SweatPals membership features, one row each, with who configures it (club admin, member, system or peakst8 admin), the peakst8 setting, the phase and prototype status. It also sets out the rule that club admins configure plans for their own audience: club settings, plan settings (including audience rules) and pass settings, plus who on the team can do what. Treat it as the build checklist.
@@ -255,6 +266,7 @@ Changes to existing tables: `Registration.appliedUserPlanId`, `Category.isPlanHo
 
 | | V1 (the first clubs) | V2 | Later or not |
 | --- | --- | --- | --- |
+| **Before launch** | Renewal reminders: pre-debit notice, receipt, payment failed, mandate at risk, intro ending, club reminder settings, delivery log | Low credits, pause ending | |
 | **Plans** | Membership (monthly or quarterly) and Pack (N credits plus expiry), one price each | Several prices per plan, yearly, every 4 weeks, half-yearly | Network or multi-club passes |
 | **Coverage** | Event types or specific events, plus a per-category policy (Free, Half, Full, Custom) and "apply to existing events" | Plan-holders-only categories, roll-over | Appointments (peakst8 has none yet) |
 | **Member** | Join, approval, pay, Passes → Plans, automatic pricing at checkout, cancel (Auto or Review), renewal notice | Shared plans, guest passes, intro offer, joining fee, minimum commitment | Members pausing their own plan (SweatPals doesn't allow it either) |
