@@ -27,6 +27,21 @@ Renewal reminders are a separate feature type, and they ship **before** membersh
 
 The backend already has scheduled jobs, the email outbox, WhatsApp and push. The existing `NotificationDelivery` log is tied to registrations and only knows `ABANDONED_CART`, so reminders get their own `PlanReminderDelivery` table and a per-club `ClubMembershipSettings` row (both in [`schema-draft.prisma`](schema-draft.prisma)).
 
+## Member perks
+
+People keep paying a monthly fee when they can see what it gets them. Perks are their own feature type ([list](coverage/README.md#p-member-perks-15)), and club admins choose them per plan under **Dashboard → Perks**:
+
+| Perk | What the member sees | Phase |
+| --- | --- | --- |
+| **Savings** | "You saved ₹X this period · ₹Y since joining" on the plan card, and a recap with each renewal receipt | V1 |
+| **Early access** | Book a set number of hours before an event opens to everyone; non-members see when it opens | V1 |
+| **Guest passes** | A number of free passes per period to bring a friend; the friend claims a link and books free, and becomes a lead for the club | V1 |
+| **Partner perks** | Offers from the club's partners (store, café, physio), locked on the club page until you hold a plan that unlocks them | V1 |
+| **Members-only sessions, WhatsApp group** | Sessions only plan holders can book; a group for holders | V1 |
+| **Later** | Waitlist priority, referral reward, member badge on leaderboards, race photos first, streaks and milestones | V2 |
+
+Schema: `Plan.earlyAccessHours`, `Plan.waitlistPriority`, `Plan.guestPassesPerCycle`, `Event.publicOpensAt`, and `ClubPerk` + `PlanPerk` for partner perks.
+
 ## What we reverse-engineered
 
 [`coverage/`](coverage/README.md) lists all 99 SweatPals membership features, one row each, with who configures it (club admin, member, system or peakst8 admin), the peakst8 setting, the phase and prototype status. It also sets out the rule that club admins configure plans for their own audience: club settings, plan settings (including audience rules) and pass settings, plus who on the team can do what. Treat it as the build checklist.
@@ -37,8 +52,8 @@ The backend already has scheduled jobs, the email outbox, WhatsApp and push. The
 
 | Side | What you can do |
 | --- | --- |
-| **Member (phone)** | Browse plans on the club page · join with or without the intro offer · request to join an approval-only plan and withdraw it · pay through a mock Razorpay UPI AutoPay mandate · see "Member price" on events · check out at the plan price (₹0 skips payment) · view the ticket with its membership discount · see credits and renewal in Passes → Plans · cancel (Auto or Review) · fix a failed renewal |
-| **Host (dashboard)** | Plans list with MRR and holders · create and publish a plan (it appears on the club page and sets its price on covered passes) · change the plan price on any pass · pause, resume, add credits to or cancel the live member's plan · approve or decline join and cancel requests |
+| **Member (phone)** | See savings, early access, guest passes and partner perks (locked until you join) · browse plans on the club page · join with or without the intro offer · request to join an approval-only plan and withdraw it · pay through a mock Razorpay UPI AutoPay mandate · see "Member price" on events · check out at the plan price (₹0 skips payment) · view the ticket with its membership discount · see credits and renewal in Passes → Plans · cancel (Auto or Review) · fix a failed renewal |
+| **Host (dashboard)** | Choose each plan's perks (early access, guest passes, partner perks) and add partner perks · plans list with MRR and holders · create and publish a plan (it appears on the club page and sets its price on covered passes) · change the plan price on any pass · pause, resume, add credits to or cancel the live member's plan · approve or decline join and cancel requests |
 | **Simulated time** | Skip to the next renewal (a pre-debit notice, then a charge or a failure) · make the next renewal fail · reset |
 
 The right-hand panel shows the member's `UserPlan` rows, the event log, and for the last checkout every step of the pricing rule: which plans were kept or dropped and why.
@@ -269,7 +284,7 @@ Changes to existing tables: `Registration.appliedUserPlanId`, `Category.isPlanHo
 | **Before launch** | Renewal reminders: pre-debit notice, receipt, payment failed, mandate at risk, intro ending, club reminder settings, delivery log | Low credits, pause ending | |
 | **Plans** | Membership (monthly or quarterly) and Pack (N credits plus expiry), one price each | Several prices per plan, yearly, every 4 weeks, half-yearly | Network or multi-club passes |
 | **Coverage** | Event types or specific events, plus a per-category policy (Free, Half, Full, Custom) and "apply to existing events" | Plan-holders-only categories, roll-over | Appointments (peakst8 has none yet) |
-| **Member** | Join, approval, pay, Passes → Plans, automatic pricing at checkout, cancel (Auto or Review), renewal notice | Shared plans, guest passes, intro offer, joining fee, minimum commitment | Members pausing their own plan (SweatPals doesn't allow it either) |
+| **Member** | Join, approval, pay, Passes → Plans, automatic pricing at checkout, cancel (Auto or Review), renewal notice; perks: savings, early access, guest passes, partner perks | Shared plans, guest passes, intro offer, joining fee, minimum commitment | Members pausing their own plan (SweatPals doesn't allow it either) |
 | **Host** | Create, edit and archive plans, member list with status, cancel, refund, approve join and cancel requests | Pause and resume, switch, change price, date or credits, Send plan, Fix billing, upcoming renewals | Leads pipeline, migrating from other platforms |
 | **Payments** | Razorpay Subscriptions (UPI AutoPay and card), Razorpay Orders for packs, webhooks, payout and platform fee | eNACH, prorated switches | Stacking promo codes with intro offers |
 

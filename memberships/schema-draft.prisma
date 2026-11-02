@@ -143,6 +143,10 @@ model Plan {
   shareSeats              Int? // seats besides the holder
   guestPassesPerCycle     Int? // null = guest passes off
   guestEligibility        GUEST_ELIGIBILITY        @default(FIRST_TIME_ONLY)
+  // Perks (club admins choose per plan)
+  earlyAccessHours        Int? // holders book this many hours before Event.publicOpensAt
+  waitlistPriority        Boolean                  @default(false)
+  perks                   PlanPerk[]
   cancellationPolicy      PLAN_CANCELLATION_POLICY @default(AUTO)
   minCommitmentCycles     Int? // recurring only
   whatsappGroupInviteUrl  String?
@@ -443,11 +447,41 @@ model PlanReminderDelivery {
   @@map("plan_reminder_delivery")
 }
 
+/// A partner perk a club offers its plan holders (e.g. 15% off at a running store).
+model ClubPerk {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clubId      String     @db.Uuid
+  club        Club       @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  partnerName String
+  offer       String // "15% off shoes"
+  redeemHow   String? // "Show your plan at the counter"
+  code        String? // shown only to holders
+  logo        String?
+  isActive    Boolean    @default(true)
+  plans       PlanPerk[]
+  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime   @default(now())
+
+  @@map("club_perk")
+}
+
+/// Which plans unlock which partner perks.
+model PlanPerk {
+  planId    String   @db.Uuid
+  plan      Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  perkId    String   @db.Uuid
+  perk      ClubPerk @relation(fields: [perkId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([planId, perkId])
+  @@map("plan_perk")
+}
+
 // Changes to existing models
 // model Registration { appliedUserPlanId String? @db.Uuid; appliedUserPlan UserPlan? @relation(...); planUsage PlanUsage? }
 // model Category     { isPlanHoldersOnly Boolean @default(false); planPolicies CategoryPlanPolicy[] }
-// model Club         { plans Plan[]; membershipSettings ClubMembershipSettings? }
-// model Event        { planCoverage PlanCoverage[] }
+// model Club         { plans Plan[]; membershipSettings ClubMembershipSettings?; perks ClubPerk[] }
+// model Event        { planCoverage PlanCoverage[]; publicOpensAt DateTime? } // early access: holders book before this
 // model User         { userPlans UserPlan[]; planJoinRequests PlanJoinRequest[]; planShares PlanShare[] @relation("PlanShareMember"); guestPasses GuestPass[] @relation("GuestPassGuest") }
 // model Host         { reviewedPlanJoinRequests PlanJoinRequest[]; reviewedPlanCancelRequests PlanCancelRequest[] }
 // model Waiver       { plans Plan[] }

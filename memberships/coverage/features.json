@@ -7,6 +7,10 @@
    "prerequisite"
   ],
   [
+   "P",
+   "Member perks"
+  ],
+  [
    "A",
    "Plan types and pricing"
   ],
@@ -32,7 +36,7 @@
   ],
   [
    "G",
-   "Sharing, guests and perks"
+   "Sharing"
   ],
   [
    "H",
@@ -236,6 +240,171 @@
    "evidence": "inferred",
    "by": "system",
    "setting": "PLAN_REMINDER_TYPE.PAUSE_ENDING before billing restarts",
+   "phase": "V2",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Members-only sessions",
+   "sweatpals": "Members-only events with their own banner, title bar and card label",
+   "source": "event:membersOnlyBanner.*, titleBar.membersOnly, common:eventCard.planHoldersOnly, ChooseTickets mode members-only",
+   "evidence": "code",
+   "by": "club",
+   "setting": "Category.isPlanHoldersOnly",
+   "phase": "V1",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Guest passes",
+   "sweatpals": "Per cycle count, eligible experiences, first-time or anyone; QR or link",
+   "source": "Help 3.4, 5.2a; public/guest-pass/:id/claim; event:ticketBanner.guestPassFree",
+   "evidence": "both",
+   "by": "club",
+   "setting": "Plan.guestPassesPerCycle, guestEligibility; GuestPass with claim link",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Redeem guest pass at check-in",
+   "sweatpals": "Staff add attendee with a guest pass",
+   "source": "Help 5.2a",
+   "evidence": "help",
+   "by": "club",
+   "setting": "Check-in: add attendee → guest pass",
+   "phase": "V1",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Partner perks",
+   "sweatpals": "Perks section locked for guests, unlocked for members; searchable",
+   "source": "Help 3.4; community-perks/*; host:perks.locked*",
+   "evidence": "both",
+   "by": "club",
+   "setting": "ClubPerk (partner, offer, code, how to redeem) unlocked by chosen plans; locked card for non-members",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Members WhatsApp group",
+   "sweatpals": "Creates a chat and adds everyone who buys",
+   "source": "Help 3.4 (class pack)",
+   "evidence": "help",
+   "by": "club",
+   "setting": "Plan.whatsappGroupInviteUrl",
+   "phase": "V1",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Savings shown to the member",
+   "sweatpals": "Membership discount line on each booking",
+   "source": "checkout:summary.membershipDiscount",
+   "evidence": "inferred",
+   "by": "system",
+   "setting": "Plan card: 'You saved ₹X this period' and since joining, from PlanUsage.amountSaved",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Value recap with each renewal",
+   "sweatpals": "Not seen",
+   "source": "—",
+   "evidence": "proposed",
+   "by": "system",
+   "setting": "Renewal receipt (CHARGED reminder) lists runs, savings and perks used last period",
+   "phase": "V1",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Early access booking",
+   "sweatpals": "Not seen beyond members-only events",
+   "source": "—",
+   "evidence": "proposed",
+   "by": "club",
+   "setting": "Plan.earlyAccessHours: holders book before Event.publicOpensAt; others see when it opens",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Waitlist priority",
+   "sweatpals": "Waitlist exists; no member priority seen",
+   "source": "event:waitlist.*",
+   "evidence": "proposed",
+   "by": "club",
+   "setting": "Plan.waitlistPriority: holders move ahead when a spot opens",
+   "phase": "V2",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Perks each plan includes",
+   "sweatpals": "Perks described per plan under the Memberships tab",
+   "source": "Help 3.4",
+   "evidence": "help",
+   "by": "club",
+   "setting": "Plan settings → Perks: early access, guest passes per cycle, partner perks, WhatsApp group",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Perks shown on the club page",
+   "sweatpals": "Perks section, searchable, locked for guests",
+   "source": "Help 3.4; host:perks.*",
+   "evidence": "both",
+   "by": "club",
+   "setting": "Club page → Member perks; locked with 'Join a plan to unlock'",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Referral reward",
+   "sweatpals": "Referral discount line at checkout",
+   "source": "checkout:summary.referralDiscount",
+   "evidence": "code",
+   "by": "club",
+   "setting": "Member gets a free week (or ₹ off next renewal) when a friend they invited joins a plan",
+   "phase": "V2",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Member badge",
+   "sweatpals": "'Pro member' style badge on profiles",
+   "source": "host:info.proMember",
+   "evidence": "inferred",
+   "by": "club",
+   "setting": "Badge on athlete lists, leaderboards and Strava challenges",
+   "phase": "V2",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Race photos first",
+   "sweatpals": "Not seen",
+   "source": "—",
+   "evidence": "proposed",
+   "by": "club",
+   "setting": "Holders get face-search photo results before public release",
+   "phase": "V2",
+   "prototype": false
+  },
+  {
+   "area": "P",
+   "feature": "Streaks and milestones",
+   "sweatpals": "Not seen",
+   "source": "—",
+   "evidence": "proposed",
+   "by": "club",
+   "setting": "Monthly run streaks, 25/50/100-run milestones and member anniversary, tied to medals",
    "phase": "V2",
    "prototype": false
   },
@@ -458,17 +627,6 @@
    "setting": "Bulk write of CategoryPlanPolicy on publish",
    "phase": "V1",
    "prototype": true
-  },
-  {
-   "area": "B",
-   "feature": "Plan-holders-only experiences",
-   "sweatpals": "Members-only events with their own banner, title bar and card label",
-   "source": "event:membersOnlyBanner.*, titleBar.membersOnly, common:eventCard.planHoldersOnly, ChooseTickets mode members-only",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Category.isPlanHoldersOnly",
-   "phase": "V2",
-   "prototype": false
   },
   {
    "area": "B",
@@ -889,39 +1047,6 @@
    "prototype": false
   },
   {
-   "area": "G",
-   "feature": "Guest passes",
-   "sweatpals": "Per cycle count, eligible experiences, first-time or anyone; QR or link",
-   "source": "Help 3.4, 5.2a; public/guest-pass/:id/claim; event:ticketBanner.guestPassFree",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.guestPassesPerCycle, guestEligibility; GuestPass",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "G",
-   "feature": "Redeem guest pass at check-in",
-   "sweatpals": "Staff add attendee with a guest pass",
-   "source": "Help 5.2a",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Check-in: add attendee → guest pass",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "G",
-   "feature": "Member perks",
-   "sweatpals": "Perks section locked for guests, unlocked for members; searchable",
-   "source": "Help 3.4; community-perks/*; host:perks.locked*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Club perks (partner discounts) unlocked by plan",
-   "phase": "Later",
-   "prototype": false
-  },
-  {
    "area": "H",
    "feature": "Members tab with plan status",
    "sweatpals": "Contact, attendance, plan, status, billing cycle",
@@ -1227,17 +1352,6 @@
    "by": "club",
    "setting": "Not planned",
    "phase": "No",
-   "prototype": false
-  },
-  {
-   "area": "K",
-   "feature": "Group chat for holders",
-   "sweatpals": "Creates a chat and adds everyone who buys",
-   "source": "Help 3.4 (class pack)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.whatsappGroupInviteUrl",
-   "phase": "V1",
    "prototype": false
   },
   {

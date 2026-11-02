@@ -90,7 +90,7 @@ svg text{font-family:Figtree,system-ui,sans-serif}
   <p>Clubs sell plans: a recurring membership or a prepaid pack. Members book each session as they do today, and peakst8 applies the plan at checkout, so the ticket is free, discounted or uses one credit. This note reverse-engineers SweatPals Plans and maps them onto the peakst8 backend.</p>
   <div class="facts"><span>Membership · Pack</span><span>Applied at checkout</span><span>Razorpay Subscriptions</span><span>UPI AutoPay</span></div>
   <div class="status" id="status" aria-live="polite"><span>Status</span><b>Draft</b><span>Next: pick pilot clubs and lock V1 scope</span></div>
-  <nav class="toc" aria-label="Sections"><a href="prototype/"><b>Open the working prototype →</b></a><a href="coverage/">What we reverse-engineered</a><a href="#reminders">Renewal reminders</a><a href="#minute">In one minute</a><a href="#concepts">Concepts</a><a href="#member">Member flows</a><a href="#host">Host flows</a><a href="#lifecycle">Lifecycle</a><a href="#checkout">Checkout pricing</a><a href="#payments">Payments</a><a href="#data">Data model</a><a href="#api">API</a><a href="#scope">Scope</a><a href="#open">Open questions</a><a href="#evidence">Evidence</a></nav>
+  <nav class="toc" aria-label="Sections"><a href="prototype/"><b>Open the working prototype →</b></a><a href="coverage/">What we reverse-engineered</a><a href="#reminders">Renewal reminders</a><a href="#perks">Member perks</a><a href="#minute">In one minute</a><a href="#concepts">Concepts</a><a href="#member">Member flows</a><a href="#host">Host flows</a><a href="#lifecycle">Lifecycle</a><a href="#checkout">Checkout pricing</a><a href="#payments">Payments</a><a href="#data">Data model</a><a href="#api">API</a><a href="#scope">Scope</a><a href="#open">Open questions</a><a href="#evidence">Evidence</a></nav>
 </section>
 
 <article class="pr">
@@ -104,6 +104,17 @@ svg text{font-family:Figtree,system-ui,sans-serif}
   <li><b>Rules:</b> club-set channels and send hour; mandatory notices can't be muted; reminders are recomputed on pause, date or price change and cancel; every send is logged.</li>
 </ul>
 <p>Full list in the <a href="coverage/#gate">coverage note</a>. Tables: <code>PlanReminderDelivery</code> and <code>ClubMembershipSettings</code> in the schema draft.</p>
+
+<h2 id="perks">Member perks</h2>
+<p class="answer">People keep paying when they can see what the plan gets them. Perks are their own feature type, chosen per plan by club admins under Dashboard → Perks.</p>
+<div class="tbl"><table><thead><tr><th>Perk</th><th>What the member sees</th><th>Phase</th></tr></thead><tbody>
+<tr><td>Savings</td><td>"You saved ₹X this period · ₹Y since joining" on the plan card, plus a recap with each renewal receipt</td><td>V1</td></tr>
+<tr><td>Early access</td><td>Book a set number of hours before an event opens to everyone</td><td>V1</td></tr>
+<tr><td>Guest passes</td><td>Free passes per period to bring a friend, who claims a link and books free</td><td>V1</td></tr>
+<tr><td>Partner perks</td><td>Offers from the club's partners, locked on the club page until you join</td><td>V1</td></tr>
+<tr><td>Members-only sessions, WhatsApp group</td><td>Sessions only holders can book; a group for holders</td><td>V1</td></tr>
+<tr><td>Later</td><td>Waitlist priority, referral reward, member badge, race photos first, streaks and milestones</td><td>V2</td></tr>
+</tbody></table></div>
 
 <h2 id="minute">In one minute</h2>
 <p class="answer">A plan is not a ticket. It is a pricing rule plus a usage meter, and it plugs into the registration flow peakst8 already has.</p>

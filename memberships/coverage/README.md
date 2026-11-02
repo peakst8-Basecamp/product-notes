@@ -6,11 +6,11 @@
 
 ## At a glance
 
-- **114 features** across 12 areas.
+- **124 features** across 13 areas.
 - **Launch prerequisite:** 12 renewal-reminder features must ship before memberships go live.
-- **Phase:** V1 58 · V2 29 · Later 11 · not planned 4.
-- **Configured by:** club admins 74 · members 8 · system 29 · peakst8 admin 3.
-- **In the prototype today:** 54 of 114.
+- **Phase:** V1 67 · V2 31 · Later 10 · not planned 4.
+- **Configured by:** club admins 82 · members 8 · system 31 · peakst8 admin 3.
+- **In the prototype today:** 60 of 124.
 
 ## Launch prerequisite: renewal reminders
 
@@ -44,6 +44,7 @@ Dashboard → Settings → Memberships. One set per club; every plan inherits th
 | **Tax** | GST % and whether plan prices include it (from club registration) |
 | **Fees** | Platform fee paid by the member or absorbed by the club |
 | **See plans banner** | Optional custom line on event pages, e.g. 'Members run free' |
+| **Partner perks** | The club's partner offers (partner, offer, code, how to redeem), then which plans unlock each one |
 | **Team** | Which club admins can create plans, change prices, refund and pause |
 
 ### Plan settings
@@ -57,7 +58,8 @@ Dashboard → Plans → Create or edit. One set per plan.
 | **Coverage** | Event types or specific events; usage limit and period; roll-over |
 | **Audience** | Everyone · first-timers · past attendees (N runs) · profile rule from the club's own form fields (e.g. women only, students, a company email domain) · invite list |
 | **Access rules** | Approval required, capacity, one per member, unlisted, featured |
-| **Extras** | Shareable seats, guest passes per cycle and who can receive them, WhatsApp group link |
+| **Perks** | Early access hours, guest passes per period and who can receive them, which partner perks it unlocks, members-only sessions, WhatsApp group |
+| **Sharing** | Shareable seats |
 | **Forms** | Waiver and questionnaire at purchase |
 | **Exit** | Cancellation policy (member cancels, or club reviews) and minimum commitment |
 
@@ -113,6 +115,26 @@ Event editor → each pass. One row per plan.
 | **Low credits** | Remaining credits shown in membership details | Inferred: Help 3.4 | Club admin | PLAN_REMINDER_TYPE.LOW_CREDITS when 1–2 bookings are left in the period | V2 | – |
 | **Pause ending** | Pause until a set date | Inferred: Help 5.3 | System | PLAN_REMINDER_TYPE.PAUSE_ENDING before billing restarts | V2 | – |
 
+### P. Member perks (15)
+
+| Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Members-only sessions** | Members-only events with their own banner, title bar and card label | Web code: event:membersOnlyBanner.*, titleBar.membersOnly, common:eventCard.planHoldersOnly, ChooseTickets mode members-only | Club admin | Category.isPlanHoldersOnly | V1 | – |
+| **Guest passes** | Per cycle count, eligible experiences, first-time or anyone; QR or link | Help + code: Help 3.4, 5.2a; public/guest-pass/:id/claim; event:ticketBanner.guestPassFree | Club admin | Plan.guestPassesPerCycle, guestEligibility; GuestPass with claim link | V1 | ✓ |
+| **Redeem guest pass at check-in** | Staff add attendee with a guest pass | Help centre: Help 5.2a | Club admin | Check-in: add attendee → guest pass | V1 | – |
+| **Partner perks** | Perks section locked for guests, unlocked for members; searchable | Help + code: Help 3.4; community-perks/*; host:perks.locked* | Club admin | ClubPerk (partner, offer, code, how to redeem) unlocked by chosen plans; locked card for non-members | V1 | ✓ |
+| **Members WhatsApp group** | Creates a chat and adds everyone who buys | Help centre: Help 3.4 (class pack) | Club admin | Plan.whatsappGroupInviteUrl | V1 | – |
+| **Savings shown to the member** | Membership discount line on each booking | Inferred: checkout:summary.membershipDiscount | System | Plan card: 'You saved ₹X this period' and since joining, from PlanUsage.amountSaved | V1 | ✓ |
+| **Value recap with each renewal** | Not seen | peakst8 proposal: — | System | Renewal receipt (CHARGED reminder) lists runs, savings and perks used last period | V1 | – |
+| **Early access booking** | Not seen beyond members-only events | peakst8 proposal: — | Club admin | Plan.earlyAccessHours: holders book before Event.publicOpensAt; others see when it opens | V1 | ✓ |
+| **Waitlist priority** | Waitlist exists; no member priority seen | peakst8 proposal: event:waitlist.* | Club admin | Plan.waitlistPriority: holders move ahead when a spot opens | V2 | – |
+| **Perks each plan includes** | Perks described per plan under the Memberships tab | Help centre: Help 3.4 | Club admin | Plan settings → Perks: early access, guest passes per cycle, partner perks, WhatsApp group | V1 | ✓ |
+| **Perks shown on the club page** | Perks section, searchable, locked for guests | Help + code: Help 3.4; host:perks.* | Club admin | Club page → Member perks; locked with 'Join a plan to unlock' | V1 | ✓ |
+| **Referral reward** | Referral discount line at checkout | Web code: checkout:summary.referralDiscount | Club admin | Member gets a free week (or ₹ off next renewal) when a friend they invited joins a plan | V2 | – |
+| **Member badge** | 'Pro member' style badge on profiles | Inferred: host:info.proMember | Club admin | Badge on athlete lists, leaderboards and Strava challenges | V2 | – |
+| **Race photos first** | Not seen | peakst8 proposal: — | Club admin | Holders get face-search photo results before public release | V2 | – |
+| **Streaks and milestones** | Not seen | peakst8 proposal: — | Club admin | Monthly run streaks, 25/50/100-run milestones and member anniversary, tied to medals | V2 | – |
+
 ### A. Plan types and pricing (12)
 
 | Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
@@ -130,7 +152,7 @@ Event editor → each pass. One row per plan.
 | **Tax on plans** | Sales tax integration | Help + code: Help 6.7; checkout:summary.fees.salesTax | Club admin | PlanPrice.isAmountInclusiveGST + club GST % | V1 | – |
 | **Fees shown at checkout** | Service, processing and transaction fee lines; host can absorb fees | Web code: checkout:summary.fees.*; user.isHostAbsorbsFee | Club admin | Plan charges platform fee to member or club (like Category.chargePlatformFeeToUser) | V1 | – |
 
-### B. Coverage and usage (10)
+### B. Coverage and usage (9)
 
 | Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -142,7 +164,6 @@ Event editor → each pass. One row per plan.
 | **Limits reset per period** | Booking limits reset on the recurring period | Help centre: Help 5.2 | System | Counted by event date per period | V1 | ✓ |
 | **Plan price per pass** | Can join free, half, full, custom $ or % | Help centre: Help 5.2 | Club admin | CategoryPlanPolicy | V1 | ✓ |
 | **Apply to existing experiences** | Set the plan price on all published experiences at once | Help centre: Help 5.2 | Club admin | Bulk write of CategoryPlanPolicy on publish | V1 | ✓ |
-| **Plan-holders-only experiences** | Members-only events with their own banner, title bar and card label | Web code: event:membersOnlyBanner.*, titleBar.membersOnly, common:eventCard.planHoldersOnly, ChooseTickets mode members-only | Club admin | Category.isPlanHoldersOnly | V2 | – |
 | **Day pass included in plan** | Day passes show as included for plan holders | Web code: host:dayPass.includedInPlan, /day-pass/[id] | Club admin | Coverage of a day-pass category | Later | – |
 
 ### C. Audience and visibility (9)
@@ -200,15 +221,12 @@ Event editor → each pass. One row per plan.
 | **Update payment method** | App only for members; tokenised update link | Help + code: Help 3.2; memberships/public/payment-method-update/:id | Member | Change UPI/card mandate link | V2 | – |
 | **Upgrade or downgrade** | Member cancels and joins the new plan | Help centre: Help 3.3 | Member | Cancel + join; host Switch plan | V1 | ✓ |
 
-### G. Sharing, guests and perks (5)
+### G. Sharing (2)
 
 | Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Shared plan** | Holder invites people by email or phone; seats; claim with intake form | Help + code: Help 3.4, 5.2a, 5.3; public/shared-membership/:id/claim | Club admin | Plan.isShareable, shareSeats; PlanShare | V2 | – |
 | **Host shares a member's plan** | Add from members or new customer; resend or revoke | Help centre: Help 5.3 | Club admin | Members → plan → Share plan | V2 | – |
-| **Guest passes** | Per cycle count, eligible experiences, first-time or anyone; QR or link | Help + code: Help 3.4, 5.2a; public/guest-pass/:id/claim; event:ticketBanner.guestPassFree | Club admin | Plan.guestPassesPerCycle, guestEligibility; GuestPass | V2 | – |
-| **Redeem guest pass at check-in** | Staff add attendee with a guest pass | Help centre: Help 5.2a | Club admin | Check-in: add attendee → guest pass | V2 | – |
-| **Member perks** | Perks section locked for guests, unlocked for members; searchable | Help + code: Help 3.4; community-perks/*; host:perks.locked* | Club admin | Club perks (partner discounts) unlocked by plan | Later | – |
 
 ### H. Host member management (12)
 
@@ -252,12 +270,11 @@ Event editor → each pass. One row per plan.
 | **Pause on one-time plans** | Doesn't extend expiry; host edits the date | Help centre: Help 5.3 | Club admin | Rule on PACK pause | V2 | – |
 | **Rejoin after cancel** | Sign up for a new plan from the community page | Help centre: Help 3.3 | Member | Join again (no intro offer) | V1 | ✓ |
 
-### K. Growth and operations (8)
+### K. Growth and operations (7)
 
 | Feature | What SweatPals does | Evidence | Configured by | peakst8 setting | Phase | Prototype |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Leads pipeline** | Stages, plan-purchase triggers, email/SMS, tasks, link plans to leads | Help centre: Help 5.4 (marketing) | Club admin | Not planned | Not planned | – |
-| **Group chat for holders** | Creates a chat and adds everyone who buys | Help centre: Help 3.4 (class pack) | Club admin | Plan.whatsappGroupInviteUrl | V1 | – |
 | **Gift cards as payment** | Gift card balance used as tender at checkout | Web code: checkout:giftCard.tender*; gift-cards/public/* | Club admin | Not planned | Not planned | – |
 | **Point of sale** | Memberships pinned for POS sales at the desk | Web code: follower.pinnedForPos.memberships; Help 6.5 | Club admin | Host sells a plan in person (Send plan → pay by link or QR) | Later | – |
 | **Migration** | Stripe customer copy or re-entry, recreate subscriptions, profile completion | Help + code: Help 5.4 (migration); profile-completion/* | peakst8 admin | Not planned | Not planned | – |

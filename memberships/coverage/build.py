@@ -47,6 +47,7 @@ CONFIG = [
         ("Tax", "GST % and whether plan prices include it (from club registration)"),
         ("Fees", "Platform fee paid by the member or absorbed by the club"),
         ("See plans banner", "Optional custom line on event pages, e.g. 'Members run free'"),
+        ("Partner perks", "The club's partner offers (partner, offer, code, how to redeem), then which plans unlock each one"),
         ("Team", "Which club admins can create plans, change prices, refund and pause"),
     ]),
     ("Plan settings", "Dashboard → Plans → Create or edit. One set per plan.", [
@@ -55,7 +56,8 @@ CONFIG = [
         ("Coverage", "Event types or specific events; usage limit and period; roll-over"),
         ("Audience", "Everyone · first-timers · past attendees (N runs) · profile rule from the club's own form fields (e.g. women only, students, a company email domain) · invite list"),
         ("Access rules", "Approval required, capacity, one per member, unlisted, featured"),
-        ("Extras", "Shareable seats, guest passes per cycle and who can receive them, WhatsApp group link"),
+        ("Perks", "Early access hours, guest passes per period and who can receive them, which partner perks it unlocks, members-only sessions, WhatsApp group"),
+        ("Sharing", "Shareable seats"),
         ("Forms", "Waiver and questionnaire at purchase"),
         ("Exit", "Cancellation policy (member cancels, or club reviews) and minimum commitment"),
     ]),
