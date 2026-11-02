@@ -1,5 +1,5 @@
 {
- "_how_to_update": "One row per feature found in SweatPals. Edit here, then run: python3 memberships/coverage/build.py (rewrites README.md tables and the data block in index.html). Fields: area, feature, sweatpals (what they do), source, evidence (help | code | both | inferred | proposed), by (club | member | admin | system), setting (where it lives in peakst8), phase (Prereq | V1 | V2 | Later | No; Prereq must ship before memberships go live for any club), prototype (true if it works in memberships/prototype).",
+ "_how_to_update": "One row per thing a member or club admin can do or will notice. Write it from their side, in plain words: no field names or system detail (that lives in code/ARCHITECTURE.md). Edit here, then run: python3 memberships/coverage/build.py. Fields: area, feature, story, for (member | club | both), phase (Prereq | V1 | V2 | Later | No), prototype (true if it works in the prototype), sweatpals (true if SweatPals has it).",
  "areas": [
   [
    "R",
@@ -8,1505 +8,1031 @@
   ],
   [
    "P",
-   "Member perks"
-  ],
-  [
-   "A",
-   "Plan types and pricing"
-  ],
-  [
-   "B",
-   "Coverage and usage"
-  ],
-  [
-   "C",
-   "Audience and visibility"
+   "Perks and brand offers"
   ],
   [
    "D",
-   "Joining and checkout"
+   "Discounts"
   ],
   [
-   "E",
-   "Booking with a plan"
-  ],
-  [
-   "F",
-   "Member plan management"
-  ],
-  [
-   "G",
-   "Sharing"
-  ],
-  [
-   "H",
-   "Host member management"
-  ],
-  [
-   "I",
-   "Billing and recovery"
+   "A",
+   "Plans and pricing"
   ],
   [
    "J",
-   "Cancellation and lifecycle"
+   "Joining a plan"
   ],
   [
-   "K",
-   "Growth and operations"
+   "B",
+   "Booking with a plan"
+  ],
+  [
+   "M",
+   "My plan"
+  ],
+  [
+   "C",
+   "Renewing and cancelling"
+  ],
+  [
+   "H",
+   "Running memberships"
+  ],
+  [
+   "G",
+   "Sharing and growth"
   ]
  ],
  "features": [
   {
    "area": "R",
-   "feature": "Pre-debit notice before every recurring charge",
-   "sweatpals": "Notification 24 hours before each renewal",
-   "source": "Help 3.3",
-   "evidence": "both",
-   "by": "system",
-   "setting": "PLAN_REMINDER_TYPE.PRE_DEBIT, at least 24 h before PlanCharge due; required for RBI e-mandates",
+   "feature": "Reminder before every renewal",
+   "story": "Members hear at least a day before they're charged: the amount, the date, and a link to manage or cancel.",
+   "for": "member",
    "phase": "Prereq",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "R",
-   "feature": "Reminder schedule",
-   "sweatpals": "Fixed at 24 hours",
-   "source": "Help 3.3",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "ClubMembershipSettings.reminderOffsets, e.g. 3 days + 1 day; 7 days for quarterly and yearly prices. The 24 h notice can't be switched off",
+   "feature": "Club chooses how members are reminded",
+   "story": "Club admins pick how early members hear about a renewal and on which channels: the app, email or WhatsApp.",
+   "for": "club",
    "phase": "Prereq",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "R",
-   "feature": "Channels and fallback",
-   "sweatpals": "App notification and email",
-   "source": "Help 3.3, 5.3",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "ClubMembershipSettings.reminderChannels: push, email, WhatsApp (uses club credits); email always sent as the record",
+   "feature": "Receipt after every charge",
+   "story": "Members get a receipt each time they're charged, with what they paid and when the next renewal is.",
+   "for": "member",
    "phase": "Prereq",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
    "area": "R",
-   "feature": "Send time and quiet hours",
-   "sweatpals": "Renewal timestamps follow the org time zone",
-   "source": "Help 5.2 (limitations)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "ClubMembershipSettings.reminderSendHour in IST (default 9 AM); never between 9 PM and 8 AM",
+   "feature": "Failed payment, with a way to fix it",
+   "story": "If a renewal fails, members are told straight away and can pay from a link in the message.",
+   "for": "member",
    "phase": "Prereq",
-   "prototype": false
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "R",
-   "feature": "What the reminder says",
-   "sweatpals": "Not visible (copy loads at runtime)",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "system",
-   "setting": "Club name, plan, amount, charge date, masked UPI/card, intro-to-full-price change, Manage and Cancel links",
+   "feature": "Heads-up before a payment problem",
+   "story": "Members hear before the renewal if their AutoPay or card won't go through, so they can update it in time.",
+   "for": "member",
    "phase": "Prereq",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
    "area": "R",
-   "feature": "Renewal receipt",
-   "sweatpals": "Confirmation email and receipt",
-   "source": "Help 3.1; payment-files/user-membership/",
-   "evidence": "both",
-   "by": "system",
-   "setting": "PLAN_REMINDER_TYPE.CHARGED after subscription.charged: amount, period, next date, receipt",
+   "feature": "Intro price ending",
+   "story": "Members on an intro offer are told before their first full-price charge.",
+   "for": "member",
    "phase": "Prereq",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "R",
-   "feature": "Payment failed notice",
-   "sweatpals": "Automatic 'Payment Failed' email to resolve billing",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "system",
-   "setting": "PLAN_REMINDER_TYPE.PAYMENT_FAILED with fix-billing link; repeated on each Razorpay retry",
+   "feature": "Payment reminders can't be missed",
+   "story": "Anything about money always reaches the member, by email as well, and can't be switched off. Other reminders follow their notification settings.",
+   "for": "member",
    "phase": "Prereq",
-   "prototype": true
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "R",
-   "feature": "Mandate at risk",
-   "sweatpals": "Upcoming billings flags at-risk charges and no card on file",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "system",
-   "setting": "PLAN_REMINDER_TYPE.MANDATE_AT_RISK before the charge: mandate cancelled, expired or card expiring, with update link",
+   "feature": "Reminders are always current",
+   "story": "If the club pauses, changes or cancels a plan, members only get reminders that are still true.",
+   "for": "member",
    "phase": "Prereq",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "R",
-   "feature": "Intro offer ending",
-   "sweatpals": "Intro rate then auto-enrols at the regular rate",
-   "source": "Help 5.2",
-   "evidence": "inferred",
-   "by": "system",
-   "setting": "PLAN_REMINDER_TYPE.INTRO_ENDING before the first full-price charge (with the pre-debit notice)",
+   "feature": "Club can see what members were told",
+   "story": "Club admins can check which reminders a member got and when, before answering a complaint.",
+   "for": "club",
    "phase": "Prereq",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "R",
-   "feature": "Mandatory vs optional reminders",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "system",
-   "setting": "Pre-debit, charged and failed can't be muted; the rest follow the member's notification settings",
-   "phase": "Prereq",
-   "prototype": false
-  },
-  {
-   "area": "R",
-   "feature": "Reschedule on change",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "system",
-   "setting": "Pause, resume, billing-date change, price change and cancel recompute or cancel queued reminders; one per charge, type and channel",
-   "phase": "Prereq",
-   "prototype": false
-  },
-  {
-   "area": "R",
-   "feature": "Delivery log",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "PlanReminderDelivery rows shown on the member's plan history; retries with attempt count",
-   "phase": "Prereq",
-   "prototype": false
-  },
-  {
-   "area": "R",
-   "feature": "Pack expiry reminder",
-   "sweatpals": "Members track remaining credits and expiry",
-   "source": "Help 3.4 (classes)",
-   "evidence": "inferred",
-   "by": "club",
-   "setting": "PLAN_REMINDER_TYPE.PACK_EXPIRING, e.g. 7 days and 1 day before, with credits left",
+   "feature": "Pack about to expire",
+   "story": "Pack holders are told before their pack expires, with how many runs are left.",
+   "for": "member",
    "phase": "V1",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
    "area": "R",
-   "feature": "Access ending after cancel",
-   "sweatpals": "Access continues to period end; rejoin from the community page",
-   "source": "Help 3.3",
-   "evidence": "inferred",
-   "by": "system",
-   "setting": "PLAN_REMINDER_TYPE.ACCESS_ENDING 3 days before, with a rejoin link",
+   "feature": "Plan ending after cancelling",
+   "story": "Members who cancelled are reminded when their access ends, with an easy way to rejoin.",
+   "for": "member",
    "phase": "V1",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
    "area": "R",
-   "feature": "Host renewal digest",
-   "sweatpals": "Upcoming billings: renewals, at risk, projected revenue",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Daily email to club admins: tomorrow's renewals, at-risk mandates, failed payments",
+   "feature": "Daily renewal summary for the club",
+   "story": "Club admins get a short daily note: tomorrow's renewals, payments at risk, and payments that failed.",
+   "for": "club",
    "phase": "V1",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
    "area": "R",
-   "feature": "Low credits",
-   "sweatpals": "Remaining credits shown in membership details",
-   "source": "Help 3.4",
-   "evidence": "inferred",
-   "by": "club",
-   "setting": "PLAN_REMINDER_TYPE.LOW_CREDITS when 1–2 bookings are left in the period",
+   "feature": "Running low on runs",
+   "story": "Members are told when they have one or two bookings left this month.",
+   "for": "member",
    "phase": "V2",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "R",
    "feature": "Pause ending",
-   "sweatpals": "Pause until a set date",
-   "source": "Help 5.3",
-   "evidence": "inferred",
-   "by": "system",
-   "setting": "PLAN_REMINDER_TYPE.PAUSE_ENDING before billing restarts",
+   "story": "Members on a paused plan are told when billing starts again.",
+   "for": "member",
    "phase": "V2",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "P",
-   "feature": "Members-only sessions",
-   "sweatpals": "Members-only events with their own banner, title bar and card label",
-   "source": "event:membersOnlyBanner.*, titleBar.membersOnly, common:eventCard.planHoldersOnly, ChooseTickets mode members-only",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Category.isPlanHoldersOnly",
+   "feature": "See what you've saved",
+   "story": "The plan card shows how much the member has saved this month and since joining.",
+   "for": "member",
    "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "P",
-   "feature": "Guest passes",
-   "sweatpals": "Per cycle count, eligible experiences, first-time or anyone; QR or link",
-   "source": "Help 3.4, 5.2a; public/guest-pass/:id/claim; event:ticketBanner.guestPassFree",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.guestPassesPerCycle, guestEligibility; GuestPass with claim link",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "P",
-   "feature": "Redeem guest pass at check-in",
-   "sweatpals": "Staff add attendee with a guest pass",
-   "source": "Help 5.2a",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Check-in: add attendee → guest pass",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "P",
-   "feature": "Partner perks",
-   "sweatpals": "Perks section locked for guests, unlocked for members; searchable",
-   "source": "Help 3.4; community-perks/*; host:perks.locked*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "ClubPerk (brand, category, offer, code, how to redeem) unlocked by chosen plans; listed on the club perks page",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "P",
-   "feature": "Members WhatsApp group",
-   "sweatpals": "Creates a chat and adds everyone who buys",
-   "source": "Help 3.4 (class pack)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.whatsappGroupInviteUrl",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "P",
-   "feature": "Savings shown to the member",
-   "sweatpals": "Membership discount line on each booking",
-   "source": "checkout:summary.membershipDiscount",
-   "evidence": "inferred",
-   "by": "system",
-   "setting": "Plan card: 'You saved ₹X this period' and since joining, from PlanUsage.amountSaved",
-   "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "P",
    "feature": "Value recap with each renewal",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "system",
-   "setting": "Renewal receipt (CHARGED reminder) lists runs, savings and perks used last period",
+   "story": "Each renewal receipt sums up the month: runs, savings and perks used.",
+   "for": "member",
    "phase": "V1",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "P",
-   "feature": "Early access booking",
-   "sweatpals": "Not seen beyond members-only events",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "Plan.earlyAccessHours: holders book before Event.publicOpensAt; others see when it opens",
+   "feature": "Book early",
+   "story": "Members can book popular events before they open to everyone. Others see when booking opens.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": false
   },
   {
    "area": "P",
-   "feature": "Waitlist priority",
-   "sweatpals": "Waitlist exists; no member priority seen",
-   "source": "event:waitlist.*",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "Plan.waitlistPriority: holders move ahead when a spot opens",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "P",
-   "feature": "Perks each plan includes",
-   "sweatpals": "Perks described per plan under the Memberships tab",
-   "source": "Help 3.4",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan settings → Perks: early access, guest passes per cycle, partner perks, WhatsApp group",
+   "feature": "Bring a friend free",
+   "story": "Members get guest passes each month. A friend opens the link and books a run free, and the club gets a new lead.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "P",
-   "feature": "Perks shown on the club page",
-   "sweatpals": "Perks section, searchable, locked for guests",
-   "source": "Help 3.4; host:perks.*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Club page → Member perks; locked with 'Join a plan to unlock'",
+   "feature": "Guest pass at the door",
+   "story": "Club staff can let a guest in with a member's pass at check-in.",
+   "for": "club",
    "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "P",
-   "feature": "Referral reward",
-   "sweatpals": "Referral discount line at checkout",
-   "source": "checkout:summary.referralDiscount",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Member gets a free week (or ₹ off next renewal) when a friend they invited joins a plan",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "P",
-   "feature": "Member badge",
-   "sweatpals": "'Pro member' style badge on profiles",
-   "source": "host:info.proMember",
-   "evidence": "inferred",
-   "by": "club",
-   "setting": "Badge on athlete lists, leaderboards and Strava challenges",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "P",
-   "feature": "Race photos first",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "Holders get face-search photo results before public release",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "P",
-   "feature": "Streaks and milestones",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "Monthly run streaks, 25/50/100-run milestones and member anniversary, tied to medals",
-   "phase": "V2",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
    "area": "P",
    "feature": "Club perks page",
-   "sweatpals": "Perks section on the community profile, searchable; locked for guests",
-   "source": "Help 3.4; host:perks.title, searchPlaceholder, lockedGuest, lockedMember",
-   "evidence": "both",
-   "by": "club",
-   "setting": "A small listing page per club: every brand perk with logo, category and offer; shareable link",
+   "story": "Each club has a small page listing its brand offers (gear, food, recovery, nutrition) that anyone can browse and the club can share.",
+   "for": "both",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "P",
-   "feature": "Perk categories and search",
-   "sweatpals": "Searchable perks list with 'no matches' state",
-   "source": "host:perks.searchAriaLabel, noMatches",
-   "evidence": "code",
-   "by": "club",
-   "setting": "ClubPerk.category (gear, nutrition, food and drink, recovery, wearables) with filter chips and search",
+   "feature": "Offers unlock with a plan",
+   "story": "Non-members see the offer and which plan unlocks it. Members tap to reveal the code or how to redeem.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "P",
-   "feature": "Perk visibility",
-   "sweatpals": "Locked perks shown to guests and members without the right plan",
-   "source": "host:perks.lockedGuest, lockedMember",
-   "evidence": "code",
-   "by": "club",
-   "setting": "ClubPerk.visibility: show as a teaser to everyone, or members only; code revealed only to unlocking plans",
+   "feature": "Search and filter perks",
+   "story": "Members can search brands and filter by category.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "P",
-   "feature": "Perk redemption count",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "Count each 'Reveal code' tap per perk, shown to the club to report back to brands",
+   "feature": "Members-only offers",
+   "story": "Clubs can keep some offers hidden until someone joins.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "P",
+   "feature": "Club adds brands and picks the plans",
+   "story": "Club admins add a brand's offer and choose which plans unlock it, and see how many members used it to report back to the brand.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "P",
+   "feature": "Club chooses each plan's perks",
+   "story": "For each plan, club admins choose early access, guest passes and which brand offers it includes.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "P",
+   "feature": "Members-only sessions",
+   "story": "Clubs can run sessions only plan holders can book.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "P",
+   "feature": "Members' WhatsApp group",
+   "story": "Joining a plan adds the member to the club's members group.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "P",
+   "feature": "First in line for sold-out events",
+   "story": "When a spot opens, members on the waitlist get it first.",
+   "for": "member",
    "phase": "V2",
-   "prototype": true
+   "prototype": false,
+   "sweatpals": false
   },
   {
-   "area": "A",
-   "feature": "Membership plan",
-   "sweatpals": "Recurring or prepaid access to selected experiences",
-   "source": "Help 5.1, 5.2",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.kind = MEMBERSHIP",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "A",
-   "feature": "Class pack",
-   "sweatpals": "Prepaid number of bookings, one-time or recurring",
-   "source": "Help 3.4 (classes), 5.1",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.kind = PACK, usageLimit",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "A",
-   "feature": "Several prices per plan (tiers)",
-   "sweatpals": "A plan returns tiers[], each a price option",
-   "source": "memberships/public/community/:id → tiers",
-   "evidence": "code",
-   "by": "club",
-   "setting": "PlanPrice (many per plan)",
+   "area": "P",
+   "feature": "Reward for bringing a friend",
+   "story": "When a friend a member invited joins a plan, the member gets a free week or money off.",
+   "for": "member",
    "phase": "V2",
-   "prototype": true
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "P",
+   "feature": "Member badge",
+   "story": "Members show a badge on leaderboards, athlete lists and challenges.",
+   "for": "member",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "P",
+   "feature": "Race photos first",
+   "story": "Members see their event photos before they're shared publicly.",
+   "for": "member",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": false
+  },
+  {
+   "area": "P",
+   "feature": "Streaks and milestones",
+   "story": "Members are celebrated for monthly streaks, 25, 50 and 100 runs, and their member anniversary.",
+   "for": "member",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": false
+  },
+  {
+   "area": "D",
+   "feature": "Club switches codes on",
+   "story": "Discount codes are off until a club admin turns them on for a plan.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": false
+  },
+  {
+   "area": "D",
+   "feature": "Create a code",
+   "story": "Club admins create a code for a campaign, students or a partner: a percentage or an amount off, on the plans they choose.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "D",
+   "feature": "First month or every month",
+   "story": "A code can take money off the first payment only, or every payment (for example a student rate).",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "D",
+   "feature": "Limits on a code",
+   "story": "Clubs can cap how many people use a code, set an end date, and switch a code off at any time.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "D",
+   "feature": "Use a code at checkout",
+   "story": "Members enter a code when joining and see the discount as its own line, with a clear message if a code doesn't work.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "D",
+   "feature": "No double discounts",
+   "story": "A code can't be combined with an intro offer.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "D",
+   "feature": "Discounts for a group",
+   "story": "Clubs can offer a discount only to a group, such as students, women or one company's employees.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": false
   },
   {
    "area": "A",
-   "feature": "Billing intervals",
-   "sweatpals": "One-time, weekly, monthly, every 4 weeks, quarterly, semi-annual, annual",
-   "source": "Help 5.1; checkout:membershipTier.billingPeriod.*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "PlanPrice.interval",
+   "feature": "Monthly memberships",
+   "story": "Clubs sell a membership that renews every week, month, quarter or year.",
+   "for": "club",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "A",
-   "feature": "One-time validity",
-   "sweatpals": "Never expires, from purchase, from first use, fixed duration",
-   "source": "Help 5.2, 3.4",
-   "evidence": "help",
-   "by": "club",
-   "setting": "PlanPrice.validity, validityDays, validUntil",
+   "feature": "Run packs",
+   "story": "Clubs sell a pack of runs that's valid for a set time, or never expires.",
+   "for": "club",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "More than one price",
+   "story": "A plan can have several price options, such as monthly or quarterly.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "A",
    "feature": "Intro offer",
-   "sweatpals": "Discounted first period, once per member; rejoining pays full price",
-   "source": "Help 5.2; membership-offers/public/tier/:id; checkout:membershipOffer.*, membershipCard.introOffer*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "PlanIntroOffer",
+   "story": "New members can pay a lower price for their first weeks, once per person.",
+   "for": "club",
    "phase": "V2",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
    "area": "A",
-   "feature": "Offer badges and countdown",
-   "sweatpals": "Discount, percent off, special price, exclusive badges; offer ends-in timer",
-   "source": "checkout:membershipOffer.*Badge, priceTier.specialOfferEndsIn",
-   "evidence": "code",
-   "by": "club",
-   "setting": "PlanIntroOffer.badge, endsAt",
+   "feature": "Joining fee",
+   "story": "Clubs can add a one-time joining fee to the first payment.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "What a plan covers",
+   "story": "Clubs choose which sessions a plan covers: all training runs, race days, or specific events.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "How often it can be used",
+   "story": "Unlimited, or a set number of bookings a week, month or in total.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Unused runs carry over",
+   "story": "Clubs can let unused bookings carry into next month.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Member price on each pass",
+   "story": "For every ticket type, clubs choose what members pay: free, half price, or a custom amount off.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Set it once for all events",
+   "story": "When publishing a plan, the club can apply its member price to every upcoming event it covers in one go.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Prices shown with tax and fees",
+   "story": "Members see the full price including GST and any fees before they pay.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Feature and order plans",
+   "story": "Clubs pin their main plan to the top and order the rest.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Hidden plans",
+   "story": "Clubs can hide a plan from the club page and share it by link only.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Approval to join",
+   "story": "Clubs can review each request before someone joins, for example a coached squad.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "One per person",
+   "story": "Clubs can stop someone buying the same plan twice.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Limited spots",
+   "story": "Clubs can cap how many people hold a plan at once; the plan shows as sold out when full.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "First-timers only",
+   "story": "Clubs can offer a plan only to people who haven't been to the club before.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Plans for a group",
+   "story": "Clubs can show a plan only to a group, such as women, students or past attendees.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": false
+  },
+  {
+   "area": "A",
+   "feature": "Retire a plan",
+   "story": "Clubs can stop selling a plan without affecting people already on it.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "A",
+   "feature": "Plans on the club's own website",
+   "story": "Clubs can show their plans and take sign-ups on their own website.",
+   "for": "club",
    "phase": "Later",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "A",
-   "feature": "Sign-up (initiation) fee",
-   "sweatpals": "One-time fee with the first payment",
-   "source": "Help 5.2; checkout:membershipTier.signUpFee",
-   "evidence": "both",
-   "by": "club",
-   "setting": "PlanPrice.joiningFee",
-   "phase": "V2",
-   "prototype": true
-  },
-  {
-   "area": "A",
-   "feature": "Discount codes on plans",
-   "sweatpals": "Promo codes at plan checkout; the discount applies to the first payment only",
-   "source": "Help 3.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.allowDiscountCodes (club admin turns it on per plan) + Coupon linked to plans (CouponToPlan)",
+   "area": "J",
+   "feature": "See plans on the club page",
+   "story": "The club page lists its plans with price, what's covered and the perks.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "A",
-   "feature": "Discount applies to",
-   "sweatpals": "Promo discount only on the initial payment; full price on renewal",
-   "source": "Help 3.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Coupon.appliesTo: FIRST_CHARGE · EVERY_CHARGE · FIRST_N_CHARGES (e.g. student rate every month)",
+   "area": "J",
+   "feature": "Clear join button",
+   "story": "The button always says what will happen: Join, Request to join, Request pending, Not approved, or View if you already have it.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "A",
-   "feature": "Discount limits",
-   "sweatpals": "Coupons can stack with intro price unless planned; avoid heavy stacking",
-   "source": "Help 5.2 (limitations)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Max uses, expiry, one per member; can't combine with an intro offer",
+   "area": "J",
+   "feature": "Pick how to pay",
+   "story": "Members choose a price option and whether to take the intro offer.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "A",
-   "feature": "Audience discounts",
-   "sweatpals": "Not seen",
-   "source": "—",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "A discount only for an audience (students, women, a company): ties a Coupon to a plan audience rule",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "A",
-   "feature": "Discount shown at checkout",
-   "sweatpals": "Custom, offer and referral discount lines in the summary",
-   "source": "checkout:summary.customDiscount, offerDiscount, referralDiscount",
-   "evidence": "code",
-   "by": "system",
-   "setting": "'Discount (CODE) −₹X' line on the plan review and receipts",
+   "area": "J",
+   "feature": "Know the terms before paying",
+   "story": "Members see what's charged today, what renews and when, and any minimum commitment, before they pay.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "A",
-   "feature": "Proration on join",
-   "sweatpals": "Aligns new member billing to the cycle",
-   "source": "Help 5.2 (pricing structure)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Club setting: align renewals to a billing day",
+   "area": "J",
+   "feature": "Waiver and questions",
+   "story": "Members sign the club's waiver and answer its questions while joining.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "J",
+   "feature": "Request to join",
+   "story": "For approval-only plans, members send a request, pay only once approved, and can withdraw it.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "J",
+   "feature": "Told why you can't join",
+   "story": "Members see a clear message if a plan is sold out, for first-timers only, already held, or their request was declined.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "J",
+   "feature": "Pay with UPI AutoPay or card",
+   "story": "Members set up AutoPay once and don't have to pay each month.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "J",
+   "feature": "You're in",
+   "story": "A confirmation that the plan is active and that benefits apply automatically, with a shortcut to book.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Member price on events",
+   "story": "Events show the member price next to the normal price.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Nudge to join",
+   "story": "People without a plan see what members pay and a link to the plans.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Plan applied automatically",
+   "story": "Members book as they do today; checkout uses their plan without any extra step.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Free bookings skip payment",
+   "story": "When the plan makes a ticket free, there's no payment screen.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Know what's not covered",
+   "story": "Checkout shows which passes the plan covers and which it doesn't.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Best plan wins",
+   "story": "If a member holds more than one plan, checkout uses the one that costs them least.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Discount on the ticket",
+   "story": "The ticket and receipt show the member discount.",
+   "for": "member",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "Run back if you cancel in time",
+   "story": "Cancelling early enough gives the run back to the plan; the club decides how early.",
+   "for": "both",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "B",
+   "feature": "See which members are going",
+   "story": "Event pages show which club members are coming.",
+   "for": "member",
    "phase": "Later",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "A",
-   "feature": "Tax on plans",
-   "sweatpals": "Sales tax integration",
-   "source": "Help 6.7; checkout:summary.fees.salesTax",
-   "evidence": "both",
-   "by": "club",
-   "setting": "PlanPrice.isAmountInclusiveGST + club GST %",
+   "area": "M",
+   "feature": "My plan in Passes",
+   "story": "Members see their plan's status, renewal date, runs left, savings and perks in one place.",
+   "for": "member",
    "phase": "V1",
-   "prototype": false
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "A",
-   "feature": "Fees shown at checkout",
-   "sweatpals": "Service, processing and transaction fee lines; host can absorb fees",
-   "source": "checkout:summary.fees.*; user.isHostAbsorbsFee",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Plan charges platform fee to member or club (like Category.chargePlatformFeeToUser)",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "B",
-   "feature": "Coverage by experience type",
-   "sweatpals": "Tick events, classes, retreats (and appointments) the plan covers",
-   "source": "Help 5.2 (booking pools)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "PlanCoverage.eventType",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "B",
-   "feature": "Coverage by specific experiences",
-   "sweatpals": "Selected classes or events only; bundles",
-   "source": "Help 5.2 (access control)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "PlanCoverage.eventId",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "B",
-   "feature": "Appointments coverage",
-   "sweatpals": "Plans apply to 1:1 appointments with their own limits",
-   "source": "Help 5.2a",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Out of scope until peakst8 has appointments",
-   "phase": "No",
-   "prototype": false
-  },
-  {
-   "area": "B",
-   "feature": "Usage limits",
-   "sweatpals": "Unlimited, N total, or N per day, week, month or year",
-   "source": "Help 5.2; checkout:membershipLimited.*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.limitPeriod, usageLimit",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "B",
-   "feature": "Roll over unused bookings",
-   "sweatpals": "Unused bookings carry into the next period",
-   "source": "Help 5.2",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.rollOverUnused",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "B",
-   "feature": "Limits reset per period",
-   "sweatpals": "Booking limits reset on the recurring period",
-   "source": "Help 5.2",
-   "evidence": "help",
-   "by": "system",
-   "setting": "Counted by event date per period",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "B",
-   "feature": "Plan price per pass",
-   "sweatpals": "Can join free, half, full, custom $ or %",
-   "source": "Help 5.2",
-   "evidence": "help",
-   "by": "club",
-   "setting": "CategoryPlanPolicy",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "B",
-   "feature": "Apply to existing experiences",
-   "sweatpals": "Set the plan price on all published experiences at once",
-   "source": "Help 5.2",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Bulk write of CategoryPlanPolicy on publish",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "B",
-   "feature": "Day pass included in plan",
-   "sweatpals": "Day passes show as included for plan holders",
-   "source": "host:dayPass.includedInPlan, /day-pass/[id]",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Coverage of a day-pass category",
-   "phase": "Later",
-   "prototype": false
-  },
-  {
-   "area": "C",
-   "feature": "Published or unlisted",
-   "sweatpals": "Unlisted hides from the page; link still works; holders keep access",
-   "source": "Help 5.2",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.isUnlisted / isPublished",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "C",
-   "feature": "Featured plan",
-   "sweatpals": "Pins the plan first in the list",
-   "source": "Help 5.2",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.isFeatured, order",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "C",
-   "feature": "Capacity",
-   "sweatpals": "Maximum active holders; sold-out state",
-   "source": "Help 5.2; checkout:membershipUnavailable.soldOut*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.capacity",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "C",
-   "feature": "First-time customers only",
-   "sweatpals": "Only net-new members can see and buy",
-   "source": "Help 5.2; checkout:membershipFirstTimeOnly.*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.isFirstTimeOnly (audience rule)",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "C",
-   "feature": "One purchase per member",
-   "sweatpals": "Blocks a second purchase; 'already has membership' state",
-   "source": "Help 5.2; checkout:membershipUnavailable.alreadyHasMembership*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.isOnePerMember",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "C",
-   "feature": "Approval required",
-   "sweatpals": "Host reviews each request before joining",
-   "source": "Help 5.2; membership-join-requests/*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.isApprovalRequired",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "C",
-   "feature": "Embeddable plan list and checkout",
-   "sweatpals": "Plan list and membership checkout widget on the host's own site",
-   "source": "/embed/[alias]/membership-list(-v2), membership-checkout(/widget), buy-membership",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Embedded Ticketing (note 1) adds a plans widget",
-   "phase": "Later",
-   "prototype": false
-  },
-  {
-   "area": "C",
-   "feature": "Audience segments",
-   "sweatpals": "Not seen in SweatPals beyond first-timers and approval",
-   "source": "peakst8 proposal",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "Plan.audience: everyone · first-timers · past attendees (N runs) · profile rule from club form fields (e.g. women only, student, company email) · invite list",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "C",
-   "feature": "Who sees the Plans section",
-   "sweatpals": "Not seen; plans are on the public community page",
-   "source": "peakst8 proposal",
-   "evidence": "proposed",
-   "by": "club",
-   "setting": "Club setting: Plans visible to everyone or club members only; section title and order",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "D",
-   "feature": "Plan card button states",
-   "sweatpals": "Join · Request to join · Request pending, withdraw · Not approved · View",
-   "source": "host:offers.*Label; 4509 chunk",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Derived from UserPlan and PlanJoinRequest",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Plan selector and details",
-   "sweatpals": "Pricing section, inclusions, 'more inclusions'",
-   "source": "checkout:membershipSelector.*, membershipCard.pricingSection, moreInclusions",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Plan description and coverage text",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Choose an offer step",
-   "sweatpals": "Pick the intro offer or continue at base price; skip",
-   "source": "checkout:membershipOffer.chooseOfferTitle, continueAtBasePriceCta",
-   "evidence": "code",
-   "by": "member",
-   "setting": "Join flow step",
-   "phase": "V2",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Commitment disclosure",
-   "sweatpals": "Checkout disclaimer in weeks, months or years",
-   "source": "checkout:membershipCheckout.commitmentDisclosure",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Plan.minCommitmentCycles",
-   "phase": "V2",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Waiver at checkout",
-   "sweatpals": "Sign or initial a waiver; minors' legal names",
-   "source": "Help 5.2; checkout:waiver.*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.waiverId (reuse Waiver)",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Questionnaire / intake form",
-   "sweatpals": "Custom questions at purchase; intake form for sent and shared plans",
-   "source": "Help 5.2; checkout:intakeForm.*; /user-membership/[id]/intake-form",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.customForm (reuse CustomForm)",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Approval info screen",
-   "sweatpals": "Explains request plan, instant updates, good match",
-   "source": "checkout:approvalInfo.requestPlan*",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Request step copy",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Join request lifecycle",
-   "sweatpals": "In review, declined (membership copy), withdraw dialog, withdrawn toast",
-   "source": "checkout:joinRequest.*; WithdrawJoinRequestDialog",
-   "evidence": "code",
-   "by": "member",
-   "setting": "PlanJoinRequest",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Order confirmation",
-   "sweatpals": "Membership confirmed; request pending variants",
-   "source": "checkout:orderConfirmation.membership*, requestPending*",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Confirmation screen",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Express payment",
-   "sweatpals": "Apple Pay / Google Pay style express checkout",
-   "source": "checkout:payment.express",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Razorpay UPI intent / saved methods",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "D",
-   "feature": "Mandate at signup",
-   "sweatpals": "Card saved for renewals (Stripe)",
-   "source": "Help 3.1, 3.2",
-   "evidence": "help",
-   "by": "system",
-   "setting": "Razorpay Subscription: UPI AutoPay, card or eNACH",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "Benefits apply automatically",
-   "sweatpals": "Members still book each experience; plan applies at checkout",
-   "source": "Help 3.1, 3.4; checkout:membershipCard.benefitsApplyAutomatically",
-   "evidence": "both",
-   "by": "system",
-   "setting": "Pricing rule in proceedToPayment",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "Eligible plans lookup",
-   "sweatpals": "Server returns the member's plans valid for an experience and date",
-   "source": "memberships/eligible-for-bookable-service/:id; payments/public/plan-holders-plans",
-   "evidence": "code",
-   "by": "system",
-   "setting": "GET /plans/me/eligible",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "Member price badge",
-   "sweatpals": "Member price or free badge on the ticket banner",
-   "source": "event:ticketBanner.memberPriceBadge(Free)",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Event page",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "See plans banner",
-   "sweatpals": "Prompts non-members; best or uniform % off; per-club copy overrides",
-   "source": "event:membershipBanner.*, checkout:membershipBanner.* (incl. overrides.*)",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Club setting: banner text (optional override)",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "With your plan / not included",
-   "sweatpals": "Pass list marks what the plan covers; pick-plan error",
-   "source": "checkout:plansAndTickets.*",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Choose Pass step",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "Membership discount line",
-   "sweatpals": "Summary shows membership discount and intro or renewal discount",
-   "source": "checkout:summary.membershipDiscount, introOffer, renewalDiscount",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Checkout and ticket summary",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "Discount type on ticket",
-   "sweatpals": "Ticket records membership or guest pass as its discount type",
-   "source": "checkout:ticket.discountType.*",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Registration.appliedUserPlanId; GuestPass.registrationId",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "Credit back on cancel",
-   "sweatpals": "Inferred from usage limits and cancellation flows",
-   "source": "Help 5.2, 3.3",
-   "evidence": "inferred",
-   "by": "club",
-   "setting": "Club setting: hours before start to release the credit; late cancels keep it",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "E",
-   "feature": "Members going",
-   "sweatpals": "Shows which members are going",
-   "source": "event:membersGoing.*",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Reuse athlete list (Event.hideAthleteList)",
-   "phase": "Later",
-   "prototype": false
-  },
-  {
-   "area": "F",
-   "feature": "Plans in Passes",
-   "sweatpals": "Status, renewal date, details, remaining credits, shared with",
-   "source": "Help 3.3, 3.4",
-   "evidence": "help",
-   "by": "member",
-   "setting": "Passes → Plans",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "F",
+   "area": "M",
    "feature": "Plan history",
-   "sweatpals": "Event history per membership",
-   "source": "user/:uid/membership/:id/history",
-   "evidence": "code",
-   "by": "system",
-   "setting": "UserPlanEvent",
+   "story": "Members can see when they joined, renewed, booked and changed anything.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "F",
-   "feature": "Receipts",
-   "sweatpals": "Downloadable receipt files per membership",
-   "source": "payment-files/user-membership/",
-   "evidence": "code",
-   "by": "system",
-   "setting": "Reuse invoice/receipt email (ERP sync)",
+   "area": "M",
+   "feature": "Download receipts",
+   "story": "Members can download a receipt for every payment.",
+   "for": "member",
    "phase": "V1",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "F",
-   "feature": "Wallet pass",
-   "sweatpals": "Add membership to Apple or Google Wallet",
-   "source": "wallet/v1/user-memberships/; common:actions.addToWallet",
-   "evidence": "code",
-   "by": "member",
-   "setting": "Wallet pass for plans",
+   "area": "M",
+   "feature": "Change how I pay",
+   "story": "Members can update their AutoPay or card from the app or a link.",
+   "for": "member",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "M",
+   "feature": "Plan in my phone wallet",
+   "story": "Members can add their plan to Apple or Google Wallet.",
+   "for": "member",
    "phase": "Later",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "F",
-   "feature": "Update payment method",
-   "sweatpals": "App only for members; tokenised update link",
-   "source": "Help 3.2; memberships/public/payment-method-update/:id",
-   "evidence": "both",
-   "by": "member",
-   "setting": "Change UPI/card mandate link",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "F",
-   "feature": "Upgrade or downgrade",
-   "sweatpals": "Member cancels and joins the new plan",
-   "source": "Help 3.3",
-   "evidence": "help",
-   "by": "member",
-   "setting": "Cancel + join; host Switch plan",
+   "area": "C",
+   "feature": "Renews on its own",
+   "story": "Plans renew automatically on the same date each period.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "G",
-   "feature": "Shared plan",
-   "sweatpals": "Holder invites people by email or phone; seats; claim with intake form",
-   "source": "Help 3.4, 5.2a, 5.3; public/shared-membership/:id/claim",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plan.isShareable, shareSeats; PlanShare",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "G",
-   "feature": "Host shares a member's plan",
-   "sweatpals": "Add from members or new customer; resend or revoke",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Members → plan → Share plan",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Members tab with plan status",
-   "sweatpals": "Contact, attendance, plan, status, billing cycle",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Dashboard → Members",
+   "area": "C",
+   "feature": "Time to fix a failed payment",
+   "story": "After a failed payment, the plan isn't lost straight away; the club sets how long the member has to fix it.",
+   "for": "both",
    "phase": "V1",
-   "prototype": true
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "H",
-   "feature": "Pause and resume",
-   "sweatpals": "Stops billing and access; keeps price and credits; extends end date; host only",
-   "source": "Help 5.3; user/:uid/membership/:id/pause",
-   "evidence": "both",
-   "by": "club",
-   "setting": "UserPlan PAUSED",
-   "phase": "V2",
-   "prototype": true
-  },
-  {
-   "area": "H",
-   "feature": "Cancel or refund",
-   "sweatpals": "Refund then keep active, cancel now or pause",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Refund via Razorpay; UserPlan action",
+   "area": "C",
+   "feature": "Cancel from the app",
+   "story": "Members cancel in a couple of taps, or send a request if the club reviews cancellations. The club chooses which.",
+   "for": "both",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "H",
-   "feature": "Change billing date",
-   "sweatpals": "This cycle or all; optional extra charge",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "UserPlan action",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Change credits",
-   "sweatpals": "Set remaining uses in the current cycle",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "UserPlan.creditsOverride",
-   "phase": "V2",
-   "prototype": true
-  },
-  {
-   "area": "H",
-   "feature": "Change price",
-   "sweatpals": "This cycle or all future cycles",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "UserPlan.priceOverride",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Switch plan",
-   "sweatpals": "Move a member to another plan with optional charge",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "UserPlan source SWITCHED",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Send plan",
-   "sweatpals": "Free, free for a period, or full payment; claim link",
-   "source": "Help 5.2a; public/user-membership/:id/claim(/setup-intent)",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Plans → Send plan",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Profile and payment update link",
-   "sweatpals": "QR or link to update profile, merge duplicates, payment method",
-   "source": "Help 5.3; profile-completion/*",
-   "evidence": "both",
-   "by": "club",
-   "setting": "Member link",
-   "phase": "Later",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Set phone number, reissue profile email",
-   "sweatpals": "For migrated or locked-out members",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Member admin actions",
-   "phase": "Later",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Member notes",
-   "sweatpals": "Team-only notes per member",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Member notes",
-   "phase": "Later",
-   "prototype": false
-  },
-  {
-   "area": "H",
-   "feature": "Approve join and cancel requests",
-   "sweatpals": "Review queues",
-   "source": "Help 5.2, 5.2a",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Dashboard → Requests",
+   "area": "C",
+   "feature": "Keep access until the end",
+   "story": "After cancelling, the plan works until the period already paid for ends. Packs work until they expire.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "I",
-   "feature": "Automatic renewal",
-   "sweatpals": "Charges the default method on the billing date",
-   "source": "Help 3.3",
-   "evidence": "help",
-   "by": "system",
-   "setting": "Razorpay subscription.charged",
+   "area": "C",
+   "feature": "Settle up before cancelling",
+   "story": "A member with a failed payment pays it before they can cancel.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "I",
-   "feature": "Retries on failure",
-   "sweatpals": "Up to 3 automatic retries",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "system",
-   "setting": "Razorpay retries; club sets grace days",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "I",
-   "feature": "No cancel while past due",
-   "sweatpals": "A failed renewal can't be cancelled; support stops retries",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "system",
-   "setting": "Rule on PAST_DUE",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "I",
-   "feature": "Fix billing (host)",
-   "sweatpals": "View attempts; charge this cycle, prorated, or custom; card, reader, QR, link",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Members → Fix billing",
-   "phase": "V2",
-   "prototype": true
-  },
-  {
-   "area": "I",
-   "feature": "Fix billing (self-serve)",
-   "sweatpals": "Public page to pay the outstanding renewal",
-   "source": "/fix-billing/[userToMembershipId]; memberships/public/fix-billing/:id(/intent)",
-   "evidence": "code",
-   "by": "member",
-   "setting": "Fix-billing link",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "I",
-   "feature": "Upcoming billings",
-   "sweatpals": "Renewals list, at risk, no card on file, projected revenue",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Dashboard → Upcoming renewals",
-   "phase": "V2",
-   "prototype": false
-  },
-  {
-   "area": "I",
-   "feature": "Refunds",
-   "sweatpals": "Host policy; 3–5 business days",
-   "source": "Help 3.3, 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Club refund policy text; Razorpay refund",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "I",
-   "feature": "Payouts and platform fee",
-   "sweatpals": "Funds to host's Stripe; host can absorb fees",
-   "source": "Help 6.1; user.isHostAbsorbsFee",
-   "evidence": "both",
-   "by": "admin",
-   "setting": "Weekly payout; platform fee % on plans (peakst8 admin)",
-   "phase": "V1",
-   "prototype": false
-  },
-  {
-   "area": "J",
-   "feature": "Cancellation policy",
-   "sweatpals": "Cancel automatically or review each request",
-   "source": "Help 5.2, 5.2a",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.cancellationPolicy",
-   "phase": "V1",
-   "prototype": true
-  },
-  {
-   "area": "J",
+   "area": "C",
    "feature": "Minimum commitment",
-   "sweatpals": "Weeks, months or years before a member can cancel",
-   "source": "Help 5.2a",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.minCommitmentCycles",
+   "story": "Clubs can ask members to stay for a few months before they can cancel; members see this before joining.",
+   "for": "both",
    "phase": "V2",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "J",
-   "feature": "Access after cancel",
-   "sweatpals": "Recurring: to period end. Pack: until credits expire",
-   "source": "Help 3.3",
-   "evidence": "help",
-   "by": "system",
-   "setting": "CANCELS_AT_PERIOD_END",
+   "area": "C",
+   "feature": "Switch plans",
+   "story": "Members change plans by cancelling and joining the new one.",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "J",
-   "feature": "Host cancels at discretion",
-   "sweatpals": "Host can cancel without notice",
-   "source": "Help 3.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Members → Cancel now",
+   "area": "C",
+   "feature": "Rejoin later",
+   "story": "Members can come back to a plan any time (without the intro offer again).",
+   "for": "member",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "J",
-   "feature": "Discontinue a plan",
-   "sweatpals": "Unlist to grandfather current price, or cancel and move members",
-   "source": "Help 5.2",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Plan.isArchived",
+   "area": "H",
+   "feature": "Members and their plans",
+   "story": "Club admins see every plan holder, their status and how much they use the plan.",
+   "for": "club",
    "phase": "V1",
-   "prototype": false
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "J",
-   "feature": "Pause on one-time plans",
-   "sweatpals": "Doesn't extend expiry; host edits the date",
-   "source": "Help 5.3",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Rule on PACK pause",
+   "area": "H",
+   "feature": "Revenue at a glance",
+   "story": "Monthly income from plans, active holders and failed payments on one screen.",
+   "for": "club",
    "phase": "V2",
-   "prototype": false
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "J",
-   "feature": "Rejoin after cancel",
-   "sweatpals": "Sign up for a new plan from the community page",
-   "source": "Help 3.3",
-   "evidence": "help",
-   "by": "member",
-   "setting": "Join again (no intro offer)",
+   "area": "H",
+   "feature": "Requests to review",
+   "story": "One queue for join requests and cancellation requests.",
+   "for": "club",
    "phase": "V1",
-   "prototype": true
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "K",
-   "feature": "Leads pipeline",
-   "sweatpals": "Stages, plan-purchase triggers, email/SMS, tasks, link plans to leads",
-   "source": "Help 5.4 (marketing)",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Not planned",
-   "phase": "No",
-   "prototype": false
+   "area": "H",
+   "feature": "Pause a member's plan",
+   "story": "Club admins pause a plan (an injury, travel); billing stops and the member gets the time back when it resumes.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "K",
-   "feature": "Gift cards as payment",
-   "sweatpals": "Gift card balance used as tender at checkout",
-   "source": "checkout:giftCard.tender*; gift-cards/public/*",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Not planned",
-   "phase": "No",
-   "prototype": false
+   "area": "H",
+   "feature": "Cancel a member's plan",
+   "story": "Club admins can end a plan at the end of the period or straight away.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": true,
+   "sweatpals": true
   },
   {
-   "area": "K",
-   "feature": "Point of sale",
-   "sweatpals": "Memberships pinned for POS sales at the desk",
-   "source": "follower.pinnedForPos.memberships; Help 6.5",
-   "evidence": "code",
-   "by": "club",
-   "setting": "Host sells a plan in person (Send plan → pay by link or QR)",
+   "area": "H",
+   "feature": "Refund a member",
+   "story": "Club admins can refund a payment and choose whether the plan continues.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "H",
+   "feature": "Give extra runs",
+   "story": "Club admins can add bookings to a member's plan for the month.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": true,
+   "sweatpals": true
+  },
+  {
+   "area": "H",
+   "feature": "Change a member's price or renewal date",
+   "story": "For one period or from now on.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "H",
+   "feature": "Give someone a plan",
+   "story": "Club admins send a plan to someone, free, free for a while, or paid, and they claim it from a link.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "H",
+   "feature": "Upcoming renewals",
+   "story": "Club admins see who renews soon and whose payment looks at risk, so they can follow up.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "H",
+   "feature": "Notes on a member",
+   "story": "Team-only notes on a member.",
+   "for": "club",
    "phase": "Later",
-   "prototype": false
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "K",
-   "feature": "Migration",
-   "sweatpals": "Stripe customer copy or re-entry, recreate subscriptions, profile completion",
-   "source": "Help 5.4 (migration); profile-completion/*",
-   "evidence": "both",
-   "by": "admin",
-   "setting": "Not planned",
-   "phase": "No",
-   "prototype": false
+   "area": "H",
+   "feature": "Who on the team can do what",
+   "story": "Club owners decide who can change prices and refund; staff can check people in and approve requests.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "K",
-   "feature": "Plan analytics",
-   "sweatpals": "Integrated analytics and member management",
-   "source": "Help 5.1",
-   "evidence": "help",
-   "by": "club",
-   "setting": "MRR, holders, churn, failed payments",
+   "area": "H",
+   "feature": "Plan money in the weekly payout",
+   "story": "Plan income arrives with the club's weekly payout, like ticket income.",
+   "for": "club",
+   "phase": "V1",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "H",
+   "feature": "Sell a plan at the desk",
+   "story": "Club staff can sign someone up in person and take payment by QR or link.",
+   "for": "club",
+   "phase": "Later",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "G",
+   "feature": "Share a plan with family",
+   "story": "A member can share their plan with a few people, who claim it from an invite.",
+   "for": "member",
    "phase": "V2",
-   "prototype": true
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "K",
-   "feature": "Enable memberships per club",
-   "sweatpals": "Not seen (Sweatpals tiers by plan)",
-   "source": "peakst8 proposal",
-   "evidence": "proposed",
-   "by": "admin",
-   "setting": "peakst8 admin switches Memberships on for a club and sets its fee",
-   "phase": "V1",
-   "prototype": false
+   "area": "G",
+   "feature": "Club adds people to a plan",
+   "story": "Club admins can add family members to someone's shared plan.",
+   "for": "club",
+   "phase": "V2",
+   "prototype": false,
+   "sweatpals": true
   },
   {
-   "area": "K",
-   "feature": "Team permissions",
-   "sweatpals": "Team management roles",
-   "source": "Help 8.5",
-   "evidence": "help",
-   "by": "club",
-   "setting": "Club admins manage plans; co-hosts view holders and redeem passes",
-   "phase": "V1",
-   "prototype": false
+   "area": "G",
+   "feature": "Gift cards",
+   "story": "Members pay with a club gift card balance.",
+   "for": "member",
+   "phase": "No",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "G",
+   "feature": "Leads pipeline",
+   "story": "Track prospects through stages with automatic messages.",
+   "for": "club",
+   "phase": "No",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "G",
+   "feature": "Bring members from another platform",
+   "story": "Move existing memberships over from another app.",
+   "for": "club",
+   "phase": "No",
+   "prototype": false,
+   "sweatpals": true
+  },
+  {
+   "area": "G",
+   "feature": "1:1 appointments",
+   "story": "Plans that cover personal sessions with a coach.",
+   "for": "club",
+   "phase": "No",
+   "prototype": false,
+   "sweatpals": true
   }
  ]
 }

@@ -7,6 +7,7 @@ Rules that keep notes useful:
 - Write for someone outside the team. No internal shorthand without a one-line explanation.
 - Every number says where it came from. If it's a guess, label it **Assumption** and say how we'll check it.
 - Keep it to what a reader needs to agree on the problem, the people, the bet and the scope. Detail goes in the appendix or the code folder.
+- Write features from the user's side: what a member, club admin or partner can do or will notice, in plain words. No field names, settings values, timings or system internals; those go in `code/ARCHITECTURE.md`.
 - Update `Status`, the decision log and `notes.json` whenever something changes.
 
 ---

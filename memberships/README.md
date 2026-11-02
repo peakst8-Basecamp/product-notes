@@ -2,7 +2,7 @@
 
 **A peakst8 product feature.** Clubs sell monthly memberships and prepaid run packs on peakst8, with perks and brand offers their members can see. Members pay once, keep booking each session as they do today, and the plan applies at checkout. Clubs get predictable monthly income, and their regulars get a reason to stay.
 
-[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) · [Code and architecture](code/) · [Feature checklist](coverage/README.md) · Status: Draft · Owner: _to assign_ · updated 2 Nov 2026
+[Product note](https://peakst8-basecamp.github.io/product-notes/memberships/) · [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) · [Code and architecture](code/) · [Feature list](coverage/README.md) · Status: Draft · Owner: _to assign_ · updated 2 Nov 2026
 
 ## 1. The problem
 
@@ -14,7 +14,7 @@ Community fitness clubs on peakst8 run the same sessions every week, but they se
 | **Regular members** | A full checkout for every session, at the same price as someone coming once. Nothing shows what being a regular is worth. | Friction every week, no reward for loyalty, an easy reason to drift to another club. |
 | **peakst8** | Revenue is a platform fee on each ticket (`Club.platformFeePercentage`, 3% by default). In October 2026 the platform had 244 users and ₹3,85,203 GMV across organisers (source: "Organiser and Event Summary – October" sheet). | GMV moves with each week's bookings. When clubs collect memberships off-platform, peakst8 loses both the revenue and the member relationship. |
 
-SweatPals, a US community-fitness platform, built exactly this and treats it as core: "Plans create predictable revenue and simplify member access across all experiences" (SweatPals help centre 5.1). We reverse-engineered their feature in full; see the [feature checklist](coverage/README.md).
+SweatPals, a US community-fitness platform, built exactly this and treats it as core: "Plans create predictable revenue and simplify member access across all experiences" (SweatPals help centre 5.1). We reverse-engineered their feature in full; see the [feature list](coverage/README.md).
 
 ## 2. Who it's for
 
@@ -47,7 +47,7 @@ SweatPals, a US community-fitness platform, built exactly this and treats it as 
 5. **Renewals are never a surprise.** A reminder goes out before every charge, a receipt after it, and a fix-payment link if it fails. Cancelling is in the member's hands (or the club reviews it, if the club chooses).
 6. **Members see what they get.** Savings so far, early booking, guest passes for friends, and the club's brand perks on a listing page anyone can browse. Club admins can switch on discount codes for campaigns, students or partners.
 
-**Club admins configure all of it.** peakst8 only switches memberships on for a club and sets the platform fee. Settings sit at three levels: club (reminders, refund policy, perks page, team access), plan (pricing, coverage, audience, perks, discounts, cancellation) and pass (plan price). Full list in the [feature checklist](coverage/README.md#the-rule-club-admins-configure-it-for-their-audience).
+**Club admins configure all of it.** peakst8 only switches memberships on for a club and sets the platform fee. Settings sit at three levels: club (reminders, refund policy, perks page, team access), plan (pricing, coverage, audience, perks, discounts, cancellation) and pass (plan price). Full list in the [feature list](coverage/README.md#what-club-admins-control).
 
 ## 5. Goals and non-goals
 
@@ -98,12 +98,12 @@ Targets are **assumptions** to confirm with the pilot clubs before launch; basel
 
 | Phase | What ships | Gate to move on |
 | --- | --- | --- |
-| **Prerequisite: renewal reminders** | Pre-debit notice before every charge (RBI e-mandate rule), receipt after it, payment-failed notice with fix link, mandate-at-risk and intro-ending notices, club reminder settings, delivery log. Reminders are a separate feature type and ship first. | All 12 prerequisite reminders pass end to end on staging with real Razorpay test mandates |
+| **Before launch: renewal reminders** | Members hear before every charge, get a receipt after it, and can fix a failed payment from the message. They're warned before a payment problem and before an intro price ends. Clubs choose how members are reminded and can see what each member was told. | All 9 before-launch reminder features work end to end on staging with Razorpay test mandates |
 | **V1: first pilot clubs** | Memberships and packs; plan price per pass; join, approval, pay; automatic pricing at checkout; cancel; host plan list, members, requests, refunds. Perks: savings, early access, guest passes, brand perks and the club perks page, members-only sessions. Discount codes switched on per plan. | Two pilot clubs live with at least 20 paying holders each; no unexpected-charge complaints |
 | **V2** | Several prices per plan, intro offers, joining fees, minimum commitment, shared plans, pause and switch, fix billing from the dashboard, upcoming renewals, waitlist priority, referral reward, member badge, audience discounts | V1 metrics on track at 60 days |
 | **Later / not planned** | Network passes, appointments, gift cards, leads pipeline, migration from other platforms | Separate product notes |
 
-The full feature-by-feature list, with who configures each one, is in the [feature checklist](coverage/README.md).
+The full list, written as what members and club admins can do, is in the [feature list](coverage/README.md).
 
 ## 9. Risks
 
@@ -136,12 +136,12 @@ The full feature-by-feature list, with who configures each one, is in the [featu
 | --- | --- |
 | Working prototype (member and host screens in the peakst8 app design) | [prototype/](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) |
 | Code for the engineer to pick up, and the architecture | [code/](code/) · [code/ARCHITECTURE.md](code/ARCHITECTURE.md) |
-| Feature checklist (every reverse-engineered feature, phase, who configures it) | [coverage/](coverage/README.md) |
+| Feature list (what members and club admins can do, by phase) | [coverage/](coverage/README.md) |
 | Database schema draft (validated against the backend schema) | [code/backend/prisma/memberships.prisma](code/backend/prisma/memberships.prisma) |
 
 ## Appendix
 
-**How we know what SweatPals built.** Nine SweatPals help-centre articles (read 1 Nov 2026) and static analysis of their public web bundles with REA on 2 Nov 2026: 56 files read as inert text, never executed, recovering the membership routes, components and screen states. Details and limits are in [code/ARCHITECTURE.md § Evidence](code/ARCHITECTURE.md#evidence) and the [feature checklist](coverage/README.md#where-the-evidence-came-from).
+**How we know what SweatPals built.** Nine SweatPals help-centre articles (read 1 Nov 2026) and static analysis of their public web bundles with REA on 2 Nov 2026: 56 files read as inert text, never executed, recovering the membership routes, components and screen states. Details and limits are in [code/ARCHITECTURE.md § Evidence](code/ARCHITECTURE.md#evidence).
 
 **In this folder**
 
@@ -150,5 +150,5 @@ The full feature-by-feature list, with who configures each one, is in the [featu
 | `README.md` | This product note |
 | `index.html` | The note as a page on the site |
 | `prototype/` | Working prototype (one self-contained page) |
-| `coverage/` | Feature checklist: `features.json` (source), `build.py`, generated `README.md` and `index.html` |
+| `coverage/` | Feature list: `features.json` (source), `build.py`, generated `README.md` and `index.html` |
 | `code/` | Code package and `ARCHITECTURE.md` for engineering |

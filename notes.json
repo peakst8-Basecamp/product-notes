@@ -54,7 +54,7 @@
       "links": {
         "Product note": "memberships/",
         "Prototype": "memberships/prototype/",
-        "Coverage": "memberships/coverage/",
+        "Feature list": "memberships/coverage/",
         "Code": "memberships/code/",
         "Schema": "https://github.com/peakst8-Basecamp/product-notes/blob/main/memberships/code/backend/prisma/memberships.prisma"
       },

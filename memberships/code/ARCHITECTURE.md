@@ -145,6 +145,6 @@ membership-join-requests/my · /:id/withdraw         payments/public/plan-holder
 user/:uid/membership/:id/{history,pause,renew,deactivate}
 ```
 
-**REA static analysis (2 Nov 2026).** 56 public Next.js bundles (membership, checkout, claim, guest-pass, fix-billing pages) read as inert text and never executed. The run over the 5 membership chunks recovered 1,425 webpack modules (Evidence `ev_da05d85e…`); 51 files were outside the selected sources, and dynamic paths stay unresolved. Component names and translation keys gave the screen states the prototype rebuilds; the [feature checklist](../coverage/README.md) maps each one.
+**REA static analysis (2 Nov 2026).** 56 public Next.js bundles (membership, checkout, claim, guest-pass, fix-billing pages) read as inert text and never executed. The run over the 5 membership chunks recovered 1,425 webpack modules (Evidence `ev_da05d85e…`); 51 files were outside the selected sources, and dynamic paths stay unresolved. Component names and translation keys gave the screen states the prototype rebuilds; the [feature list](../coverage/README.md) lists them from the user's side.
 
 **peakst8 backend (`main` at `b7b7f9c`).** No plan or subscription models before this. Payments use Razorpay Orders (`PaymentTransaction`, `RazorpayPayment`). The ticket unit is `Event` → `Category` → `Registration` → `Ticket`. Scheduled jobs use BullMQ `upsertJobScheduler` (`cron.infra.ts`); email goes through the `OutboundEmail` outbox; push through `pushNotificationService`; `NotificationDelivery` only knows `ABANDONED_CART`.
