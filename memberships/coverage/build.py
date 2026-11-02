@@ -47,7 +47,8 @@ CONFIG = [
         ("Tax", "GST % and whether plan prices include it (from club registration)"),
         ("Fees", "Platform fee paid by the member or absorbed by the club"),
         ("See plans banner", "Optional custom line on event pages, e.g. 'Members run free'"),
-        ("Partner perks", "The club's partner offers (partner, offer, code, how to redeem), then which plans unlock each one"),
+        ("Brand perks", "The club's brand partnerships for its perks page: partner, category, offer, code, how to redeem, shown to everyone or members only, and which plans unlock each"),
+        ("Discount codes", "Codes with % or ₹ off, the plans they apply to, first payment or every charge, max uses and expiry; switch any code off"),
         ("Team", "Which club admins can create plans, change prices, refund and pause"),
     ]),
     ("Plan settings", "Dashboard → Plans → Create or edit. One set per plan.", [
@@ -58,6 +59,7 @@ CONFIG = [
         ("Access rules", "Approval required, capacity, one per member, unlisted, featured"),
         ("Perks", "Early access hours, guest passes per period and who can receive them, which partner perks it unlocks, members-only sessions, WhatsApp group"),
         ("Sharing", "Shareable seats"),
+        ("Discounts", "Whether the plan takes discount codes (off by default); codes are created under Dashboard → Discounts"),
         ("Forms", "Waiver and questionnaire at purchase"),
         ("Exit", "Cancellation policy (member cancels, or club reviews) and minimum commitment"),
     ]),

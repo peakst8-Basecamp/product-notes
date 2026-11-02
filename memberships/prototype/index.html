@@ -116,6 +116,11 @@ h2.d{font-size:20px;line-height:1.15}
 .saved{display:grid;gap:2px;padding:12px;border-radius:12px;background:linear-gradient(108deg,rgba(216,198,170,.16),rgba(201,126,5,.1));border:1px solid rgba(216,198,170,.3)}
 .saved b{font-family:var(--display);font-size:20px;color:var(--gold-a)}
 .saved span{font-size:12.5px;color:var(--muted)}
+.bperk{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:14px;border-radius:14px;border:1px dashed var(--line-2);background:rgba(255,255,255,.02);color:var(--muted)}
+.bperk b{color:var(--fg)}.bperk.open{border-style:solid;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.05);color:var(--fg)}
+.blogo{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#fff;font-size:16px}
+.err{font-size:12.5px;color:#fca5a5}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .link{background:none;border:0;padding:0;color:#7dd3fc;font-weight:500;text-decoration:underline;text-underline-offset:3px}
 .memberprice{font-size:12px;font-weight:600;color:var(--gold-ink);background:linear-gradient(108deg,var(--gold-a),var(--gold-b));border-radius:6px;padding:2px 6px}
 
@@ -149,6 +154,7 @@ h2.d{font-size:20px;line-height:1.15}
 .steps span{flex:none;font-size:12px;padding:5px 10px;border-radius:999px;background:var(--step);color:var(--muted)}
 .steps span.on{color:var(--gold-ink);background:linear-gradient(108deg,#d8c6aa 0%,#f1d593 30%,#e6b85c 60%,#c97e05 100%);font-weight:600}
 .steps span.done{color:var(--fg)}
+.steps button.done{flex:none;font-size:12px;padding:5px 10px;border-radius:999px;border:0;background:var(--step);color:var(--fg);text-decoration:underline;text-underline-offset:3px}
 .sum{display:grid;gap:8px;font-variant-numeric:tabular-nums}
 .sum .row{font-size:14px;color:var(--muted)}
 .sum .row b{color:var(--fg);font-weight:500}
@@ -253,19 +259,19 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 function seed(){
   const now=START.getTime();
   return {
-    now, failNextRenewal:false, view:'club', sheet:null, toast:null, lastPricing:null, seq:1,
+    now, failNextRenewal:false, view:'club', sheet:null, toast:null, lastPricing:null, seq:100, // ids from 100 so they never clash with seeded p1, d2, k3
     user:{id:'u1',name:'Aarav Menon',phone:'+91 98450 21734'},
     club:{name:'Find Your Fit',city:'Bengaluru',members:412},
     plans:[
       {id:'p1',kind:'MEMBERSHIP',name:'FYF Unlimited',description:'Every Find Your Fit training run, as often as you like, and half price on race days.',coverage:['TRAINING','SINGLE_DAY'],limitPeriod:'UNLIMITED',usageLimit:null,
        prices:[{id:'pp1',label:'Monthly',amount:1499,billing:'RECURRING',interval:'MONTHLY',joiningFee:0},{id:'pp2',label:'Quarterly',amount:3999,billing:'RECURRING',interval:'QUARTERLY',joiningFee:0}],
-       intro:{priceId:'pp1',amount:199,days:14},approval:false,cancellation:'AUTO',minCommitment:0,featured:true,published:true,perks:{earlyAccessHours:48,guestPasses:2,perkIds:['k1','k2']}},
+       intro:{priceId:'pp1',amount:199,days:14},approval:false,cancellation:'AUTO',minCommitment:0,featured:true,published:true,perks:{earlyAccessHours:48,guestPasses:2,perkIds:['k1','k2','k4']},allowDiscounts:true},
       {id:'p2',kind:'MEMBERSHIP',name:'8 Runs a Month',description:'Two runs a week, any training session.',coverage:['TRAINING'],limitPeriod:'PER_MONTH',usageLimit:8,
-       prices:[{id:'pp3',label:'Monthly',amount:999,billing:'RECURRING',interval:'MONTHLY',joiningFee:0}],intro:null,approval:false,cancellation:'REVIEW',minCommitment:3,featured:false,published:true,perks:{earlyAccessHours:24,guestPasses:0,perkIds:['k1']}},
+       prices:[{id:'pp3',label:'Monthly',amount:999,billing:'RECURRING',interval:'MONTHLY',joiningFee:0}],intro:null,approval:false,cancellation:'REVIEW',minCommitment:3,featured:false,published:true,perks:{earlyAccessHours:24,guestPasses:0,perkIds:['k1','k4']},allowDiscounts:true},
       {id:'p3',kind:'PACK',name:'10-Run Pack',description:'Ten training runs, valid 90 days from purchase.',coverage:['TRAINING'],limitPeriod:'TOTAL',usageLimit:10,
-       prices:[{id:'pp4',label:'One-time',amount:2199,billing:'ONE_TIME',validityDays:90,joiningFee:0}],intro:null,approval:false,cancellation:'AUTO',minCommitment:0,featured:false,published:true,perks:{earlyAccessHours:0,guestPasses:0,perkIds:[]}},
+       prices:[{id:'pp4',label:'One-time',amount:2199,billing:'ONE_TIME',validityDays:90,joiningFee:0}],intro:null,approval:false,cancellation:'AUTO',minCommitment:0,featured:false,published:true,perks:{earlyAccessHours:0,guestPasses:0,perkIds:[]},allowDiscounts:false},
       {id:'p4',kind:'MEMBERSHIP',name:'Pacer Squad',description:'Coached sub-50 10K group. The coach approves every request.',coverage:['TRAINING','SINGLE_DAY'],limitPeriod:'UNLIMITED',usageLimit:null,
-       prices:[{id:'pp5',label:'Monthly',amount:2499,billing:'RECURRING',interval:'MONTHLY',joiningFee:500}],intro:null,approval:true,cancellation:'AUTO',minCommitment:0,featured:false,published:true,perks:{earlyAccessHours:48,guestPasses:1,perkIds:['k1','k2','k3']}},
+       prices:[{id:'pp5',label:'Monthly',amount:2499,billing:'RECURRING',interval:'MONTHLY',joiningFee:500}],intro:null,approval:true,cancellation:'AUTO',minCommitment:0,featured:false,published:true,perks:{earlyAccessHours:48,guestPasses:1,perkIds:['k1','k2','k3','k4','k5']},allowDiscounts:false},
     ],
     events:[
       {id:'e1',type:'TRAINING',name:'Saturday Cubbon Park 5K',short:'SAT\n5K',date:now+5*DAY,place:'Cubbon Park, Gate 2',
@@ -278,9 +284,16 @@ function seed(){
                    {id:'c5',name:'Fun run 3K',info:'Untimed, families welcome',base:399,policies:{}}]},
     ],
     perks:[
-      {id:'k1',partner:'Decathlon Indiranagar',offer:'15% off running shoes and watches',redeem:'Show your plan at billing',code:'FYF15'},
-      {id:'k2',partner:'Third Wave Coffee, Church Street',offer:'Free cold brew after Saturday runs',redeem:'Show your plan card at the counter',code:null},
-      {id:'k3',partner:'Sportsmed Physio',offer:'First running assessment free',redeem:'Book with the code',code:'PACERFREE'},
+      {id:'k1',partner:'Decathlon Indiranagar',cat:'GEAR',color:'#0082c3',offer:'15% off running shoes and watches',redeem:'Show your plan at billing',code:'FYF15',vis:'TEASER',reveals:41},
+      {id:'k2',partner:'Third Wave Coffee, Church Street',cat:'FOOD',color:'#c2410c',offer:'Free cold brew after Saturday runs',redeem:'Show your plan card at the counter',code:null,vis:'TEASER',reveals:0},
+      {id:'k3',partner:'Sportsmed Physio',cat:'RECOVERY',color:'#0f766e',offer:'First running assessment free',redeem:'Book with the code',code:'PACERFREE',vis:'TEASER',reveals:9},
+      {id:'k4',partner:'Fast&Up',cat:'NUTRITION',color:'#ea580c',offer:'Free electrolyte tube with any order',redeem:'Use the code at checkout on their site',code:'FYFHYDRATE',vis:'TEASER',reveals:27},
+      {id:'k5',partner:'Ultrahuman',cat:'WEARABLES',color:'#334155',offer:'₹2,000 off Ring AIR',redeem:'Use the code at checkout',code:'PACERRING',vis:'MEMBERS_ONLY',reveals:6},
+    ],
+    discounts:[
+      {id:'d1',code:'MONSOON20',kind:'PERCENT',value:20,planIds:['p1','p2'],applies:'FIRST',maxUses:50,used:12,enabled:true},
+      {id:'d2',code:'STUDENT300',kind:'FLAT',value:300,planIds:['p1'],applies:'EVERY',maxUses:null,used:4,enabled:true},
+      {id:'d3',code:'DIWALI500',kind:'FLAT',value:500,planIds:['p1','p4'],applies:'FIRST',maxUses:100,used:100,enabled:false},
     ],
     userPlans:[], joinRequests:[], bookings:[], usages:[], guestPasses:[],
     members:[ // other holders, for the host view
@@ -315,6 +328,21 @@ function earlyAccess(event){ // returns {open, viaPlan, opensAt}
   const via=livePlans().map(u=>planById(u.planId)).filter(p=>p.perks.earlyAccessHours&&p.coverage.includes(event.type)&&S.now>=event.publicOpensAt-p.perks.earlyAccessHours*3600000).sort((a,b)=>b.perks.earlyAccessHours-a.perks.earlyAccessHours)[0];
   return via?{open:true,viaPlan:via,opensAt:event.publicOpensAt}:{open:false,opensAt:event.publicOpensAt};
 }
+const PERK_CATS={GEAR:'Gear',NUTRITION:'Nutrition',FOOD:'Food & drink',RECOVERY:'Recovery',WEARABLES:'Wearables',OTHER:'Other'};
+/* Discounts: club admins turn codes on per plan (Host → Discounts) */
+function discountAmount(dc,amount){return dc.kind==='PERCENT'?Math.round(amount*dc.value/100):Math.min(amount,dc.value)}
+function checkCode(code,plan,intro){
+  const c=String(code||'').trim().toUpperCase();if(!c)return {err:'Enter a code.'};
+  if(!plan.allowDiscounts)return {err:`${S.club.name} doesn't take discount codes on this plan.`};
+  const dc=S.discounts.find(x=>x.code===c);
+  if(!dc)return {err:`${c} isn't a valid code for ${S.club.name}.`};
+  if(!dc.enabled)return {err:`${c} has been switched off by the club.`};
+  if(!dc.planIds.includes(plan.id))return {err:`${c} doesn't apply to ${plan.name}.`};
+  if(dc.maxUses!=null&&dc.used>=dc.maxUses)return {err:`${c} has been fully used.`};
+  if(intro)return {err:`${c} can't be combined with the intro offer. Choose "Continue at base price" to use it.`};
+  return {dc};
+}
+function renewalAmount(up){const price=priceById(up.priceId);let a=up.priceOverride??price.amount;const dc=up.discountId&&S.discounts.find(x=>x.id===up.discountId);if(dc)a-=discountAmount(dc,a);return a}
 function savings(up){const all=S.usages.filter(u=>u.userPlanId===up.id&&u.status!=='RELEASED');return {period:all.filter(u=>u.eventDate>=up.periodStart&&u.eventDate<up.periodEnd).reduce((s,u)=>s+u.saved,0),total:all.reduce((s,u)=>s+u.saved,0),runs:all.length}}
 function guestPassesLeft(up){const plan=planById(up.planId);const used=S.guestPasses.filter(g=>g.userPlanId===up.id&&g.periodStart===up.periodStart).length;return {left:Math.max(0,plan.perks.guestPasses-used),limit:plan.perks.guestPasses}}
 function priceFor(policy,base){
@@ -364,7 +392,7 @@ function evaluate(event,cat){
 }
 
 /* ───────────────────────── Actions ───────────────────────── */
-function startPlan(planId,priceId,{intro=false,source='PURCHASE'}={}){
+function startPlan(planId,priceId,{intro=false,source='PURCHASE',discount=null}={}){
   const plan=planById(planId),price=priceById(priceId);
   const startedAt=S.now;
   let periodEnd;
@@ -372,11 +400,12 @@ function startPlan(planId,priceId,{intro=false,source='PURCHASE'}={}){
   else if(intro)periodEnd=S.now+plan.intro.days*DAY;
   else periodEnd=addMonths(S.now,INTERVAL[price.interval].months);
   const up={id:'up'+(S.seq++),planId,priceId,status:'ACTIVE',source,startedAt,periodStart:S.now,periodEnd,introActive:intro,charges:[],history:[]};
-  const first=intro?plan.intro.amount:price.amount;
+  let first=intro?plan.intro.amount:price.amount;
+  if(discount){first-=discountAmount(discount,first);discount.used++;if(discount.applies==='EVERY')up.discountId=discount.id;up.history.push({t:S.now,m:'Used code '+discount.code})}
   up.charges.push({type:'FIRST_PAYMENT',amount:first+(price.joiningFee||0),at:S.now});
   up.history.push({t:S.now,m:'Joined'+(intro?' on intro offer':'')});
   S.userPlans.push(up);
-  log(`${S.user.name.split(' ')[0]} joined ${plan.name} (${price.label}${intro?', intro '+fmt(plan.intro.amount):''}). Charged ${fmt(first+(price.joiningFee||0))}.`);
+  log(`${S.user.name.split(' ')[0]} joined ${plan.name} (${price.label}${intro?', intro '+fmt(plan.intro.amount):''}${discount?', code '+discount.code:''}). Charged ${fmt(first+(price.joiningFee||0))}.`);
   return up;
 }
 function requestJoin(planId,priceId){
@@ -411,12 +440,12 @@ function advanceToRenewal(){
     if(up.status==='CANCELS_AT_PERIOD_END'){up.status='ENDED';up.history.push({t:S.now,m:'Ended'});log(`${plan.name} ended as scheduled.`);continue}
     if(price.billing==='ONE_TIME'){up.status='ENDED';up.history.push({t:S.now,m:'Expired'});log(`${plan.name} expired.`);continue}
     if(up.status==='PAST_DUE')continue;
-    log(`Pre-debit notice sent 24 h before: ${fmt(up.priceOverride??price.amount)} for ${plan.name}.`);
+    log(`Pre-debit notice sent 24 h before: ${fmt(renewalAmount(up))} for ${plan.name}.`);
     if(S.failNextRenewal){
       up.status='PAST_DUE';up.history.push({t:S.now,m:'Renewal failed'});S.failNextRenewal=false;
       log(`Renewal of ${plan.name} failed (UPI mandate declined). Razorpay will retry; fix-billing link sent.`);
     } else {
-      const amt=up.priceOverride??price.amount;
+      const amt=renewalAmount(up);
       up.periodStart=up.periodEnd;up.periodEnd=addMonths(up.periodEnd,INTERVAL[price.interval].months);up.introActive=false;up.creditsOverride=undefined;
       up.charges.push({type:'RENEWAL',amount:amt,at:S.now});up.history.push({t:S.now,m:'Renewed '+fmt(amt)});
       log(`${plan.name} renewed: charged ${fmt(amt)}. New period ${d(up.periodStart)} – ${d(up.periodEnd)}.`);
@@ -426,7 +455,7 @@ function advanceToRenewal(){
 }
 function fixBilling(up){
   const plan=planById(up.planId),price=priceById(up.priceId);
-  const amt=up.priceOverride??price.amount;
+  const amt=renewalAmount(up);
   up.status='ACTIVE';up.periodStart=up.periodEnd;up.periodEnd=addMonths(up.periodEnd,INTERVAL[price.interval].months);up.introActive=false;
   up.charges.push({type:'FIX_BILLING',amount:amt,at:S.now});up.history.push({t:S.now,m:'Fixed billing '+fmt(amt)});
   log(`Billing fixed for ${plan.name}: ${fmt(amt)} paid through the fix-billing link.`);
@@ -477,11 +506,12 @@ V.club=()=>{
   </div>`;
 };
 function perksSection(){
-  const un=unlockedPerkIds();const list=S.perks.filter(k=>plansUnlocking(k.id).length);
+  const un=unlockedPerkIds();const list=S.perks.filter(k=>plansUnlocking(k.id).length&&(k.vis!=='MEMBERS_ONLY'||un.has(k.id)));
   if(!list.length)return '';
   return `<div class="stack" id="perks"><div class="row"><h2 class="d">Member perks</h2><span class="dim" style="font-size:12.5px">${un.size?un.size+' unlocked':'For plan holders'}</span></div>
-  ${list.map(k=>{const open=un.has(k.id);const via=plansUnlocking(k.id);return `<div class="perkcard ${open?'open':''}"><div class="row" style="align-items:flex-start"><div style="display:grid;gap:3px;min-width:0"><b>${esc(k.partner)}</b><span>${esc(k.offer)}</span></div>${open?'<span class="pill ok">Unlocked</span>':'<span class="pill">🔒 Locked</span>'}</div>
-    ${open?`<div class="note">${esc(k.redeem)}${k.code?` · Code <b class="code">${esc(k.code)}</b>`:''}</div>`:`<div class="note">Join ${via.map(p=>esc(p.name)).join(' or ')} to unlock</div>`}</div>`}).join('')}</div>`;
+  ${list.slice(0,2).map(k=>{const open=un.has(k.id);const via=plansUnlocking(k.id);return `<div class="perkcard ${open?'open':''}"><div class="row" style="align-items:flex-start"><div style="display:grid;gap:3px;min-width:0"><b>${esc(k.partner)}</b><span>${esc(k.offer)}</span></div>${open?'<span class="pill ok">Unlocked</span>':'<span class="pill">🔒 Locked</span>'}</div>
+    ${open?`<div class="note">${esc(k.redeem)}${k.code?` · Code <b class="code">${esc(k.code)}</b>`:''}</div>`:`<div class="note">Join ${via.map(p=>esc(p.name)).join(' or ')} to unlock</div>`}</div>`}).join('')}
+  <button class="btn ghost sm" style="justify-self:start" data-act="go:perkspage">See all ${S.perks.filter(k=>plansUnlocking(k.id).length).length} brand perks</button></div>`;
 }
 function eventRow(e){
   const best=S.events&&e.categories.map(c=>evaluate(e,c).best).filter(Boolean).sort((a,b)=>a.price-b.price)[0];
@@ -526,7 +556,7 @@ V.passes=()=>{
 };
 function planCard(up){
   const plan=planById(up.planId),price=priceById(up.priceId);const a=allowance(up,S.now);
-  const renewTxt=price.billing==='ONE_TIME'?`Expires ${d(up.periodEnd)}`:up.status==='CANCELS_AT_PERIOD_END'?`Access until ${d(up.periodEnd)}`:up.status==='PAUSED'?'Billing paused by the club':up.status==='PAST_DUE'?'Renewal payment failed':`Renews ${d(up.periodEnd)} · ${fmt(up.introActive?price.amount:(up.priceOverride??price.amount))}`;
+  const renewTxt=price.billing==='ONE_TIME'?`Expires ${d(up.periodEnd)}`:up.status==='CANCELS_AT_PERIOD_END'?`Access until ${d(up.periodEnd)}`:up.status==='PAUSED'?'Billing paused by the club':up.status==='PAST_DUE'?'Renewal payment failed':`Renews ${d(up.periodEnd)} · ${fmt(up.introActive?price.amount:(renewalAmount(up)))}`;
   return `<div class="card stack" style="gap:14px;border-color:rgba(27,255,255,.18);background:linear-gradient(160deg,rgba(46,49,146,.22),rgba(255,255,255,.02))">
     <div class="row" style="align-items:flex-start"><div style="display:grid;gap:4px"><span class="eyebrow">${esc(S.club.name)}</span><b style="font-size:18px">${esc(plan.name)}</b><span class="muted" style="font-size:13px">${renewTxt}</span></div>${statusPill(up.status)}</div>
     ${a.limit?`<div class="stack" style="gap:6px"><div class="row" style="font-size:13px"><span class="muted">${plan.kind==='PACK'?'Credits':'This period'}</span><span class="num">${Math.max(0,a.left)} of ${a.limit} left</span></div><div class="meter"><i style="width:${Math.max(0,a.left)/a.limit*100}%"></i></div></div>`:`<div class="row" style="font-size:13px"><span class="muted">Bookings</span><span>Unlimited</span></div>`}
@@ -534,16 +564,38 @@ function planCard(up){
     ${perkRows(up)}
     ${up.introActive?`<div class="note">Intro offer until ${d(up.periodEnd)}, then ${fmt(price.amount)}/${INTERVAL[price.interval].label}.</div>`:''}
     <div class="note">Benefits apply automatically when you book a covered run.</div>
-    ${up.status==='PAST_DUE'?`<button class="btn block" data-act="fix:${up.id}">Fix billing · ${fmt(up.priceOverride??price.amount)}</button>`:`<button class="btn ghost sm" style="justify-self:start" data-act="manage:${up.id}">Manage</button>`}
+    ${up.status==='PAST_DUE'?`<button class="btn block" data-act="fix:${up.id}">Fix billing · ${fmt(renewalAmount(up))}</button>`:`<button class="btn ghost sm" style="justify-self:start" data-act="manage:${up.id}">Manage</button>`}
   </div>`;
 }
 function perkRows(up){
   const plan=planById(up.planId);const k=plan.perks;if(!k)return '';const rows=[];
   if(k.guestPasses){const g=guestPassesLeft(up);rows.push(`<div class="row" style="font-size:13px"><span class="muted">Guest passes</span><span><span class="num">${g.left} of ${g.limit} left</span>${BOOKABLE.includes(up.status)&&g.left?` · <button class="link" data-act="guest:${up.id}">Send a pass</button>`:''}</span></div>`)}
   if(k.earlyAccessHours)rows.push(`<div class="row" style="font-size:13px"><span class="muted">Early access</span><span>Book ${k.earlyAccessHours}h before everyone</span></div>`);
-  if(k.perkIds.length)rows.push(`<div class="row" style="font-size:13px"><span class="muted">Partner perks</span><button class="link" data-act="perks">${k.perkIds.length} unlocked</button></div>`);
+  if(k.perkIds.length)rows.push(`<div class="row" style="font-size:13px"><span class="muted">Partner perks</span><button class="link" data-act="go:perkspage">${k.perkIds.length} unlocked</button></div>`);
   return rows.length?`<div class="stack" style="gap:8px">${rows.join('')}</div>`:'';
 }
+V.perkspage=()=>{
+  const un=unlockedPerkIds();const cat=S.perkCat||'ALL';const q=(S.perkQuery||'').toLowerCase();
+  const all=S.perks.filter(k=>plansUnlocking(k.id).length);
+  const hidden=all.filter(k=>k.vis==='MEMBERS_ONLY'&&!un.has(k.id));
+  const vis=all.filter(k=>!(k.vis==='MEMBERS_ONLY'&&!un.has(k.id)));
+  const cats=['ALL',...new Set(vis.map(k=>k.cat))];
+  const shown=vis.filter(k=>(cat==='ALL'||k.cat===cat)&&(!q||(k.partner+' '+k.offer).toLowerCase().includes(q)));
+  return `<div class="stack" style="gap:16px">
+    <div class="appbar"><button class="back" data-act="go:club" aria-label="Back">${I.back}</button><b>${esc(S.club.name)}</b></div>
+    <div class="stack" style="gap:6px"><span class="eyebrow">Club perks</span><h1 class="d">Brand offers for ${esc(S.club.name)} members</h1><p class="sub">${un.size?`You've unlocked ${un.size} of ${all.length}.`:`${all.length} offers from the club's partners. Join a plan to unlock them.`}</p></div>
+    <div class="field"><label for="psearch" class="sr">Search perks</label><input id="psearch" data-psearch placeholder="Search brands or offers" value="${esc(S.perkQuery||'')}"></div>
+    <div class="chips">${cats.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-act="pcat:${c}">${c==='ALL'?'All':PERK_CATS[c]}</button>`).join('')}</div>
+    <div class="stack">${shown.length?shown.map(k=>{const open=un.has(k.id);const via=plansUnlocking(k.id);const revealed=(S.revealed||{})[k.id];
+      return `<div class="bperk ${open?'open':''}"><div class="blogo" style="background:${k.color}">${esc(k.partner.replace(/[^A-Za-z& ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join(''))}</div>
+      <div style="display:grid;gap:4px;min-width:0"><div class="row" style="align-items:flex-start"><b>${esc(k.partner)}</b><span class="pill" style="height:22px">${PERK_CATS[k.cat]}</span></div><span>${esc(k.offer)}</span>
+      ${open?(k.code?(revealed?`<span class="note">${esc(k.redeem)} · <b class="code">${esc(k.code)}</b></span>`:`<button class="btn sm" style="justify-self:start;margin-top:4px" data-act="reveal:${k.id}">Reveal code</button>`):`<span class="note">${esc(k.redeem)}</span>`)
+        :`<span class="note">🔒 Unlock with ${via.map(p=>esc(p.name)).join(' or ')}</span>`}</div></div>`}).join(''):`<div class="card"><p class="sub">No perks match "${esc(S.perkQuery||'')}".</p></div>`}</div>
+    ${hidden.length?`<p class="note">+${hidden.length} members-only perk${hidden.length>1?'s':''} you'll see after joining ${esc(plansUnlocking(hidden[0].id).map(p=>p.name).join(' or '))}.</p>`:''}
+    ${un.size?'':`<button class="btn block" data-act="go:club">See plans</button>`}
+    <p class="note">Share this page: ps8.club/find-your-fit/perks · Partners shown are examples.</p>
+  </div>`;
+};
 V.manage=(id)=>{
   const up=S.userPlans.find(u=>u.id===id);if(!up)return V.passes();
   const plan=planById(up.planId),price=priceById(up.priceId);
@@ -581,7 +633,7 @@ SH.plan=(st)=>{ // join flow: Plan → Offer → Review → Pay
   const hasIntro=!!plan.intro&&plan.intro.priceId===price.id&&!S.userPlans.some(u=>u.planId===plan.id); // once per member
   const steps=['Plan',...(hasIntro?['Offer']:[]),plan.approval&&!approved?'Request':'Review'];
   const step=st.step||'Plan';
-  const stepsHtml=`<div class="steps">${steps.map(s=>`<span class="${s===step?'on':steps.indexOf(s)<steps.indexOf(step)?'done':''}">${s}</span>`).join('')}</div>`;
+  const stepsHtml=`<div class="steps">${steps.map(s=>steps.indexOf(s)<steps.indexOf(step)?`<button class="done" data-act="step:${s}">${s}</button>`:`<span class="${s===step?'on':''}">${s}</span>`).join('')}</div>`;
   const head=`<div class="head"><div><div class="title">${esc(plan.name)}</div><div class="muted" style="font-size:14px">${esc(S.club.name)}</div></div><button class="x" data-act="close" aria-label="Close">×</button></div>`;
   if(step==='Plan'){
     return head+stepsHtml+`<div class="stack" style="gap:14px">
@@ -607,13 +659,18 @@ SH.plan=(st)=>{ // join flow: Plan → Offer → Review → Pay
   }
   // Review
   const intro=hasIntro&&st.intro!==false;
-  const today=(intro?plan.intro.amount:price.amount)+(price.joiningFee||0);
+  const dc=st.discountId&&S.discounts.find(x=>x.id===st.discountId);
+  const base=intro?plan.intro.amount:price.amount;const off=dc?discountAmount(dc,base):0;
+  const today=base-off+(price.joiningFee||0);
   return head+stepsHtml+`<div class="stack" style="gap:14px"><h2 class="d">Review</h2>
     <div class="card sum"><div class="row"><span>${esc(plan.name)} · ${esc(price.label)}</span><b>${fmt(price.amount)}</b></div>
       ${intro?`<div class="row"><span>Intro offer · first ${plan.intro.days} days</span><b>−${fmt(price.amount-plan.intro.amount)}</b></div>`:''}
+      ${dc?`<div class="row"><span>Discount (${esc(dc.code)})</span><b>−${fmt(off)}</b></div>`:''}
       ${price.joiningFee?`<div class="row"><span>Sign-up fee</span><b>${fmt(price.joiningFee)}</b></div>`:''}
       <div class="hr"></div><div class="row total"><span>Pay today</span><span>${fmt(today)}</span></div></div>
-    <p class="note">${price.billing==='ONE_TIME'?`One payment. Valid until ${d(S.now+price.validityDays*DAY)}.`:`Then ${fmt(price.amount)} every ${INTERVAL[price.interval].label} from ${d(intro?S.now+plan.intro.days*DAY:addMonths(S.now,INTERVAL[price.interval].months))} through UPI AutoPay. You get a reminder 24 hours before each charge.`}${plan.minCommitment?` Minimum commitment ${plan.minCommitment} months.`:''}</p>
+    ${plan.allowDiscounts?(dc?`<div class="row card" style="padding:10px 12px"><span style="font-size:13.5px"><b>${esc(dc.code)}</b> applied · ${dc.applies==='EVERY'?'every renewal too':'first payment only'}</span><button class="link" data-act="rmcode">Remove</button></div>`
+      :`<div class="stack" style="gap:6px"><div style="display:flex;gap:8px"><div class="field" style="flex:1"><label for="dcode" class="sr">Discount code</label><input id="dcode" placeholder="Discount code" value="${esc(st.codeDraft||'')}" autocapitalize="characters"></div><button class="btn ghost sm" style="height:40px" data-act="applycode">Apply</button></div>${st.codeErr?`<span class="err">${esc(st.codeErr)}</span>`:''}</div>`):''}
+    <p class="note">${price.billing==='ONE_TIME'?`One payment. Valid until ${d(S.now+price.validityDays*DAY)}.`:`Then ${fmt(dc&&dc.applies==='EVERY'?price.amount-discountAmount(dc,price.amount):price.amount)} every ${INTERVAL[price.interval].label} from ${d(intro?S.now+plan.intro.days*DAY:addMonths(S.now,INTERVAL[price.interval].months))} through UPI AutoPay. You get a reminder 24 hours before each charge.`}${plan.minCommitment?` Minimum commitment ${plan.minCommitment} months.`:''}</p>
     <label class="toggle"><span style="font-size:13.5px">I agree to the club waiver and plan terms</span><input type="checkbox" id="agree" ${st.agree?'checked':''} data-act="agree"></label>
     <button class="btn block" data-act="pay" ${st.agree?'':'disabled'}>Pay ${fmt(today)}</button></div>`;
 };
@@ -714,13 +771,28 @@ V['h-perks']=()=>`<div class="dhead"><div><span class="eyebrow">Dashboard · ${e
     ${S.perks.map(k=>`<td><input type="checkbox" aria-label="${esc(k.partner)} for ${esc(p.name)}" data-perk="pk|${p.id}|${k.id}" ${p.perks.perkIds.includes(k.id)?'checked':''}></td>`).join('')}</tr>`).join('')}
   </tbody></table></div>
   <div class="stack" style="margin-top:20px"><h2 class="d">Partner perks</h2>
-  ${S.perks.map(k=>`<div class="card row" style="flex-wrap:wrap"><div style="display:grid;gap:2px;min-width:0"><b>${esc(k.partner)}</b><span class="muted" style="font-size:13px">${esc(k.offer)} · ${esc(k.redeem)}${k.code?' · code '+esc(k.code):''}</span></div><span class="dim" style="font-size:12.5px">${plansUnlocking(k.id).map(p=>esc(p.name)).join(', ')||'No plan yet'}</span></div>`).join('')}
+  ${S.perks.map(k=>`<div class="card row" style="flex-wrap:wrap"><div style="display:grid;gap:2px;min-width:0"><b>${esc(k.partner)} <span class="pill" style="height:20px">${PERK_CATS[k.cat]}</span> ${k.vis==='MEMBERS_ONLY'?'<span class="pill" style="height:20px">Members only</span>':''}</b><span class="muted" style="font-size:13px">${esc(k.offer)} · ${esc(k.redeem)}${k.code?' · code '+esc(k.code):''}</span></div><div style="display:grid;gap:2px;text-align:right"><span class="num" style="font-size:13px">${k.reveals} code reveals</span><span class="dim" style="font-size:12.5px">${plansUnlocking(k.id).map(p=>esc(p.name)).join(', ')||'No plan yet'}</span></div></div>`).join('')}
   <div class="card"><b style="display:block;margin-bottom:10px">Add a partner perk</b><div class="form">
     <div class="field"><label for="k-partner">Partner</label><input id="k-partner" placeholder="Ather Space, Indiranagar"></div>
     <div class="field"><label for="k-offer">Offer</label><input id="k-offer" placeholder="Free test ride + ₹2,000 off"></div>
     <div class="field"><label for="k-redeem">How to redeem</label><input id="k-redeem" placeholder="Show your plan card"></div>
     <div class="field"><label for="k-code">Code (optional)</label><input id="k-code" placeholder="FYFRIDE"></div>
+    <div class="field"><label for="k-cat">Category</label><select id="k-cat">${Object.entries(PERK_CATS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>
+    <div class="field"><label for="k-vis">Who sees it</label><select id="k-vis"><option value="TEASER">Everyone (code for members)</option><option value="MEMBERS_ONLY">Members only</option></select></div>
   </div><div class="row" style="margin-top:12px;justify-content:flex-end"><span class="dim" style="font-size:12.5px">New perks unlock for every published membership.</span><button class="btn sm" data-act="addperk">Add perk</button></div></div></div>`;
+V['h-discounts']=()=>`<div class="dhead"><div><span class="eyebrow">Dashboard · ${esc(S.club.name)}</span><h1 class="d">Discounts</h1><p class="sub">Turn discount codes on for the plans you choose, then create codes for campaigns, students or partners. Members enter them at checkout.</p></div></div>
+  <div class="stack"><b>Plans that take codes</b><div class="menu">${S.plans.map(p=>`<label class="toggle" style="min-width:200px"><span>${esc(p.name)}</span><input type="checkbox" data-disc="allow|${p.id}" ${p.allowDiscounts?'checked':''}></label>`).join('')}</div></div>
+  <div class="tbl" style="margin-top:16px"><table><thead><tr><th>Code</th><th>Discount</th><th>Plans</th><th>Applies to</th><th>Uses</th><th>On</th></tr></thead><tbody>
+  ${S.discounts.map(dc=>`<tr><td><b class="code">${esc(dc.code)}</b></td><td class="num">${dc.kind==='PERCENT'?dc.value+'% off':fmt(dc.value)+' off'}</td><td>${dc.planIds.map(id=>esc(planById(id).name)).join(', ')}</td><td>${dc.applies==='EVERY'?'Every charge':'First payment'}</td><td class="num">${dc.used}${dc.maxUses!=null?' / '+dc.maxUses:''}</td><td><input type="checkbox" aria-label="${esc(dc.code)} on" data-disc="en|${dc.id}" ${dc.enabled?'checked':''}></td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="card" style="margin-top:16px"><b style="display:block;margin-bottom:10px">Create a code</b><div class="form">
+    <div class="field"><label for="dc-code">Code</label><input id="dc-code" placeholder="RUNCLUB25"></div>
+    <div class="field"><label for="dc-kind">Type</label><select id="dc-kind"><option value="PERCENT">% off</option><option value="FLAT">₹ off</option></select></div>
+    <div class="field"><label for="dc-value">Value</label><input id="dc-value" type="number" min="1" value="25"></div>
+    <div class="field"><label for="dc-applies">Applies to</label><select id="dc-applies"><option value="FIRST">First payment only</option><option value="EVERY">Every charge</option></select></div>
+    <div class="field"><label for="dc-max">Max uses (blank = no limit)</label><input id="dc-max" type="number" min="1" placeholder="100"></div>
+    <div class="field"><label>Plans</label><div class="chips">${S.plans.map(p=>`<label class="chip" style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" class="dc-plan" value="${p.id}" ${p.allowDiscounts?'checked':''}>${esc(p.name)}</label>`).join('')}</div></div>
+  </div><div class="row" style="margin-top:12px;justify-content:flex-end"><span class="dim" style="font-size:12.5px">Codes can't be combined with an intro offer.</span><button class="btn sm" data-act="adddisc">Create code</button></div></div>`;
 V['h-members']=()=>{const rows=[...S.userPlans.map(u=>({id:u.id,name:S.user.name,planId:u.planId,priceId:u.priceId,status:u.status,periodEnd:u.periodEnd,used:allowance(u,S.now),live:true,up:u})),...S.members.map(m=>({...m,live:false}))];
   return `<div class="dhead"><div><span class="eyebrow">Members</span><h1 class="d">Plan holders</h1><p class="sub">Aarav is the live member from the phone. Try pausing or changing their credits, then go back to the member side.</p></div></div>
   <div class="tbl"><table><thead><tr><th>Member</th><th>Plan</th><th>Status</th><th>Renews / ends</th><th>Usage</th><th>Actions</th></tr></thead><tbody>
@@ -736,8 +808,8 @@ V['h-requests']=()=>{const reqs=allRequests().filter(r=>r.status==='PENDING');co
 
 /* ───────────────────────── Render ───────────────────────── */
 const NAV=[
-  ['Member · phone',[['club','Club page'],['event:e1','Saturday 5K'],['event:e3','Monsoon 10K'],['passes','Passes · Plans']]],
-  ['Host · dashboard',[['h-plans','Plans'],['h-create','Create plan'],['h-pricing','Plan pricing'],['h-perks','Perks'],['h-members','Members'],['h-requests','Requests']]],
+  ['Member · phone',[['club','Club page'],['perkspage','Club perks'],['event:e1','Saturday 5K'],['event:e3','Monsoon 10K'],['passes','Passes · Plans']]],
+  ['Host · dashboard',[['h-plans','Plans'],['h-create','Create plan'],['h-pricing','Plan pricing'],['h-perks','Perks'],['h-discounts','Discounts'],['h-members','Members'],['h-requests','Requests']]],
 ];
 function renderRail(){
   document.getElementById('rail').innerHTML=NAV.map(([g,items])=>`<div class="grp"><h3>${g}</h3><nav>${items.map(([id,l])=>`<button data-act="${id.startsWith('event:')?id:'go:'+id}" ${S.view===id||(S.view==='event'&&S.viewArg&&id==='event:'+S.viewArg)?'aria-current="page"':''}><span>${l}</span>${id==='h-requests'&&pendingCount()?`<span class="badge">${pendingCount()}</span>`:''}</button>`).join('')}</nav></div>`).join('');
@@ -786,13 +858,18 @@ document.addEventListener('click',ev=>{
     case 'plan':{const p=planById(arg);if(S.view.startsWith('h-'))go('club');S.sheet={type:'plan',planId:p.id,priceId:p.prices[0].id,step:'Plan'};render();break}
     case 'price':sh.priceId=arg;render();break;
     case 'step':sh.step=arg;render();break;
-    case 'intro':sh.intro=arg==='on';render();break;
+    case 'intro':sh.intro=arg==='on';if(sh.intro){sh.discountId=null}render();break;
     case 'agree':sh.agree=el.checked;render();break;
     case 'sendrequest':requestJoin(sh.planId,sh.priceId);S.sheet={type:'requested'};render();break;
     case 'withdraw':{const r=S.joinRequests.find(x=>x.id===arg);r.status='WITHDRAWN';log(`Join request for ${planById(r.planId).name} withdrawn.`);toast('Request withdrawn');render();break}
     case 'pay':{const plan=planById(sh.planId),price=priceById(sh.priceId);const intro=plan.intro&&plan.intro.priceId===price.id&&sh.intro!==false&&!S.userPlans.some(u=>u.planId===plan.id);
-      const amt=(intro?plan.intro.amount:price.amount)+(price.joiningFee||0);
-      sh.rzp={amount:amt,recurring:price.billing==='RECURRING',maxAmount:price.amount,every:price.billing==='RECURRING'?INTERVAL[price.interval].label:'',then:'join',intro};render();break}
+      const dc=sh.discountId&&S.discounts.find(x=>x.id===sh.discountId);const base=intro?plan.intro.amount:price.amount;
+      const amt=base-(dc?discountAmount(dc,base):0)+(price.joiningFee||0);
+      sh.rzp={amount:amt,recurring:price.billing==='RECURRING',maxAmount:price.amount,every:price.billing==='RECURRING'?INTERVAL[price.interval].label:'',then:'join',intro,discount:dc||null};render();break}
+    case 'applycode':{const plan=planById(sh.planId),price=priceById(sh.priceId);const intro=plan.intro&&plan.intro.priceId===price.id&&sh.intro!==false&&!S.userPlans.some(u=>u.planId===plan.id);
+      sh.codeDraft=document.getElementById('dcode').value;const r=checkCode(sh.codeDraft,plan,intro);
+      if(r.err){sh.codeErr=r.err;sh.discountId=null}else{sh.codeErr=null;sh.discountId=r.dc.id;toast(r.dc.code+' applied')}render();break}
+    case 'rmcode':sh.discountId=null;sh.codeDraft='';render();break;
     case 'checkout':S.sheet={type:'checkout',eventId:arg};render();break;
     case 'cat':sh.catId=arg;render();break;
     case 'confirmbook':{const e=eventById(sh.eventId);const c=e.categories.find(x=>x.id===sh.catId)||e.categories[0];const ev2=evaluate(e,c);const total=ev2.best?ev2.best.price:c.base;
@@ -802,7 +879,7 @@ document.addEventListener('click',ev=>{
       if(arg==='cancel'){sh.rzp=null;render();break}
       const r=sh.rzp;
       if(r.then==='join'){
-        const plan=planById(sh.planId);const up=startPlan(sh.planId,sh.priceId,{intro:r.intro});
+        const plan=planById(sh.planId);const up=startPlan(sh.planId,sh.priceId,{intro:r.intro,discount:r.discount});
         const jr=reqFor(plan.id);if(jr&&jr.status==='APPROVED')jr.status='CONVERTED';
         S.sheet={type:'joined',upId:up.id};render();
       } else {const e=eventById(sh.eventId);const c=e.categories.find(x=>x.id===sh.catId);const ev2=evaluate(e,c);const b=book(e,c,ev2.best);S.sheet=null;toast('Payment successful');go('ticket',b.id)}
@@ -822,9 +899,17 @@ document.addEventListener('click',ev=>{
     case 'guestclaim':{const g=S.guestPasses.find(x=>x.id===arg);const e=S.events.find(x=>x.type==='TRAINING');g.status='REDEEMED';g.eventName=e.name;
       log(`${g.name} claimed the guest pass and booked ${e.name} free. Added to the club's leads as a first-timer.`);toast(g.name+' booked free');render();break}
     case 'addperk':{const v=id=>(document.getElementById(id).value||'').trim();const partner=v('k-partner')||'Ather Space, Indiranagar',offer=v('k-offer')||'Free test ride + ₹2,000 off';
-      const k={id:'k'+(S.seq++),partner,offer,redeem:v('k-redeem')||'Show your plan card',code:v('k-code')||null};S.perks.push(k);
+      const k={id:'k'+(S.seq++),partner,offer,redeem:v('k-redeem')||'Show your plan card',code:v('k-code')||null,cat:document.getElementById('k-cat').value,vis:document.getElementById('k-vis').value,color:'#4f46e5',reveals:0};S.perks.push(k);
       S.plans.filter(p=>p.kind==='MEMBERSHIP'&&p.published).forEach(p=>p.perks.perkIds.push(k.id));
       log(`Host added partner perk: ${partner} (${offer}), unlocked for every published membership.`);toast('Perk added');render();break}
+    case 'pcat':S.perkCat=arg;render();break;
+    case 'reveal':{const k=perkById(arg);S.revealed=S.revealed||{};S.revealed[k.id]=true;k.reveals++;log(`Revealed ${k.partner} code (${k.reveals} reveals so far).`);render();break}
+    case 'adddisc':{const v=id=>(document.getElementById(id).value||'').trim();const code=(v('dc-code')||'RUNCLUB25').toUpperCase().replace(/\s+/g,'');
+      if(S.discounts.some(x=>x.code===code)){toast(code+' already exists');break}
+      const planIds=[...document.querySelectorAll('.dc-plan:checked')].map(x=>x.value);if(!planIds.length){toast('Pick at least one plan');break}
+      const dc={id:'d'+(S.seq++),code,kind:v('dc-kind'),value:Number(v('dc-value'))||25,planIds,applies:v('dc-applies'),maxUses:v('dc-max')?Number(v('dc-max')):null,used:0,enabled:true};
+      S.discounts.push(dc);planIds.forEach(id=>{planById(id).allowDiscounts=true});
+      log(`Host created ${code}: ${dc.kind==='PERCENT'?dc.value+'%':fmt(dc.value)} off ${dc.applies==='EVERY'?'every charge':'the first payment'} on ${planIds.map(id=>planById(id).name).join(', ')}.`);toast(code+' is live');render();break}
     case 'renew':advanceToRenewal();break;
     case 'failtoggle':S.failNextRenewal=el.checked;log(S.failNextRenewal?'Next renewal set to fail.':'Next renewal set to succeed.');renderPanel();break;
     case 'reset':S=seed();go('club');toast('Demo reset');break;
@@ -849,10 +934,15 @@ document.addEventListener('click',ev=>{
   }
 });
 document.addEventListener('input',ev=>{const el=ev.target;
+  if(el.hasAttribute('data-psearch')){S.perkQuery=el.value;render();const k=document.getElementById('psearch');if(k){k.focus();k.setSelectionRange(k.value.length,k.value.length)}return}
   if(el.dataset.f&&S.form){S.form[el.dataset.f]=el.type==='number'?Number(el.value):el.value;if(el.tagName==='SELECT')render();else{const card=document.querySelector('#stage .card');if(card){const keep=document.activeElement.id;render();const k=document.getElementById(keep);if(k){k.focus();const v=k.value;if(k.setSelectionRange&&k.type==='text')k.setSelectionRange(v.length,v.length)}}}}
   if(el.dataset.fb&&S.form){S.form[el.dataset.fb]=el.checked;render()}
 });
 document.addEventListener('change',ev=>{const el=ev.target;
+  if(el.dataset.disc){const [kind,id]=el.dataset.disc.split('|');
+    if(kind==='allow'){const p=planById(id);p.allowDiscounts=el.checked;log(`Host ${el.checked?'turned on':'turned off'} discount codes for ${p.name}.`)}
+    if(kind==='en'){const dc=S.discounts.find(x=>x.id===id);dc.enabled=el.checked;log(`Host switched ${dc.code} ${el.checked?'on':'off'}.`)}
+    render();return}
   if(el.dataset.perk){const [kind,pid,kid]=el.dataset.perk.split('|');const p=planById(pid);
     if(kind==='ea'){p.perks.earlyAccessHours=Number(el.value);log(`Host set early access on ${p.name} to ${el.value==='0'?'off':el.value+' hours'}.`)}
     if(kind==='gp'){p.perks.guestPasses=Number(el.value);log(`Host set ${p.name} guest passes to ${el.value} per period.`)}

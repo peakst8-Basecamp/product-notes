@@ -27,6 +27,20 @@ Renewal reminders are a separate feature type, and they ship **before** membersh
 
 The backend already has scheduled jobs, the email outbox, WhatsApp and push. The existing `NotificationDelivery` log is tied to registrations and only knows `ABANDONED_CART`, so reminders get their own `PlanReminderDelivery` table and a per-club `ClubMembershipSettings` row (both in [`schema-draft.prisma`](schema-draft.prisma)).
 
+## Discounts (club admins switch them on)
+
+Discount codes are off by default. A club admin turns them on **per plan** under **Dashboard → Discounts**, then creates codes for campaigns, students or partners. Members enter a code on the plan's Review step.
+
+| Setting | Options |
+| --- | --- |
+| **Plans that take codes** | On or off per plan (`Plan.allowDiscountCodes`) |
+| **Code** | % off or ₹ off; the plans it applies to |
+| **Applies to** | First payment only (SweatPals' rule) · every charge (e.g. a student rate) · first N charges |
+| **Limits** | Max uses, expiry, one per member; switch a code off at any time |
+| **Rules** | Can't be combined with an intro offer; the discount shows as its own line on the review and receipts; an every-charge code carries into renewals and pre-debit notices |
+
+This reuses the backend's existing `Coupon` model, linked to plans through `CouponToPlan`. Later (V2): audience discounts tied to a plan audience rule (students, women, a company).
+
 ## Member perks
 
 People keep paying a monthly fee when they can see what it gets them. Perks are their own feature type ([list](coverage/README.md#p-member-perks-15)), and club admins choose them per plan under **Dashboard → Perks**:
@@ -37,10 +51,13 @@ People keep paying a monthly fee when they can see what it gets them. Perks are 
 | **Early access** | Book a set number of hours before an event opens to everyone; non-members see when it opens | V1 |
 | **Guest passes** | A number of free passes per period to bring a friend; the friend claims a link and books free, and becomes a lead for the club | V1 |
 | **Partner perks** | Offers from the club's partners (store, café, physio), locked on the club page until you hold a plan that unlocks them | V1 |
+| **Club perks page** | A small listing page per club for its brand partnerships: logo, category, offer, how to redeem; search and category filters; 'Reveal code' for unlocked perks; locked cards say which plan unlocks them; members-only perks stay hidden; shareable link | V1 |
 | **Members-only sessions, WhatsApp group** | Sessions only plan holders can book; a group for holders | V1 |
 | **Later** | Waitlist priority, referral reward, member badge on leaderboards, race photos first, streaks and milestones | V2 |
 
-Schema: `Plan.earlyAccessHours`, `Plan.waitlistPriority`, `Plan.guestPassesPerCycle`, `Event.publicOpensAt`, and `ClubPerk` + `PlanPerk` for partner perks.
+Most of these clubs are social clubs with access to brands, so the perks page is where a club shows those partnerships off, to members and to people deciding whether to join. Club admins add each brand (partner, category, offer, code, how to redeem, who sees it) and choose which plans unlock it; each 'Reveal code' tap is counted so the club can report back to the brand.
+
+Schema: `Plan.earlyAccessHours`, `Plan.waitlistPriority`, `Plan.guestPassesPerCycle`, `Event.publicOpensAt`, and `ClubPerk` (with `category`, `visibility`, `revealCount`) + `PlanPerk` for brand perks.
 
 ## What we reverse-engineered
 
@@ -52,8 +69,8 @@ Schema: `Plan.earlyAccessHours`, `Plan.waitlistPriority`, `Plan.guestPassesPerCy
 
 | Side | What you can do |
 | --- | --- |
-| **Member (phone)** | See savings, early access, guest passes and partner perks (locked until you join) · browse plans on the club page · join with or without the intro offer · request to join an approval-only plan and withdraw it · pay through a mock Razorpay UPI AutoPay mandate · see "Member price" on events · check out at the plan price (₹0 skips payment) · view the ticket with its membership discount · see credits and renewal in Passes → Plans · cancel (Auto or Review) · fix a failed renewal |
-| **Host (dashboard)** | Choose each plan's perks (early access, guest passes, partner perks) and add partner perks · plans list with MRR and holders · create and publish a plan (it appears on the club page and sets its price on covered passes) · change the plan price on any pass · pause, resume, add credits to or cancel the live member's plan · approve or decline join and cancel requests |
+| **Member (phone)** | Browse the club perks page (search, categories, reveal codes) · enter a discount code at checkout · see savings, early access, guest passes and partner perks (locked until you join) · browse plans on the club page · join with or without the intro offer · request to join an approval-only plan and withdraw it · pay through a mock Razorpay UPI AutoPay mandate · see "Member price" on events · check out at the plan price (₹0 skips payment) · view the ticket with its membership discount · see credits and renewal in Passes → Plans · cancel (Auto or Review) · fix a failed renewal |
+| **Host (dashboard)** | Turn discount codes on per plan, create and switch off codes · choose each plan's perks (early access, guest passes, partner perks) and add partner perks · plans list with MRR and holders · create and publish a plan (it appears on the club page and sets its price on covered passes) · change the plan price on any pass · pause, resume, add credits to or cancel the live member's plan · approve or decline join and cancel requests |
 | **Simulated time** | Skip to the next renewal (a pre-debit notice, then a charge or a failure) · make the next renewal fail · reset |
 
 The right-hand panel shows the member's `UserPlan` rows, the event log, and for the last checkout every step of the pricing rule: which plans were kept or dropped and why.

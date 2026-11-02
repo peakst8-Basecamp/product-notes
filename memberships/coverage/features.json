@@ -283,7 +283,7 @@
    "source": "Help 3.4; community-perks/*; host:perks.locked*",
    "evidence": "both",
    "by": "club",
-   "setting": "ClubPerk (partner, offer, code, how to redeem) unlocked by chosen plans; locked card for non-members",
+   "setting": "ClubPerk (brand, category, offer, code, how to redeem) unlocked by chosen plans; listed on the club perks page",
    "phase": "V1",
    "prototype": true
   },
@@ -409,6 +409,50 @@
    "prototype": false
   },
   {
+   "area": "P",
+   "feature": "Club perks page",
+   "sweatpals": "Perks section on the community profile, searchable; locked for guests",
+   "source": "Help 3.4; host:perks.title, searchPlaceholder, lockedGuest, lockedMember",
+   "evidence": "both",
+   "by": "club",
+   "setting": "A small listing page per club: every brand perk with logo, category and offer; shareable link",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Perk categories and search",
+   "sweatpals": "Searchable perks list with 'no matches' state",
+   "source": "host:perks.searchAriaLabel, noMatches",
+   "evidence": "code",
+   "by": "club",
+   "setting": "ClubPerk.category (gear, nutrition, food and drink, recovery, wearables) with filter chips and search",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Perk visibility",
+   "sweatpals": "Locked perks shown to guests and members without the right plan",
+   "source": "host:perks.lockedGuest, lockedMember",
+   "evidence": "code",
+   "by": "club",
+   "setting": "ClubPerk.visibility: show as a teaser to everyone, or members only; code revealed only to unlocking plans",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "P",
+   "feature": "Perk redemption count",
+   "sweatpals": "Not seen",
+   "source": "—",
+   "evidence": "proposed",
+   "by": "club",
+   "setting": "Count each 'Reveal code' tap per perk, shown to the club to report back to brands",
+   "phase": "V2",
+   "prototype": true
+  },
+  {
    "area": "A",
    "feature": "Membership plan",
    "sweatpals": "Recurring or prepaid access to selected experiences",
@@ -498,14 +542,58 @@
   },
   {
    "area": "A",
-   "feature": "Promo code on first charge only",
-   "sweatpals": "Discount applies to the first payment; renewals are full price",
+   "feature": "Discount codes on plans",
+   "sweatpals": "Promo codes at plan checkout; the discount applies to the first payment only",
    "source": "Help 3.3",
    "evidence": "help",
-   "by": "system",
-   "setting": "Coupon applies to FIRST_PAYMENT only",
+   "by": "club",
+   "setting": "Plan.allowDiscountCodes (club admin turns it on per plan) + Coupon linked to plans (CouponToPlan)",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "A",
+   "feature": "Discount applies to",
+   "sweatpals": "Promo discount only on the initial payment; full price on renewal",
+   "source": "Help 3.3",
+   "evidence": "help",
+   "by": "club",
+   "setting": "Coupon.appliesTo: FIRST_CHARGE · EVERY_CHARGE · FIRST_N_CHARGES (e.g. student rate every month)",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "A",
+   "feature": "Discount limits",
+   "sweatpals": "Coupons can stack with intro price unless planned; avoid heavy stacking",
+   "source": "Help 5.2 (limitations)",
+   "evidence": "help",
+   "by": "club",
+   "setting": "Max uses, expiry, one per member; can't combine with an intro offer",
+   "phase": "V1",
+   "prototype": true
+  },
+  {
+   "area": "A",
+   "feature": "Audience discounts",
+   "sweatpals": "Not seen",
+   "source": "—",
+   "evidence": "proposed",
+   "by": "club",
+   "setting": "A discount only for an audience (students, women, a company): ties a Coupon to a plan audience rule",
    "phase": "V2",
    "prototype": false
+  },
+  {
+   "area": "A",
+   "feature": "Discount shown at checkout",
+   "sweatpals": "Custom, offer and referral discount lines in the summary",
+   "source": "checkout:summary.customDiscount, offerDiscount, referralDiscount",
+   "evidence": "code",
+   "by": "system",
+   "setting": "'Discount (CODE) −₹X' line on the plan review and receipts",
+   "phase": "V1",
+   "prototype": true
   },
   {
    "area": "A",

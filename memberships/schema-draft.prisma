@@ -101,6 +101,26 @@ enum GUEST_ELIGIBILITY {
   ANYONE
 }
 
+enum COUPON_APPLIES_TO {
+  FIRST_CHARGE // default, as SweatPals does
+  EVERY_CHARGE // e.g. a student rate
+  FIRST_N_CHARGES
+}
+
+enum PERK_CATEGORY {
+  GEAR
+  NUTRITION
+  FOOD_AND_DRINK
+  RECOVERY
+  WEARABLES
+  OTHER
+}
+
+enum PERK_VISIBILITY {
+  TEASER // everyone sees the brand and offer; code only for unlocking plans
+  MEMBERS_ONLY // hidden from people without an unlocking plan
+}
+
 enum PLAN_REMINDER_TYPE {
   PRE_DEBIT // launch prerequisite: >= 24 h before every recurring charge (RBI e-mandate)
   CHARGED // launch prerequisite: post-debit receipt
@@ -146,6 +166,8 @@ model Plan {
   // Perks (club admins choose per plan)
   earlyAccessHours        Int? // holders book this many hours before Event.publicOpensAt
   waitlistPriority        Boolean                  @default(false)
+  allowDiscountCodes      Boolean                  @default(false) // club admin turns discount codes on per plan
+  couponLinks             CouponToPlan[]
   perks                   PlanPerk[]
   cancellationPolicy      PLAN_CANCELLATION_POLICY @default(AUTO)
   minCommitmentCycles     Int? // recurring only
@@ -265,6 +287,7 @@ model UserPlan {
   commitmentEndsAt       DateTime?
   razorpaySubscriptionId String?            @unique
   claimToken             String?            @unique // Send plan link
+  couponId               String?            @db.Uuid // discount carried into renewals when it applies to every charge
   usages                 PlanUsage[]
   charges                PlanCharge[]
   shares                 PlanShare[]
@@ -453,11 +476,15 @@ model ClubPerk {
   clubId      String     @db.Uuid
   club        Club       @relation(fields: [clubId], references: [id], onDelete: Cascade)
   partnerName String
+  category    PERK_CATEGORY   @default(OTHER)
+  visibility  PERK_VISIBILITY @default(TEASER)
   offer       String // "15% off shoes"
   redeemHow   String? // "Show your plan at the counter"
   code        String? // shown only to holders
   logo        String?
   isActive    Boolean    @default(true)
+  revealCount Int        @default(0) // "Reveal code" taps, reported back to the brand
+  order       Int?
   plans       PlanPerk[]
   updatedAt   DateTime   @updatedAt
   createdAt   DateTime   @default(now())
@@ -477,6 +504,20 @@ model PlanPerk {
   @@map("plan_perk")
 }
 
+/// Which plans a club discount code applies to (reuses the existing Coupon).
+model CouponToPlan {
+  couponId     String            @db.Uuid
+  coupon       Coupon            @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  planId       String            @db.Uuid
+  plan         Plan              @relation(fields: [planId], references: [id], onDelete: Cascade)
+  appliesTo    COUPON_APPLIES_TO @default(FIRST_CHARGE)
+  chargesCount Int? // for FIRST_N_CHARGES
+  createdAt    DateTime          @default(now())
+
+  @@id([couponId, planId])
+  @@map("coupon_plan")
+}
+
 // Changes to existing models
 // model Registration { appliedUserPlanId String? @db.Uuid; appliedUserPlan UserPlan? @relation(...); planUsage PlanUsage? }
 // model Category     { isPlanHoldersOnly Boolean @default(false); planPolicies CategoryPlanPolicy[] }
@@ -485,3 +526,5 @@ model PlanPerk {
 // model User         { userPlans UserPlan[]; planJoinRequests PlanJoinRequest[]; planShares PlanShare[] @relation("PlanShareMember"); guestPasses GuestPass[] @relation("GuestPassGuest") }
 // model Host         { reviewedPlanJoinRequests PlanJoinRequest[]; reviewedPlanCancelRequests PlanCancelRequest[] }
 // model Waiver       { plans Plan[] }
+// model Coupon       { planLinks CouponToPlan[]; clubId String? @db.Uuid; perMemberLimit Int? } // club-owned codes for plans
+// model UserPlan     (above) gains couponId for EVERY_CHARGE / FIRST_N_CHARGES renewals
