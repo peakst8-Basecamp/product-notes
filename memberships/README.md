@@ -99,7 +99,7 @@ Targets are **assumptions** to confirm with the pilot clubs before launch; basel
 | Phase | What ships | Gate to move on |
 | --- | --- | --- |
 | **Before launch: renewal reminders** | Members hear before every charge, get a receipt after it, and can fix a failed payment from the message. They're warned before a payment problem and before an intro price ends. Clubs choose how members are reminded and can see what each member was told. | All 9 before-launch reminder features work end to end on staging with Razorpay test mandates |
-| **V1: first pilot clubs** | Memberships and packs; plan price per pass; join, approval, pay; automatic pricing at checkout; cancel; host plan list, members, requests, refunds. Perks: savings, early access, guest passes, brand perks and the club perks page, members-only sessions. Discount codes switched on per plan. | Two pilot clubs live with at least 20 paying holders each; no unexpected-charge complaints |
+| **V1: first pilot clubs** | Memberships and packs; plan price per pass; join, approval, pay; automatic pricing at checkout; cancel; admin plan list, members, requests, refunds. Perks: savings, early access, guest passes, brand perks and the club perks page, members-only sessions. Discount codes switched on per plan. | Two pilot clubs live with at least 20 paying holders each; no unexpected-charge complaints |
 | **V2** | Several prices per plan, intro offers, joining fees, minimum commitment, shared plans, pause and switch, fix billing from the dashboard, upcoming renewals, waitlist priority, referral reward, member badge, audience discounts | V1 metrics on track at 60 days |
 | **Later / not planned** | Network passes, appointments, gift cards, leads pipeline, migration from other platforms | Separate product notes |
 
@@ -134,7 +134,7 @@ The full list, written as what members and club admins can do, is in the [featur
 
 | What | Where |
 | --- | --- |
-| Working prototype (member and host screens in the peakst8 app design) | [prototype/](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) |
+| Working prototype (club page with Gold, Silver and Bronze levels, brand perks wall, admin dashboard with charts) | [prototype/](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/) |
 | Code for the engineer to pick up, and the architecture | [code/](code/) · [code/ARCHITECTURE.md](code/ARCHITECTURE.md) |
 | Feature list (what members and club admins can do, by phase) | [coverage/](coverage/README.md) |
 | Database schema draft (validated against the backend schema) | [code/backend/prisma/memberships.prisma](code/backend/prisma/memberships.prisma) |

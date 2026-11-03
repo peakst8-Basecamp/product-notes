@@ -220,6 +220,129 @@ h2.d{font-size:20px;line-height:1.15}
 .ctrl{display:grid;gap:8px}
 .ctrl .row{font-size:13px}
 
+
+/* ---------- Tiers: metallic tokens (decorative; chart series colours live in SERIES) ---------- */
+:root{
+  --metal-gold:linear-gradient(135deg,#fff3c4 0%,#e3b34b 32%,#a87b1f 62%,#f2d27a 100%);
+  --metal-silver:linear-gradient(135deg,#ffffff 0%,#c9cfd9 32%,#8a94a3 62%,#e8ecf2 100%);
+  --metal-bronze:linear-gradient(135deg,#ffdcc0 0%,#c98250 32%,#8a4b22 62%,#e8a87c 100%);
+  --metal-squad:linear-gradient(135deg,#4a4a52 0%,#1a1a1f 50%,#3a3a42 100%);
+  --glow-gold:rgba(227,179,75,.22);--glow-silver:rgba(201,207,217,.16);--glow-bronze:rgba(201,130,80,.18);
+}
+.medal{display:inline-grid;place-items:center;flex:none;border-radius:999px;font-family:var(--display);font-weight:800;color:#1b1406;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -2px 4px rgba(0,0,0,.25),0 2px 8px rgba(0,0,0,.4)}
+.medal.gold{background:var(--metal-gold)}.medal.silver{background:var(--metal-silver);color:#20242b}.medal.bronze{background:var(--metal-bronze);color:#2a1406}
+.medal.squad{background:var(--metal-squad);color:#f1d593;box-shadow:inset 0 0 0 1.5px #c9a24b,0 2px 8px rgba(0,0,0,.4)}.medal.none{background:var(--step);color:var(--muted)}
+.tchip{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:700;font-style:normal;letter-spacing:.02em;color:#1b1406;white-space:nowrap}
+.tchip.gold{background:var(--metal-gold)}.tchip.silver{background:var(--metal-silver);color:#20242b}.tchip.bronze{background:var(--metal-bronze);color:#2a1406}.tchip.squad{background:var(--metal-squad);color:#f1d593}
+
+/* ---------- Club hero ---------- */
+.hero{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#0d0f13}
+.cover{height:118px;position:relative;background:radial-gradient(120% 140% at 0% 0%,#ff7a45 0%,rgba(255,122,69,0) 55%),radial-gradient(120% 140% at 100% 0%,#e3b34b 0%,rgba(227,179,75,0) 50%),linear-gradient(160deg,#2a1b12,#0d0f13)}
+.track{position:absolute;left:-10%;right:-10%;height:2px;border-radius:2px;background:rgba(255,255,255,.18);transform:rotate(-8deg)}
+.track.t1{top:46px}.track.t2{top:62px;opacity:.6}.track.t3{top:78px;opacity:.35}
+.herobody{padding:0 16px 16px;margin-top:-30px;position:relative;display:grid;gap:10px}
+.logo.big{width:64px;height:64px;border-radius:18px;border:3px solid #0d0f13;font-size:20px}
+.verified{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:#7dd3fc;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stats div{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:8px 6px;display:grid;gap:1px;text-align:center}
+.stats b{font-family:var(--display);font-size:17px}.stats span{font-size:10.5px;color:var(--dim)}
+.memberbar{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:16px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:var(--fg)}
+.memberbar.gold{border-color:rgba(227,179,75,.5);background:linear-gradient(120deg,var(--glow-gold),rgba(255,255,255,.02))}
+.memberbar.silver{border-color:rgba(201,207,217,.4);background:linear-gradient(120deg,var(--glow-silver),rgba(255,255,255,.02))}
+.memberbar.bronze{border-color:rgba(201,130,80,.45);background:linear-gradient(120deg,var(--glow-bronze),rgba(255,255,255,.02))}
+
+/* ---------- Tier cards ---------- */
+.tcard{position:relative;display:grid;gap:12px;padding:18px 16px 16px;border-radius:20px;border:1.5px solid transparent;background:linear-gradient(#111216,#111216) padding-box,var(--metal,linear-gradient(var(--line-2),var(--line-2))) border-box;overflow:hidden}
+.tcard::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 60% at 100% 0%,var(--glow,transparent),transparent 70%)}
+.tcard.gold{--metal:var(--metal-gold);--glow:var(--glow-gold);box-shadow:0 10px 30px rgba(227,179,75,.12)}
+.tcard.silver{--metal:var(--metal-silver);--glow:var(--glow-silver)}
+.tcard.bronze{--metal:var(--metal-bronze);--glow:var(--glow-bronze)}
+.tcard.squad{--metal:linear-gradient(135deg,#c9a24b,#3a3a42 40%,#c9a24b);--glow:rgba(201,162,75,.12);background:linear-gradient(#0b0b0e,#0b0b0e) padding-box,var(--metal) border-box}
+.tcard.gold::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,240,200,.08),transparent);animation:shine 6s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,70%{left:-60%}100%{left:120%}}
+.ttag{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;color:#1b1406;background:var(--metal,var(--step))}
+.tcard.squad .ttag{color:#f1d593;background:#1a1a1f;box-shadow:inset 0 0 0 1px #c9a24b}
+.tlabel{font-family:var(--display);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;background:var(--metal,linear-gradient(var(--muted),var(--muted)));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tprice{display:flex;align-items:baseline;gap:6px}.tprice b{font-family:var(--display);font-size:32px;letter-spacing:-.02em}.tprice span{color:var(--muted);font-size:13px}
+.perrun{font-size:13px;color:var(--muted);margin-top:-6px}.perrun b{color:var(--fg)}
+.introbar{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:linear-gradient(108deg,var(--gold-a),var(--gold-b));color:var(--gold-ink);font-size:12.5px;font-weight:600}
+.bens{list-style:none;margin:0;padding:0;display:grid;gap:7px}.bens li{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:#d4d4d8;line-height:1.4}.bens li svg{flex:none;margin-top:1px}
+.btn.goldbtn{background:var(--metal-gold);color:#1b1406;font-weight:700}
+
+/* ---------- Compare + calculator ---------- */
+.cmp{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+.cmp table{width:100%;border-collapse:collapse;font-size:12.5px}
+.cmp th{padding:12px 6px 8px;font-weight:600;font-size:11px;color:var(--muted)}
+.cmp th span{display:block;margin-top:4px}
+.cmp td{padding:10px 6px;border-top:1px solid var(--line);text-align:center;color:#d4d4d8}
+.cmp td:first-child{text-align:left;color:var(--muted);padding-left:12px}
+.cmp td.gold,.cmp th.gold{background:rgba(227,179,75,.06)}
+.calc{display:grid;gap:12px;padding:16px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(46,49,146,.18),rgba(255,255,255,.02))}
+.slider{display:grid;gap:8px}.slider input{width:100%;accent-color:#e3b34b}.slider span{font-size:13px;color:var(--muted)}
+.cbars{display:grid;gap:8px}.cbar{display:grid;grid-template-columns:62px minmax(0,1fr) 64px;gap:8px;align-items:center;font-size:12.5px}
+.cname{color:var(--muted)}.cbar b{text-align:right}.ctrack{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}
+.ctrack i{display:block;height:100%;border-radius:999px;background:#52525b;transition:width .25s}.ctrack i.gold{background:var(--metal-gold)}.ctrack i.silver{background:var(--metal-silver)}.ctrack i.bronze{background:var(--metal-bronze)}
+.cbar.best .cname{color:var(--fg);font-weight:700}.cbar.best b{color:var(--gold-a)}
+.cresult{margin:12px 0 0;font-size:13.5px;color:#d4d4d8;line-height:1.5}
+
+/* ---------- Brand wall ---------- */
+.blogo2{display:inline-grid;place-items:center;flex:none;border-radius:14px;font-family:var(--display);font-weight:800;color:#fff;background:radial-gradient(120% 120% at 0% 0%,rgba(255,255,255,.35),transparent 55%),var(--brand);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 4px 14px rgba(0,0,0,.35)}
+.brandrow{display:flex;gap:10px;overflow-x:auto;margin:0 -18px;padding:2px 18px 6px;scroll-snap-type:x mandatory}
+.brandmini{flex:none;width:132px;scroll-snap-align:start;display:grid;gap:6px;justify-items:start;text-align:left;padding:12px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--fg)}
+.brandmini b{font-size:13px}.brandmini span{font-size:11.5px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.brandmini em{font-style:normal}.brandmini em.ok{font-size:11px;color:var(--ok);font-weight:700}
+.brandmini.open{border-color:rgba(52,211,153,.35)}
+.perkhero{display:grid;gap:8px;padding:18px;border-radius:22px;background:radial-gradient(100% 100% at 100% 0%,rgba(227,179,75,.35),transparent 60%),linear-gradient(160deg,#2a2112,#0e0f12);border:1px solid rgba(227,179,75,.3)}
+.logowall{display:flex;margin:6px 0 2px}.logowall .blogo2{margin-right:-8px;border:2px solid #1a160d}
+.featured{display:grid;gap:10px;padding:16px;border-radius:20px;color:#fff;background:radial-gradient(120% 100% at 100% 0%,rgba(255,255,255,.18),transparent 55%),linear-gradient(150deg,var(--brand),#0b0c0e 120%);border:1px solid rgba(255,255,255,.14)}
+.foffer{margin:0;font-family:var(--display);font-weight:700;font-size:21px;line-height:1.15;letter-spacing:-.01em}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btile{display:grid;gap:6px;align-content:start;justify-items:start;padding:12px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.btile b{font-size:13.5px}.boffer{font-size:12.5px;color:#d4d4d8;line-height:1.35}.bmeta{font-size:11px;color:var(--dim);display:flex;gap:4px;align-items:center;flex-wrap:wrap}.bmeta em{font-style:normal}
+.btile.open{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.04)}
+.btile .btn,.featured .btn{height:32px;padding:0 12px;font-size:12.5px}
+.lockline{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted)}
+.coupon{display:grid;gap:4px;padding:8px 10px;border-radius:10px;border:1.5px dashed rgba(227,179,75,.6);background:rgba(227,179,75,.06)}
+.coupon .code{font-size:14px;font-weight:700;color:#f1d593}
+.secret{display:flex;gap:8px;align-items:center;padding:12px;border-radius:14px;border:1px dashed var(--line-2);font-size:12.5px;color:var(--muted)}
+
+/* ---------- Admin dashboard ---------- */
+.kpi .row{align-items:flex-end}.spark{width:96px;height:28px}
+.delta{font-size:12px;font-weight:600}.delta.up{color:var(--ok)}.delta.down{color:#fca5a5}
+.dgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.dgrid{grid-template-columns:minmax(0,1fr)}}
+.panelc{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:rgba(255,255,255,.025);display:grid;gap:8px;align-content:start;min-width:0}
+.panelc.span2{grid-column:span 2}@media (max-width:900px){.panelc.span2{grid-column:auto}}
+.panelc h3{margin:0;font-size:14.5px;font-weight:600}
+.chart{width:100%;height:auto;display:block}
+.chart .grid{stroke:rgba(255,255,255,.07);stroke-width:1}.chart .axis,.donut .axis{fill:#71717a;font-size:11px;font-family:var(--sans)}
+.chart .vlabel{fill:#fafafa;font-size:12px;font-weight:600;font-family:var(--sans)}
+.chart [data-tip],.donut [data-tip],.funnel [data-tip],.hbars [data-tip]{cursor:default}
+.chart rect[data-tip]:hover,.donut circle[data-tip]:hover{opacity:.85}
+.donutwrap{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;align-items:center}
+.donut{width:120px;height:120px}.donut .dtotal{fill:#fafafa;font-family:var(--display);font-weight:700;font-size:26px}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:12.5px}
+.legend li{display:grid;grid-template-columns:10px minmax(0,1fr) auto auto;gap:8px;align-items:center;color:#d4d4d8}
+.legend i{width:10px;height:10px;border-radius:3px}
+.legend.inline{display:flex;gap:12px}.legend.inline li{display:flex;gap:6px}
+.funnel,.hbars{display:grid;gap:8px;margin-top:4px}
+.frow{display:grid;grid-template-columns:120px minmax(0,1fr) 54px 40px;gap:8px;align-items:center;font-size:12.5px}
+.fl,.hl{color:var(--muted)}.frow b,.hrow b{text-align:right}.fconv{font-size:11.5px;color:var(--dim);text-align:right}
+.ftrack,.htrack{height:14px;border-radius:4px;background:rgba(255,255,255,.05);overflow:hidden}
+.ftrack i{display:block;height:100%;border-radius:4px;background:#3b82f6}.htrack i{display:block;height:100%;border-radius:4px}
+.hrow{display:grid;grid-template-columns:92px minmax(0,1fr) 30px;gap:8px;align-items:center;font-size:12.5px}
+.goal{justify-items:center;text-align:center;background:radial-gradient(100% 80% at 50% 0%,rgba(227,179,75,.14),transparent 70%),rgba(255,255,255,.025)}
+.goal p{margin:0;font-size:13.5px}.ring{width:96px;height:96px}.ring .ringt{fill:#fafafa;font-family:var(--display);font-weight:700;font-size:18px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.badgeb{display:inline-flex;gap:4px;align-items:center;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--dim)}
+.badgeb.got{color:#1b1406;background:var(--metal-gold);border-color:transparent;font-weight:700}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:10px}
+.lcard{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;border:1.5px solid transparent;background:linear-gradient(#111216,#111216) padding-box,var(--metal,linear-gradient(var(--line),var(--line))) border-box}
+.lcard.gold{--metal:var(--metal-gold)}.lcard.silver{--metal:var(--metal-silver)}.lcard.bronze{--metal:var(--metal-bronze)}.lcard.squad{--metal:linear-gradient(135deg,#c9a24b,#3a3a42 40%,#c9a24b)}
+.tview summary{font-size:12px;color:var(--dim);cursor:pointer}.tview table{width:100%;font-size:12px;border-collapse:collapse;margin-top:6px}.tview th,.tview td{padding:4px 6px;text-align:right;border-top:1px solid var(--line);color:var(--muted)}
+.tip{position:fixed;z-index:200;pointer-events:none;background:#f4f4f5;color:#111;font-size:12.5px;font-weight:600;padding:6px 10px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.4);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.tcard.gold::after{display:none}}
+
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#f4f4f5;color:#111;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:500;z-index:100;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:up .25s ease-out;max-width:calc(100% - 32px)}
 @keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -233,7 +356,7 @@ h2.d{font-size:20px;line-height:1.15}
 <div class="wrap">
   <header class="top">
     <div class="brand"><svg role="img" aria-label="peakst8" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1276.26 357.96"><path d="M905.13,168.68c-12.71-10.47-30.25-16.93-52.63-19.37l-16.79-1.83c-10.26-1.22-17.66-3.53-22.21-6.95-4.54-3.41-6.82-8.28-6.82-14.62s2.8-11.94,8.39-16.08c5.59-4.14,13.52-6.21,23.78-6.21,11.42,0,20.11,2.44,26.05,7.31,5.94,4.88,9.27,10.85,9.97,17.91h43.71c-.7-20.95-8.28-36.79-22.73-47.52-14.46-10.72-33.34-16.08-56.65-16.08-15.16,0-28.5,2.38-40.04,7.13-11.54,4.75-20.58,11.76-27.1,21.02-6.53,9.26-9.79,20.71-9.79,34.36,0,17.06,5.71,30.77,17.13,41.12,11.42,10.36,27.86,16.63,49.31,18.82l16.44,1.83c12.82,1.46,21.86,4.15,27.1,8.04,5.25,3.9,7.87,9.02,7.87,15.35,0,7.56-3.5,13.52-10.49,17.91-6.99,4.39-16.21,6.58-27.63,6.58-13.99,0-24.25-2.8-30.77-8.41-6.53-5.6-10.14-11.82-10.84-18.64h-44.06c.93,20.47,8.8,36.49,23.61,48.06,14.8,11.57,35.26,17.36,61.37,17.36,16.78,0,31.35-2.62,43.71-7.86,12.35-5.24,21.97-12.73,28.85-22.48,6.87-9.74,10.32-21.2,10.32-34.36,0-17.78-6.35-31.92-19.06-42.4Z" style="fill:#fff;"/><path d="M343.42,78.41c-13.9-9.52-31.13-14.28-51.68-14.28-15.65,0-29.49,2.91-41.52,8.72-12.03,5.82-22.02,13.61-29.96,23.38-7.94,9.78-13.96,20.91-18.04,33.39-4.09,12.49-6.13,25.42-6.13,38.77v7.05c0,12.86,2.04,25.48,6.13,37.85,4.08,12.37,10.16,23.56,18.22,33.58,8.06,10.02,18.22,17.99,30.48,23.93,12.26,5.94,26.57,8.9,42.92,8.9s29.61-2.85,41.87-8.53c12.26-5.69,22.36-13.73,30.31-24.12,7.94-10.39,13.31-22.51,16.12-36.36h-45.2c-2.1,7.42-6.89,13.67-14.37,18.74-7.48,5.07-17.05,7.6-28.73,7.6s-21.72-2.78-29.43-8.35c-7.71-5.57-13.44-13.23-17.17-23-2.44-6.38-4.07-13.37-4.91-20.96h142.96v-18.92c0-17.81-3.5-34.44-10.51-49.91-7.01-15.46-17.46-27.95-31.36-37.48ZM243.15,152.81c.96-5.67,2.38-10.87,4.26-15.58,3.86-9.65,9.51-17.13,16.99-22.45,7.47-5.32,16.58-7.98,27.33-7.98s19.62,2.48,26.63,7.42c7.01,4.95,12.32,12,15.94,21.15,2.06,5.21,3.51,11.03,4.4,17.44h-95.56Z" style="fill:#fff;"/><polygon points="764.74 65.42 707.58 65.42 645.88 168.2 645.88 1.79 594.3 1.79 594.3 275.54 645.88 275.54 645.88 178.42 667.77 178.42 706.48 275.54 764.74 275.54 708.7 157.08 764.74 65.42" style="fill:#fff;"/><path d="M529.98,87.79c-4.9-5.87-10.63-10.79-17.22-14.7-10.02-5.94-21.25-8.91-33.71-8.91-16.37,0-30.96,4.67-43.78,14-12.82,9.33-22.9,22.06-30.23,38.18-7.33,16.12-10.99,34.37-10.99,54.73s3.66,38.18,10.99,54.31c7.33,16.12,17.4,28.85,30.23,38.18,12.82,9.33,27.29,14,43.42,14,12.7,0,24.12-2.97,34.26-8.91,6.55-3.84,12.22-8.67,17.04-14.46v23.37h48.36V65.36h-48.36v22.43ZM520.46,210.55c-8.31,10.47-19.18,15.7-32.61,15.7-8.55,0-16.25-2.4-23.08-7.21-6.84-4.81-12.15-11.31-15.94-19.51-3.79-8.2-5.68-17.82-5.68-28.85s1.89-20.22,5.68-28.43c3.78-8.2,9.03-14.71,15.75-19.52,6.71-4.81,14.47-7.21,23.26-7.21s16.85,2.33,23.45,7c6.59,4.67,11.84,11.24,15.75,19.73,3.9,8.49,5.86,18.1,5.86,28.85,0,15.84-4.16,29-12.46,39.46Z" style="fill:#fff;"/><path d="M143.07,78.18c-12.82-9.33-27.29-14-43.41-14-12.7,0-24.12,2.97-34.26,8.91-6.55,3.84-12.22,8.67-17.04,14.46v-23.37H0v293.79h48.36v-103.99c4.9,5.87,10.63,10.79,17.22,14.7,10.02,5.94,21.25,8.91,33.71,8.91,16.37,0,30.96-4.67,43.78-14,12.82-9.33,22.9-22.06,30.23-38.18,7.33-16.12,10.99-34.37,10.99-54.73s-3.66-38.18-10.99-54.31c-7.33-16.12-17.4-28.85-30.23-38.18ZM129.51,199.52c-3.78,8.2-9.03,14.71-15.75,19.52-6.71,4.81-14.47,7.21-23.26,7.21s-16.85-2.33-23.45-7c-6.59-4.67-11.84-11.24-15.75-19.73-3.9-8.49-5.86-18.1-5.86-28.85,0-15.84,4.16-29,12.46-39.46,8.31-10.47,19.18-15.7,32.61-15.7,8.55,0,16.25,2.4,23.08,7.21,6.84,4.81,12.15,11.31,15.94,19.51,3.79,8.2,5.68,17.82,5.68,28.85s-1.89,20.22-5.68,28.43Z" style="fill:#fff;"/><path d="M1246.63,0h-85.7c-16.36,0-29.63,13.51-29.63,30.17v84.2c0,10.68-4.56,20.83-12.49,27.81h0c-7.93,6.98-12.49,17.13-12.49,27.81v74.56c0,16.66,13.26,30.17,29.63,30.17h85.7c16.36,0,29.63-13.51,29.63-30.17v-74.56c0-10.68,4.56-20.83,12.49-27.81,7.93-6.98,12.49-17.13,12.49-27.81V30.17c0-16.66-13.26-30.17-29.63-30.17ZM1199.08,213.23c0,4.61-3.67,8.35-8.2,8.35h-24.18c-4.53,0-8.2-3.74-8.2-8.35v-33.16c0-17.78,14.16-32.2,31.62-32.2h.75c4.53,0,8.2,3.74,8.2,8.35v57.01ZM1224.06,93.3c0,17.99-14.33,32.58-32,32.58-4.74,0-8.57-3.91-8.57-8.73v-55.28c0-4.82,3.84-8.73,8.57-8.73h23.42c4.74,0,8.57,3.91,8.57,8.73v31.43Z" style="fill:#fff;"/><path d="M1024.4,275.26h5.32c-.91,0-1.77-.03-2.66-.04-.89.01-1.75.04-2.66.04Z" style="fill:#fff;"/><path d="M987.25,0h-48.61v196.97c0,19.54,2.9,35.07,8.72,46.57,5.81,11.5,14.71,19.67,26.72,24.49,11.42,4.59,25.95,6.97,43.54,7.19,17.58-.22,32.12-2.6,43.54-7.19,12-4.82,20.91-12.99,26.72-24.49,5.82-11.5,8.72-27.02,8.72-46.57v-61.83h-48.61l.37,59.79c0,9.9-2.65,17.5-7.98,22.82-1.46,1.47-3.85,3.14-6.55,4.8-12.43,7.64-28.51,5.7-38.81-4.64-.05-.05-.11-.11-.16-.16-5.32-5.32-7.98-12.92-7.98-22.82l.18-85.9h109.53v-44.85h-109.44l.1-64.18Z" style="fill:#fff;"/></svg><span>Club Memberships · working prototype</span></div>
-    <div class="hint">Everything is live: join a plan, book a run, then switch to the host side and change it.</div>
+    <div class="hint">Everything is live: join a level, book a run, then switch to the admin dashboard and change it.</div>
   </header>
   <div class="grid">
     <aside class="rail" id="rail"></aside>
@@ -263,14 +386,14 @@ function seed(){
     user:{id:'u1',name:'Aarav Menon',phone:'+91 98450 21734'},
     club:{name:'Find Your Fit',city:'Bengaluru',members:412},
     plans:[
-      {id:'p1',kind:'MEMBERSHIP',name:'FYF Unlimited',description:'Every Find Your Fit training run, as often as you like, and half price on race days.',coverage:['TRAINING','SINGLE_DAY'],limitPeriod:'UNLIMITED',usageLimit:null,
+      {id:'p1',tier:'gold',kind:'MEMBERSHIP',name:'FYF Unlimited',description:'Every Find Your Fit training run, as often as you like, and half price on race days.',coverage:['TRAINING','SINGLE_DAY'],limitPeriod:'UNLIMITED',usageLimit:null,
        prices:[{id:'pp1',label:'Monthly',amount:1499,billing:'RECURRING',interval:'MONTHLY',joiningFee:0},{id:'pp2',label:'Quarterly',amount:3999,billing:'RECURRING',interval:'QUARTERLY',joiningFee:0}],
        intro:{priceId:'pp1',amount:199,days:14},approval:false,cancellation:'AUTO',minCommitment:0,featured:true,published:true,perks:{earlyAccessHours:48,guestPasses:2,perkIds:['k1','k2','k4']},allowDiscounts:true},
-      {id:'p2',kind:'MEMBERSHIP',name:'8 Runs a Month',description:'Two runs a week, any training session.',coverage:['TRAINING'],limitPeriod:'PER_MONTH',usageLimit:8,
+      {id:'p2',tier:'silver',kind:'MEMBERSHIP',name:'8 Runs a Month',description:'Two runs a week, any training session.',coverage:['TRAINING'],limitPeriod:'PER_MONTH',usageLimit:8,
        prices:[{id:'pp3',label:'Monthly',amount:999,billing:'RECURRING',interval:'MONTHLY',joiningFee:0}],intro:null,approval:false,cancellation:'REVIEW',minCommitment:3,featured:false,published:true,perks:{earlyAccessHours:24,guestPasses:0,perkIds:['k1','k4']},allowDiscounts:true},
-      {id:'p3',kind:'PACK',name:'10-Run Pack',description:'Ten training runs, valid 90 days from purchase.',coverage:['TRAINING'],limitPeriod:'TOTAL',usageLimit:10,
+      {id:'p3',tier:'bronze',kind:'PACK',name:'10-Run Pack',description:'Ten training runs, valid 90 days from purchase.',coverage:['TRAINING'],limitPeriod:'TOTAL',usageLimit:10,
        prices:[{id:'pp4',label:'One-time',amount:2199,billing:'ONE_TIME',validityDays:90,joiningFee:0}],intro:null,approval:false,cancellation:'AUTO',minCommitment:0,featured:false,published:true,perks:{earlyAccessHours:0,guestPasses:0,perkIds:[]},allowDiscounts:false},
-      {id:'p4',kind:'MEMBERSHIP',name:'Pacer Squad',description:'Coached sub-50 10K group. The coach approves every request.',coverage:['TRAINING','SINGLE_DAY'],limitPeriod:'UNLIMITED',usageLimit:null,
+      {id:'p4',tier:'squad',kind:'MEMBERSHIP',name:'Pacer Squad',description:'Coached sub-50 10K group. The coach approves every request.',coverage:['TRAINING','SINGLE_DAY'],limitPeriod:'UNLIMITED',usageLimit:null,
        prices:[{id:'pp5',label:'Monthly',amount:2499,billing:'RECURRING',interval:'MONTHLY',joiningFee:500}],intro:null,approval:true,cancellation:'AUTO',minCommitment:0,featured:false,published:true,perks:{earlyAccessHours:48,guestPasses:1,perkIds:['k1','k2','k3','k4','k5']},allowDiscounts:false},
     ],
     events:[
@@ -295,6 +418,10 @@ function seed(){
       {id:'d2',code:'STUDENT300',kind:'FLAT',value:300,planIds:['p1'],applies:'EVERY',maxUses:null,used:4,enabled:true},
       {id:'d3',code:'DIWALI500',kind:'FLAT',value:500,planIds:['p1','p4'],applies:'FIRST',maxUses:100,used:100,enabled:false},
     ],
+    // Demo history for the admin charts. The current month adds whatever happens live in the prototype.
+    history:{months:['Jun','Jul','Aug','Sep','Oct','Nov'],gold:[18,22,27,31,36,41],silver:[24,27,31,36,40,46],bronze:[30,33,38,41,47,52],packsSold:[9,10,12,13,15,17],churn:[4.8,4.1,3.9,3.6,3.3,3.1],
+      funnel:[['Club page visits',2840],['Viewed a plan',1120],['Started checkout',214],['Joined',139]]},
+    calcRuns:8,
     userPlans:[], joinRequests:[], bookings:[], usages:[], guestPasses:[],
     members:[ // other holders, for the host view
       {id:'m1',name:'Priya Raghavan',planId:'p1',priceId:'pp1',status:'ACTIVE',periodEnd:now+18*DAY,used:6},
@@ -329,7 +456,18 @@ function earlyAccess(event){ // returns {open, viaPlan, opensAt}
   return via?{open:true,viaPlan:via,opensAt:event.publicOpensAt}:{open:false,opensAt:event.publicOpensAt};
 }
 const PERK_CATS={GEAR:'Gear',NUTRITION:'Nutrition',FOOD:'Food & drink',RECOVERY:'Recovery',WEARABLES:'Wearables',OTHER:'Other'};
-/* Discounts: club admins turn codes on per plan (Host → Discounts) */
+/* Tiers: how a club's plans are presented as levels */
+const TIERS={gold:{label:'Gold',rank:3,letter:'G',tag:'Most popular'},silver:{label:'Silver',rank:2,letter:'S',tag:'Best value'},bronze:{label:'Bronze',rank:1,letter:'B',tag:'Try it out'},squad:{label:'Pacer Squad',rank:4,letter:'P',tag:'Invite only'}};
+const SERIES={gold:'#b4871f',silver:'#7a8fd0',bronze:'#a9532b',blue:'#3b82f6'}; // validated for the dark dashboard surface (dataviz validator)
+const tierOf=p=>TIERS[p.tier]||null;
+const medal=(t,size=40)=>`<span class="medal ${t||'none'}" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.42)}px" aria-hidden="true">${(TIERS[t]||{letter:'•'}).letter}</span>`;
+const tierChip=p=>p.tier?`<span class="tchip ${p.tier}">${TIERS[p.tier].label}</span>`:'';
+const DROP_IN=Math.round((299+249)/2); // average single-session price across the club's training runs
+function perRun(plan){const pr=plan.prices[0];if(plan.limitPeriod==='UNLIMITED')return {value:Math.round(pr.amount/12),note:'at 12 runs a month'};return {value:Math.round(pr.amount/(plan.usageLimit||1)),note:plan.limitPeriod==='TOTAL'?`across ${plan.usageLimit} runs`:`at ${plan.usageLimit} runs a month`}}
+function minTierFor(perkId){const ps=plansUnlocking(perkId).filter(p=>p.tier).sort((a,b)=>TIERS[a.tier].rank-TIERS[b.tier].rank);return ps[0]||null}
+function monthlyCost(plan,runs){const pr=plan.prices[0];if(plan.kind==='PACK')return Math.round(runs*pr.amount/(plan.usageLimit||1));if(plan.limitPeriod==='UNLIMITED')return pr.amount;const extra=Math.max(0,runs-(plan.usageLimit||0));return pr.amount+extra*DROP_IN}
+
+/* Discounts: club admins turn codes on per plan (Admin → Discounts) */
 function discountAmount(dc,amount){return dc.kind==='PERCENT'?Math.round(amount*dc.value/100):Math.min(amount,dc.value)}
 function checkCode(code,plan,intro){
   const c=String(code||'').trim().toUpperCase();if(!c)return {err:'Enter a code.'};
@@ -470,6 +608,10 @@ const I={
   ring:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9.5" stroke="#fff"/></svg>',
   pin:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-12a7 7 0 1 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
   cal:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  tickSm:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-11"/></svg>',
+  chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>',
+  lock:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  trend:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
   spark:'<svg width="16" height="16" viewBox="0 0 24 24" fill="#3a3b40"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>',
 };
 
@@ -490,28 +632,81 @@ function planButton(plan){ // SweatPals offer-card states: Join · Request to jo
 /* ───────────────────────── Views: member ───────────────────────── */
 const V={};
 V.club=()=>{
-  const plans=S.plans.filter(p=>p.published).sort((a,b)=>(b.featured?1:0)-(a.featured?1:0));
-  return `<div class="stack" style="gap:18px">
-    <div class="club"><div class="logo">FYF</div><div><h1 class="d" style="font-size:24px">${esc(S.club.name)}</h1><p class="sub">${S.club.members} members · ${esc(S.club.city)}</p></div></div>
-    <p class="sub">Weekly community runs around Cubbon Park and Lalbagh. Plans make every run one tap.</p>
-    <div class="stack"><div class="row"><h2 class="d">Plans</h2><span class="dim" style="font-size:12.5px">${plans.length} available</span></div>
-    ${plans.map(p=>{const pr=p.prices[0];const b=planButton(p);return `<div class="plan">
-      <div class="row" style="align-items:flex-start"><div style="display:grid;gap:4px"><b style="font-size:16px">${esc(p.name)}</b><span class="muted" style="font-size:13px">${esc(p.description)}</span></div>${p.featured?'<span class="pill gold">Popular</span>':''}</div>
-      <div class="price">${priceLine(pr)}${p.prices.length>1?` <span class="per">· or ${fmt(p.prices[1].amount)}/${INTERVAL[p.prices[1].interval].label}</span>`:''}</div>
-      <div class="feat"><span class="pill">${coverText(p)}</span><span class="pill">${limitText(p)}</span>${p.intro?`<span class="pill gold">${fmt(p.intro.amount)} first ${p.intro.days} days</span>`:''}${p.approval?'<span class="pill">Approval needed</span>':''}${p.kind==='PACK'?'<span class="pill">Pack</span>':''}${perkPills(p).map(x=>`<span class="pill perk">${x}</span>`).join('')}</div>
-      <button class="btn ${b.kind} sm" style="justify-self:start" ${b.disabled?'disabled':''} data-act="${b.act||''}">${b.label}</button></div>`}).join('')}
+  const plans=S.plans.filter(p=>p.published);
+  const tiered=plans.filter(p=>['gold','silver','bronze'].includes(p.tier)).sort((a,b)=>TIERS[b.tier].rank-TIERS[a.tier].rank);
+  const others=plans.filter(p=>!tiered.includes(p));
+  const held=S.userPlans.find(u=>BOOKABLE.includes(u.status));
+  return `<div class="stack" style="gap:22px">
+    <div class="hero">
+      <div class="cover" aria-hidden="true"><span class="track t1"></span><span class="track t2"></span><span class="track t3"></span></div>
+      <div class="herobody">
+        <div class="logo big">FYF</div>
+        <div class="row" style="align-items:flex-end"><div><h1 class="d" style="font-size:28px">${esc(S.club.name)}</h1><p class="sub" style="font-size:13.5px">Community runs · ${esc(S.club.city)}</p></div><span class="verified">${I.tickSm} Verified club</span></div>
+        <div class="stats"><div><b class="num">${S.club.members}</b><span>members</span></div><div><b class="num">3×</b><span>runs a week</span></div><div><b class="num">4.9</b><span>186 reviews</span></div><div><b class="num">${S.perks.length}</b><span>brand perks</span></div></div>
+      </div>
     </div>
+    ${held?`<button class="memberbar ${planById(held.planId).tier||''}" data-act="passes">${medal(planById(held.planId).tier,34)}<span style="flex:1;text-align:left"><b>You're ${tierOf(planById(held.planId))?TIERS[planById(held.planId).tier].label:'a member'}</b><span class="muted" style="display:block;font-size:12.5px">${esc(planById(held.planId).name)} · view your plan</span></span>${I.chev}</button>`:''}
+    <section class="stack" style="gap:14px" aria-labelledby="levels-h">
+      <div><span class="eyebrow">Membership</span><h2 class="d" id="levels-h" style="font-size:24px">Pick your level</h2><p class="sub" style="font-size:13.5px">Drop-in runs cost about ${fmt(DROP_IN)}. Every level brings that down, and adds perks.</p></div>
+      ${tiered.map(tierCard).join('')}
+      ${others.map(tierCard).join('')}
+    </section>
+    ${tiered.length>1?compareTable(tiered):''}
+    ${tiered.length?calculator(tiered):''}
     ${perksSection()}
-    <div class="stack"><h2 class="d">Upcoming</h2>${S.events.map(eventRow).join('')}</div>
+    <div class="stack"><h2 class="d">Upcoming runs</h2>${S.events.map(eventRow).join('')}</div>
   </div>`;
 };
+function tierCard(p){
+  const pr=p.prices[0],b=planButton(p),t=tierOf(p),pp=perRun(p);
+  const bens=[coverText(p),limitText(p),...perkPills(p)];
+  if(p.cancellation==='AUTO'&&p.kind!=='PACK')bens.push('Cancel any time');
+  if(p.minCommitment)bens.push(`${p.minCommitment}-month minimum`);
+  return `<article class="tcard ${p.tier||'none'}">
+    ${t?`<span class="ttag">${t.tag}</span>`:''}
+    <div class="row" style="align-items:center;justify-content:flex-start;gap:12px">${medal(p.tier,46)}<div style="min-width:0"><span class="tlabel">${t?t.label:'Plan'}</span><b style="display:block;font-size:17px">${esc(p.name)}</b></div></div>
+    <div class="tprice"><b class="num">${fmt(pr.amount)}</b><span>${pr.billing==='ONE_TIME'?`one-time · ${pr.validityDays} days`:`/ ${INTERVAL[pr.interval].label}`}</span></div>
+    ${p.tier!=='squad'?`<div class="perrun"><b class="num">${fmt(pp.value)}</b> a run ${pp.note}<span class="dim"> · drop-in ${fmt(DROP_IN)}</span></div>`:`<div class="perrun">Coached sub-50 10K group. The coach approves every request.</div>`}
+    ${p.intro?`<div class="introbar">${I.spark}<span>${fmt(p.intro.amount)} for your first ${p.intro.days} days</span></div>`:''}
+    <ul class="bens">${bens.map(x=>`<li>${I.check}<span>${x}</span></li>`).join('')}</ul>
+    <button class="btn ${b.kind} ${p.tier==='gold'&&!b.kind?'goldbtn':''} block" style="height:46px" ${b.disabled?'disabled':''} data-act="${b.act||''}">${b.label}</button>
+  </article>`;
+}
+function compareTable(tiered){
+  const cols=[...tiered].sort((a,b)=>TIERS[a.tier].rank-TIERS[b.tier].rank);
+  const yes=I.check, no='<span class="dim">—</span>';
+  const rows=[
+    ['Price',p=>{const pr=p.prices[0];return `<b class="num">${fmt(pr.amount)}</b><span class="dim" style="display:block;font-size:11px">${pr.billing==='ONE_TIME'?'one-time':'/'+INTERVAL[pr.interval].label}</span>`}],
+    ['Runs',p=>p.limitPeriod==='UNLIMITED'?'Unlimited':p.limitPeriod==='TOTAL'?`${p.usageLimit} total`:`${p.usageLimit} / mo`],
+    ['Race days',p=>p.coverage.includes('SINGLE_DAY')?'Half price':no],
+    ['Book early',p=>p.perks.earlyAccessHours?`${p.perks.earlyAccessHours}h`:no],
+    ['Guest passes',p=>p.perks.guestPasses?`${p.perks.guestPasses} / mo`:no],
+    ['Brand perks',p=>p.perks.perkIds.length||no],
+    ['Cancel any time',p=>p.cancellation==='AUTO'&&!p.minCommitment?yes:no],
+  ];
+  return `<section class="stack" style="gap:10px" aria-labelledby="cmp-h"><h2 class="d" id="cmp-h">Compare levels</h2>
+  <div class="cmp"><table><thead><tr><th></th>${cols.map(p=>`<th class="${p.tier}">${medal(p.tier,22)}<span>${TIERS[p.tier].label}</span></th>`).join('')}</tr></thead>
+  <tbody>${rows.map(([l,f])=>`<tr><td>${l}</td>${cols.map(p=>`<td class="${p.tier}">${f(p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
+}
+function calculator(tiered){
+  return `<section class="calc" aria-labelledby="calc-h"><div class="row"><div><span class="eyebrow">Savings calculator</span><h2 class="d" id="calc-h">How often do you run?</h2></div></div>
+  <label class="slider"><input type="range" min="2" max="16" step="1" value="${S.calcRuns}" data-calc aria-label="Runs a month"><span id="calc-runs" class="num">${S.calcRuns} runs a month</span></label>
+  <div id="calc-out">${calcOut(tiered)}</div></section>`;
+}
+function calcOut(tiered){
+  const runs=S.calcRuns;
+  const rows=[{name:'Drop-in',tier:'none',cost:runs*DROP_IN},...tiered.map(p=>({name:TIERS[p.tier].label,tier:p.tier,cost:monthlyCost(p,runs),plan:p}))];
+  const max=Math.max(...rows.map(r=>r.cost));const best=rows.slice(1).sort((a,b)=>a.cost-b.cost)[0];
+  return `<div class="cbars">${rows.map(r=>`<div class="cbar ${r===best?'best':''}"><span class="cname">${r.name}</span><span class="ctrack"><i class="${r.tier}" style="width:${Math.max(6,r.cost/max*100)}%"></i></span><b class="num">${fmt(r.cost)}</b></div>`).join('')}</div>
+  <p class="cresult">${best&&best.cost<rows[0].cost?`<b>${best.name}</b> suits ${runs} runs a month: you'd save <b class="num">${fmt(rows[0].cost-best.cost)}</b> a month over paying per run.`:'At this pace, paying per run is cheapest.'}</p>`;
+}
+function brandLogo(k,size=48){const ini=k.partner.replace(/[^A-Za-z& ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('');return `<span class="blogo2" style="--brand:${k.color};width:${size}px;height:${size}px;font-size:${Math.round(size*0.34)}px">${esc(ini)}</span>`}
 function perksSection(){
   const un=unlockedPerkIds();const list=S.perks.filter(k=>plansUnlocking(k.id).length&&(k.vis!=='MEMBERS_ONLY'||un.has(k.id)));
   if(!list.length)return '';
-  return `<div class="stack" id="perks"><div class="row"><h2 class="d">Member perks</h2><span class="dim" style="font-size:12.5px">${un.size?un.size+' unlocked':'For plan holders'}</span></div>
-  ${list.slice(0,2).map(k=>{const open=un.has(k.id);const via=plansUnlocking(k.id);return `<div class="perkcard ${open?'open':''}"><div class="row" style="align-items:flex-start"><div style="display:grid;gap:3px;min-width:0"><b>${esc(k.partner)}</b><span>${esc(k.offer)}</span></div>${open?'<span class="pill ok">Unlocked</span>':'<span class="pill">🔒 Locked</span>'}</div>
-    ${open?`<div class="note">${esc(k.redeem)}${k.code?` · Code <b class="code">${esc(k.code)}</b>`:''}</div>`:`<div class="note">Join ${via.map(p=>esc(p.name)).join(' or ')} to unlock</div>`}</div>`}).join('')}
-  <button class="btn ghost sm" style="justify-self:start" data-act="go:perkspage">See all ${S.perks.filter(k=>plansUnlocking(k.id).length).length} brand perks</button></div>`;
+  return `<section class="stack" id="perks" style="gap:12px" aria-labelledby="perks-h"><div class="row"><div><span class="eyebrow">Member perks</span><h2 class="d" id="perks-h">Brands that back the club</h2></div><span class="dim" style="font-size:12.5px">${un.size?un.size+' unlocked':''}</span></div>
+  <div class="brandrow">${list.map(k=>{const open=un.has(k.id);const mt=minTierFor(k.id);return `<button class="brandmini ${open?'open':''}" data-act="go:perkspage">${brandLogo(k,44)}<b>${esc(k.partner.split(',')[0])}</b><span>${esc(k.offer)}</span>${open?'<em class="ok">Unlocked</em>':mt?`<em class="tchip ${mt.tier}">${TIERS[mt.tier].label}${mt.tier!=='gold'&&mt.tier!=='squad'?' & up':''}</em>`:''}</button>`}).join('')}</div>
+  <button class="btn ghost sm" style="justify-self:start" data-act="go:perkspage">See all ${S.perks.filter(k=>plansUnlocking(k.id).length).length} brand perks</button></section>`;
 }
 function eventRow(e){
   const best=S.events&&e.categories.map(c=>evaluate(e,c).best).filter(Boolean).sort((a,b)=>a.price-b.price)[0];
@@ -558,7 +753,7 @@ function planCard(up){
   const plan=planById(up.planId),price=priceById(up.priceId);const a=allowance(up,S.now);
   const renewTxt=price.billing==='ONE_TIME'?`Expires ${d(up.periodEnd)}`:up.status==='CANCELS_AT_PERIOD_END'?`Access until ${d(up.periodEnd)}`:up.status==='PAUSED'?'Billing paused by the club':up.status==='PAST_DUE'?'Renewal payment failed':`Renews ${d(up.periodEnd)} · ${fmt(up.introActive?price.amount:(renewalAmount(up)))}`;
   return `<div class="card stack" style="gap:14px;border-color:rgba(27,255,255,.18);background:linear-gradient(160deg,rgba(46,49,146,.22),rgba(255,255,255,.02))">
-    <div class="row" style="align-items:flex-start"><div style="display:grid;gap:4px"><span class="eyebrow">${esc(S.club.name)}</span><b style="font-size:18px">${esc(plan.name)}</b><span class="muted" style="font-size:13px">${renewTxt}</span></div>${statusPill(up.status)}</div>
+    <div class="row" style="align-items:flex-start"><div style="display:grid;gap:4px"><span class="eyebrow">${esc(S.club.name)}</span><span style="display:flex;gap:8px;align-items:center">${medal(plan.tier,26)}<b style="font-size:18px">${esc(plan.name)}</b></span><span class="muted" style="font-size:13px">${renewTxt}</span></div>${statusPill(up.status)}</div>
     ${a.limit?`<div class="stack" style="gap:6px"><div class="row" style="font-size:13px"><span class="muted">${plan.kind==='PACK'?'Credits':'This period'}</span><span class="num">${Math.max(0,a.left)} of ${a.limit} left</span></div><div class="meter"><i style="width:${Math.max(0,a.left)/a.limit*100}%"></i></div></div>`:`<div class="row" style="font-size:13px"><span class="muted">Bookings</span><span>Unlimited</span></div>`}
     ${(()=>{const sv=savings(up);return sv.runs?`<div class="saved"><b class="num">You saved ${fmt(sv.period)}</b><span>this period · ${fmt(sv.total)} since joining · ${sv.runs} run${sv.runs>1?'s':''}</span></div>`:''})()}
     ${perkRows(up)}
@@ -581,21 +776,30 @@ V.perkspage=()=>{
   const vis=all.filter(k=>!(k.vis==='MEMBERS_ONLY'&&!un.has(k.id)));
   const cats=['ALL',...new Set(vis.map(k=>k.cat))];
   const shown=vis.filter(k=>(cat==='ALL'||k.cat===cat)&&(!q||(k.partner+' '+k.offer).toLowerCase().includes(q)));
-  return `<div class="stack" style="gap:16px">
+  const featured=[...vis].sort((a,b)=>b.reveals-a.reveals)[0];
+  const total=vis.reduce((s,k)=>s+k.reveals,0);
+  return `<div class="stack" style="gap:18px">
     <div class="appbar"><button class="back" data-act="go:club" aria-label="Back">${I.back}</button><b>${esc(S.club.name)}</b></div>
-    <div class="stack" style="gap:6px"><span class="eyebrow">Club perks</span><h1 class="d">Brand offers for ${esc(S.club.name)} members</h1><p class="sub">${un.size?`You've unlocked ${un.size} of ${all.length}.`:`${all.length} offers from the club's partners. Join a plan to unlock them.`}</p></div>
+    <div class="perkhero"><span class="eyebrow" style="color:#e9d6a8">Club perks</span><h1 class="d">The ${esc(S.club.name)} brand wall</h1><p class="sub" style="color:#d6d3c8">${all.length} partner offers · members used them ${total} times</p>
+      <div class="logowall">${vis.slice(0,6).map(k=>brandLogo(k,40)).join('')}</div>
+      <p class="sub" style="font-size:13px;color:#e9d6a8">${un.size?`You've unlocked ${un.size} of ${all.length}.`:'Join a level to unlock them.'}</p></div>
+    ${featured?featuredPerk(featured,un.has(featured.id)):''}
     <div class="field"><label for="psearch" class="sr">Search perks</label><input id="psearch" data-psearch placeholder="Search brands or offers" value="${esc(S.perkQuery||'')}"></div>
     <div class="chips">${cats.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-act="pcat:${c}">${c==='ALL'?'All':PERK_CATS[c]}</button>`).join('')}</div>
-    <div class="stack">${shown.length?shown.map(k=>{const open=un.has(k.id);const via=plansUnlocking(k.id);const revealed=(S.revealed||{})[k.id];
-      return `<div class="bperk ${open?'open':''}"><div class="blogo" style="background:${k.color}">${esc(k.partner.replace(/[^A-Za-z& ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join(''))}</div>
-      <div style="display:grid;gap:4px;min-width:0"><div class="row" style="align-items:flex-start"><b>${esc(k.partner)}</b><span class="pill" style="height:22px">${PERK_CATS[k.cat]}</span></div><span>${esc(k.offer)}</span>
-      ${open?(k.code?(revealed?`<span class="note">${esc(k.redeem)} · <b class="code">${esc(k.code)}</b></span>`:`<button class="btn sm" style="justify-self:start;margin-top:4px" data-act="reveal:${k.id}">Reveal code</button>`):`<span class="note">${esc(k.redeem)}</span>`)
-        :`<span class="note">🔒 Unlock with ${via.map(p=>esc(p.name)).join(' or ')}</span>`}</div></div>`}).join(''):`<div class="card"><p class="sub">No perks match "${esc(S.perkQuery||'')}".</p></div>`}</div>
-    ${hidden.length?`<p class="note">+${hidden.length} members-only perk${hidden.length>1?'s':''} you'll see after joining ${esc(plansUnlocking(hidden[0].id).map(p=>p.name).join(' or '))}.</p>`:''}
-    ${un.size?'':`<button class="btn block" data-act="go:club">See plans</button>`}
+    ${shown.length?`<div class="bgrid">${shown.map(k=>brandTile(k,un.has(k.id))).join('')}</div>`:`<div class="card"><p class="sub">No perks match "${esc(S.perkQuery||'')}".</p></div>`}
+    ${hidden.length?`<div class="secret">${I.lock}<span>+${hidden.length} members-only perk${hidden.length>1?'s':''} appear after you join ${esc(plansUnlocking(hidden[0].id).map(p=>p.name).join(' or '))}.</span></div>`:''}
+    ${un.size?'':`<button class="btn goldbtn block" data-act="go:club">See membership levels</button>`}
     <p class="note">Share this page: ps8.club/find-your-fit/perks · Partners shown are examples.</p>
   </div>`;
 };
+function perkAction(k,open){
+  const revealed=(S.revealed||{})[k.id];const mt=minTierFor(k.id);
+  if(!open)return `<span class="lockline">${I.lock}${mt?`Unlock with ${TIERS[mt.tier].label}${mt.tier!=='gold'&&mt.tier!=='squad'?' or higher':''}`:'Members only'}</span>`;
+  if(!k.code)return `<span class="note">${esc(k.redeem)}</span>`;
+  return revealed?`<span class="coupon"><span class="code">${esc(k.code)}</span><span class="note">${esc(k.redeem)}</span></span>`:`<button class="btn sm" data-act="reveal:${k.id}">Reveal code</button>`;
+}
+function featuredPerk(k,open){const mt=minTierFor(k.id);return `<article class="featured" style="--brand:${k.color}"><span class="eyebrow" style="color:rgba(255,255,255,.75)">Most used this month</span><div class="row" style="justify-content:flex-start;gap:12px">${brandLogo(k,52)}<div><b style="font-size:16px">${esc(k.partner)}</b><span style="display:block;font-size:12.5px;opacity:.8">${PERK_CATS[k.cat]} · ${k.reveals} members used it</span></div></div><p class="foffer">${esc(k.offer)}</p>${mt?`<span class="tchip ${mt.tier}" style="justify-self:start">${TIERS[mt.tier].label}${mt.tier!=='gold'&&mt.tier!=='squad'?' & up':''}</span>`:''}${perkAction(k,open)}</article>`}
+function brandTile(k,open){const mt=minTierFor(k.id);return `<article class="btile ${open?'open':''}">${brandLogo(k,44)}<b>${esc(k.partner.split(',')[0])}</b><span class="boffer">${esc(k.offer)}</span><span class="bmeta">${PERK_CATS[k.cat]}${mt?` · <em class="tchip ${mt.tier}">${TIERS[mt.tier].label}</em>`:''}</span>${perkAction(k,open)}</article>`}
 V.manage=(id)=>{
   const up=S.userPlans.find(u=>u.id===id);if(!up)return V.passes();
   const plan=planById(up.planId),price=priceById(up.priceId);
@@ -634,7 +838,7 @@ SH.plan=(st)=>{ // join flow: Plan → Offer → Review → Pay
   const steps=['Plan',...(hasIntro?['Offer']:[]),plan.approval&&!approved?'Request':'Review'];
   const step=st.step||'Plan';
   const stepsHtml=`<div class="steps">${steps.map(s=>steps.indexOf(s)<steps.indexOf(step)?`<button class="done" data-act="step:${s}">${s}</button>`:`<span class="${s===step?'on':''}">${s}</span>`).join('')}</div>`;
-  const head=`<div class="head"><div><div class="title">${esc(plan.name)}</div><div class="muted" style="font-size:14px">${esc(S.club.name)}</div></div><button class="x" data-act="close" aria-label="Close">×</button></div>`;
+  const head=`<div class="head"><div style="display:flex;gap:12px;align-items:center">${medal(plan.tier,40)}<div><div class="title">${esc(plan.name)}</div><div class="muted" style="font-size:14px">${tierOf(plan)?TIERS[plan.tier].label+' · ':''}${esc(S.club.name)}</div></div></div><button class="x" data-act="close" aria-label="Close">×</button></div>`;
   if(step==='Plan'){
     return head+stepsHtml+`<div class="stack" style="gap:14px">
       <p class="sub">${esc(plan.description)}</p>
@@ -729,20 +933,75 @@ function rzpHtml(st){
       <button class="opt" style="justify-content:center;border:0;color:#6b7280" data-act="rzp:cancel">Cancel</button></div></div>`;
 }
 
-/* ───────────────────────── Views: host ───────────────────────── */
+/* ───────────────────────── Views: admin dashboard ───────────────────────── */
 function holders(planId){return S.members.filter(m=>m.planId===planId&&m.status!=='ENDED').length+S.userPlans.filter(u=>u.planId===planId&&u.status!=='ENDED').length}
 function mrr(){let t=0;const add=(priceId,status,override)=>{const p=priceById(priceId);if(!p||!['ACTIVE','CANCELS_AT_PERIOD_END'].includes(status))return;if(p.billing==='ONE_TIME')return;t+=(override??p.amount)/INTERVAL[p.interval].months};S.members.forEach(m=>add(m.priceId,m.status));S.userPlans.forEach(u=>add(u.priceId,u.status,u.priceOverride));return t}
 function allRequests(){return [...S.joinRequests.map(r=>({...r,name:S.user.name,mine:true})),...S.otherRequests]}
 const pendingCount=()=>allRequests().filter(r=>r.status==='PENDING').length+S.userPlans.filter(u=>u.cancelRequested&&u.status==='ACTIVE').length;
-V['h-plans']=()=>`<div class="dhead"><div><span class="eyebrow">Dashboard · ${esc(S.club.name)}</span><h1 class="d">Plans</h1></div><button class="btn sm" data-act="go:h-create">+ Create plan</button></div>
-  <div class="kpis"><div class="kpi"><span class="dim">Monthly recurring</span><b class="num">${fmt(mrr())}</b></div><div class="kpi"><span class="dim">Active holders</span><b class="num">${S.plans.reduce((s,p)=>s+holders(p.id),0)}</b></div><div class="kpi"><span class="dim">Payment failed</span><b class="num">${S.members.filter(m=>m.status==='PAST_DUE').length+S.userPlans.filter(u=>u.status==='PAST_DUE').length}</b></div><div class="kpi"><span class="dim">Requests waiting</span><b class="num">${pendingCount()}</b></div></div>
-  <div class="tbl"><table><thead><tr><th>Plan</th><th>Price</th><th>Covers</th><th>Limit</th><th>Rules</th><th>Holders</th><th>Status</th></tr></thead><tbody>
-  ${S.plans.map(p=>`<tr><td><b>${esc(p.name)}</b><div class="dim" style="font-size:12px">${p.kind==='PACK'?'Pack':'Membership'}</div></td><td class="num">${p.prices.map(x=>priceLine(x).replace(/<[^>]+>/g,'')).join('<br>')}</td><td>${coverText(p)}</td><td>${limitText(p)}</td><td style="font-size:12.5px" class="muted">${[p.approval&&'Approval',p.intro&&'Intro offer',p.minCommitment&&p.minCommitment+'-mo commitment',p.cancellation==='REVIEW'&&'Review cancels'].filter(Boolean).join(' · ')||'—'}</td><td class="num">${holders(p.id)}</td><td><button class="btn ghost sm" data-act="toggleplan:${p.id}">${p.published?'Published':'Unlisted'}</button></td></tr>`).join('')}
-  </tbody></table></div>`;
-V['h-create']=()=>{const f=S.form||(S.form={kind:'MEMBERSHIP',name:'Weekend Warrior',description:'Every Saturday and Sunday run.',coverage:['TRAINING'],limitPeriod:'PER_MONTH',usageLimit:8,amount:799,interval:'MONTHLY',validityDays:60,approval:false,intro:false,introAmount:99,introDays:7,cancellation:'AUTO',policy:'FREE'});
+// This month's holders per level: the demo history plus anyone who joined live in the prototype.
+function liveTierCounts(){const H=S.history;const n=H.months.length-1;const c={gold:H.gold[n],silver:H.silver[n],bronze:H.bronze[n]};
+  S.userPlans.filter(u=>BOOKABLE.includes(u.status)).forEach(u=>{const tr=planById(u.planId).tier;if(c[tr]!==undefined)c[tr]+=1});return c}
+function revenueSeries(){const H=S.history;const pr=id=>priceById(id).amount;return H.months.map((_,i)=>H.gold[i]*pr('pp1')+H.silver[i]*pr('pp3')+H.packsSold[i]*pr('pp4'))}
+function liveRevenue(){const rs=revenueSeries();const live=S.userPlans.filter(u=>BOOKABLE.includes(u.status)).reduce((s,u)=>s+u.charges.reduce((a,c)=>a+c.amount,0),0);return rs[rs.length-1]+live}
+function niceMax(v){const p=Math.pow(10,Math.floor(Math.log10(v)));const m=v/p;return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p}
+const kfmt=v=>v>=100000?'₹'+(v/100000).toFixed(v%100000?2:0)+'L':v>=1000?'₹'+Math.round(v/1000)+'k':fmt(v);
+function spark(values,color){const w=96,h=28,mx=Math.max(...values),mn=Math.min(...values);const pts=values.map((v,i)=>[i*(w-6)/(values.length-1)+3,h-4-(v-mn)/((mx-mn)||1)*(h-8)]);const last=pts[pts.length-1];
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${last[0]}" cy="${last[1]}" r="3" fill="${color}" stroke="#0b0c0e" stroke-width="2"/></svg>`}
+function areaChart({labels,values,color,fmtv}){const W=600,H=220,L=48,R=16,T=16,B=28;const mx=niceMax(Math.max(...values)*1.1);const x=i=>L+i*(W-L-R)/(labels.length-1),y=v=>T+(1-v/mx)*(H-T-B);
+  const grid=[0,0.5,1].map(f=>`<line x1="${L}" x2="${W-R}" y1="${y(mx*f)}" y2="${y(mx*f)}" class="grid"/><text x="${L-8}" y="${y(mx*f)+4}" text-anchor="end" class="axis">${kfmt(mx*f)}</text>`).join('');
+  const line=values.map((v,i)=>`${x(i)},${y(v)}`).join(' ');const area=`${x(0)},${y(0)} ${line} ${x(values.length-1)},${y(0)}`;
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Monthly plan revenue, ${labels[0]} to ${labels[labels.length-1]}"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".35"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>${grid}
+    <polygon points="${area}" fill="url(#ag)"/><polyline points="${line}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+    ${values.map((v,i)=>`<g class="pt" data-tip="${labels[i]}: ${fmtv(v)}"><rect x="${x(i)-22}" y="${T}" width="44" height="${H-T-B}" fill="transparent"/><circle cx="${x(i)}" cy="${y(v)}" r="${i===values.length-1?5:4}" fill="${i===values.length-1?color:'#0b0c0e'}" stroke="${color}" stroke-width="2"/></g><text x="${x(i)}" y="${H-8}" text-anchor="middle" class="axis">${labels[i]}</text>`).join('')}
+    <text x="${x(values.length-1)}" y="${y(values[values.length-1])-12}" text-anchor="end" class="vlabel">${fmtv(values[values.length-1])}</text></svg>`}
+function stackedBars({labels,series}){const W=600,H=220,L=36,R=12,T=18,B=28;const totals=labels.map((_,i)=>series.reduce((s,se)=>s+se.values[i],0));const mx=niceMax(Math.max(...totals)*1.1);const bw=(W-L-R)/labels.length*0.52;const x=i=>L+(i+0.5)*(W-L-R)/labels.length,y=v=>T+(1-v/mx)*(H-T-B);
+  let out=[0,0.5,1].map(f=>`<line x1="${L}" x2="${W-R}" y1="${y(mx*f)}" y2="${y(mx*f)}" class="grid"/><text x="${L-6}" y="${y(mx*f)+4}" text-anchor="end" class="axis">${Math.round(mx*f)}</text>`).join('');
+  labels.forEach((lb,i)=>{let base=0;series.forEach((se,j)=>{const v=se.values[i];const y0=y(base),y1=y(base+v);const top=j===series.length-1;out+=`<rect x="${x(i)-bw/2}" y="${y1+1}" width="${bw}" height="${Math.max(0,y0-y1-2)}" rx="${top?4:0}" fill="${se.color}" data-tip="${lb} · ${se.name}: ${v}"/>`;base+=v});
+    out+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle" class="axis">${lb}</text>`;if(i===labels.length-1)out+=`<text x="${x(i)}" y="${y(totals[i])-6}" text-anchor="middle" class="vlabel">${totals[i]}</text>`});
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Members by level each month">${out}</svg>`}
+function donut(parts){const total=parts.reduce((s,p)=>s+p.value,0);const r=62,c=2*Math.PI*r;let acc=0;
+  const segs=parts.map(p=>{const len=p.value/total*c;const seg=`<circle r="${r}" cx="80" cy="80" fill="none" stroke="${p.color}" stroke-width="22" stroke-dasharray="${Math.max(0,len-3)} ${c-len+3}" stroke-dashoffset="${-acc}" transform="rotate(-90 80 80)" data-tip="${p.name}: ${p.value} (${Math.round(p.value/total*100)}%)"/>`;acc+=len;return seg}).join('');
+  return `<div class="donutwrap"><svg viewBox="0 0 160 160" class="donut" role="img" aria-label="Members by level now">${segs}<text x="80" y="76" text-anchor="middle" class="dtotal">${total}</text><text x="80" y="96" text-anchor="middle" class="axis">members</text></svg>
+  <ul class="legend">${parts.map(p=>`<li><i style="background:${p.color}"></i><span>${p.name}</span><b class="num">${p.value}</b><span class="dim num">${Math.round(p.value/total*100)}%</span></li>`).join('')}</ul></div>`}
+function funnel(steps){const mx=steps[0][1];return `<div class="funnel">${steps.map(([l,v],i)=>`<div class="frow"><span class="fl">${l}</span><span class="ftrack"><i style="width:${v/mx*100}%;opacity:${1-i*0.18}" data-tip="${l}: ${v.toLocaleString('en-IN')}"></i></span><b class="num">${v.toLocaleString('en-IN')}</b>${i?`<span class="fconv">${Math.round(v/steps[i-1][1]*100)}%</span>`:'<span class="fconv"></span>'}</div>`).join('')}</div>`}
+function hbars(items,color){const mx=Math.max(...items.map(i=>i.value),1);return `<div class="hbars">${items.map(it=>`<div class="hrow"><span class="hl">${esc(it.label)}</span><span class="htrack"><i style="width:${it.value/mx*100}%;background:${color}" data-tip="${esc(it.label)}: ${it.value} reveals"></i></span><b class="num">${it.value}</b></div>`).join('')}</div>`}
+function ring(pct){const r=34,c=2*Math.PI*r;return `<svg viewBox="0 0 84 84" class="ring" aria-hidden="true"><circle r="${r}" cx="42" cy="42" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8"/><circle r="${r}" cx="42" cy="42" fill="none" stroke="url(#gg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c*Math.min(1,pct)} ${c}" transform="rotate(-90 42 42)"/><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1d593"/><stop offset="1" stop-color="#c97e05"/></linearGradient></defs><text x="42" y="47" text-anchor="middle" class="ringt">${Math.round(pct*100)}%</text></svg>`}
+V['h-plans']=()=>{
+  const H=S.history,rev=revenueSeries(),c=liveTierCounts(),liveRev=liveRevenue();
+  const members=c.gold+c.silver+c.bronze,prevMembers=H.gold[4]+H.silver[4]+H.bronze[4];
+  const revVals=[...rev.slice(0,-1),liveRev];const memVals=H.months.map((_,i)=>H.gold[i]+H.silver[i]+H.bronze[i]);memVals[memVals.length-1]=members;
+  const arpm=Math.round(liveRev/members);const arpmVals=revVals.map((v,i)=>Math.round(v/memVals[i]));
+  const delta=(a,b)=>{const d=Math.round((a-b)/b*100);return `<span class="delta ${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${Math.abs(d)}%</span>`};
+  const goal=150000,goalPct=liveRev/goal;
+  const reveals=[...S.perks].sort((a,b)=>b.reveals-a.reveals).slice(0,5).map(k=>({label:k.partner.split(',')[0],value:k.reveals}));
+  const tierPlans=S.plans.filter(p=>p.tier);
+  return `<div class="dhead"><div><span class="eyebrow">Admin · ${esc(S.club.name)}</span><h1 class="d">Plans</h1></div><div class="menu"><span class="pill gold">${I.trend} Growing 6 months in a row</span><button class="btn sm" data-act="go:h-create">+ Create plan</button></div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="dim">Plan revenue this month</span><b class="num">${kfmt(liveRev)}</b><div class="row">${delta(liveRev,rev[4])}${spark(revVals,SERIES.blue)}</div></div>
+    <div class="kpi"><span class="dim">Active members</span><b class="num">${members}</b><div class="row">${delta(members,prevMembers)}${spark(memVals,SERIES.blue)}</div></div>
+    <div class="kpi"><span class="dim">Revenue per member</span><b class="num">${fmt(arpm)}</b><div class="row">${delta(arpm,arpmVals[4])}${spark(arpmVals,SERIES.blue)}</div></div>
+    <div class="kpi"><span class="dim">Monthly churn</span><b class="num">${H.churn[5]}%</b><div class="row"><span class="delta up">▼ ${(H.churn[4]-H.churn[5]).toFixed(1)} pts</span>${spark(H.churn,SERIES.blue)}</div></div>
+  </div>
+  <div class="dgrid">
+    <section class="panelc span2"><div class="row"><div><h3>Monthly plan revenue</h3><span class="dim">Memberships plus packs sold · ${H.months[0]}–${H.months[5]}</span></div></div>${areaChart({labels:H.months,values:revVals,color:SERIES.blue,fmtv:kfmt})}
+      <details class="tview"><summary>View as table</summary><table><tr>${H.months.map(m=>`<th>${m}</th>`).join('')}</tr><tr>${revVals.map(v=>`<td class="num">${fmt(v)}</td>`).join('')}</tr></table></details></section>
+    <section class="panelc goal"><h3>Next milestone</h3>${ring(goalPct)}<p><b class="num">${kfmt(liveRev)}</b> of <b class="num">${kfmt(goal)}</b> a month</p><p class="dim" style="font-size:12.5px">About ${Math.max(0,Math.ceil((goal-liveRev)/1499))} more Gold members gets you there.</p>
+      <div class="badges">${[['50 members',members>=50],['100 members',members>=100],['150 members',members>=150]].map(([l,ok])=>`<span class="badgeb ${ok?'got':''}">${ok?I.tickSm:I.lock}${l}</span>`).join('')}</div></section>
+    <section class="panelc span2"><div class="row"><div><h3>Members by level</h3><span class="dim">Active holders at month end</span></div><ul class="legend inline">${['gold','silver','bronze'].map(k=>`<li><i style="background:${SERIES[k]}"></i>${TIERS[k].label}</li>`).join('')}</ul></div>
+      ${stackedBars({labels:H.months,series:['gold','silver','bronze'].map(k=>({name:TIERS[k].label,color:SERIES[k],values:H[k].map((v,i)=>i===5?c[k]:v)}))})}
+      <details class="tview"><summary>View as table</summary><table><tr><th></th>${H.months.map(m=>`<th>${m}</th>`).join('')}</tr>${['gold','silver','bronze'].map(k=>`<tr><th>${TIERS[k].label}</th>${H[k].map((v,i)=>`<td class="num">${i===5?c[k]:v}</td>`).join('')}</tr>`).join('')}</table></details></section>
+    <section class="panelc"><h3>Level mix today</h3>${donut(['gold','silver','bronze'].map(k=>({name:TIERS[k].label,value:c[k],color:SERIES[k]})))}</section>
+    <section class="panelc span2"><h3>From club page to member</h3><span class="dim">This month</span>${funnel(H.funnel)}</section>
+    <section class="panelc"><h3>Brand perks members use</h3><span class="dim">Code reveals</span>${hbars(reveals,SERIES.blue)}</section>
+  </div>
+  <h2 class="d" style="margin:22px 0 12px">Your levels</h2>
+  <div class="lgrid">${S.plans.map(p=>{const n=['p1','p2','p3'].includes(p.id)?c[p.tier]:holders(p.id);const pr=p.prices[0];return `<article class="lcard ${p.tier||'none'}">${medal(p.tier,36)}<div style="min-width:0"><span class="tlabel">${tierOf(p)?TIERS[p.tier].label:'No level'}</span><b style="display:block">${esc(p.name)}</b><span class="dim" style="font-size:12.5px">${fmt(pr.amount)}${pr.billing==='ONE_TIME'?' one-time':' / '+INTERVAL[pr.interval].label} · ${limitText(p)}</span></div><div style="text-align:right"><b class="num" style="font-size:20px">${n}</b><span class="dim" style="display:block;font-size:12px">holders</span></div><button class="btn ghost sm" data-act="toggleplan:${p.id}">${p.published?'Published':'Unlisted'}</button></article>`}).join('')}</div>`;
+};
+V['h-create']=()=>{const f=S.form||(S.form={tier:'silver',kind:'MEMBERSHIP',name:'Weekend Warrior',description:'Every Saturday and Sunday run.',coverage:['TRAINING'],limitPeriod:'PER_MONTH',usageLimit:8,amount:799,interval:'MONTHLY',validityDays:60,approval:false,intro:false,introAmount:99,introDays:7,cancellation:'AUTO',policy:'FREE'});
   return `<div class="dhead"><div><span class="eyebrow">Plans</span><h1 class="d">Create plan</h1></div><button class="btn ghost sm" data-act="go:h-plans">Back to plans</button></div>
   <div class="form">
     <div class="field" style="grid-column:1/-1"><label>Kind</label><div class="chips">${['MEMBERSHIP','PACK'].map(k=>`<button class="chip" aria-pressed="${f.kind===k}" data-act="f-kind:${k}">${k==='PACK'?'Pack':'Membership'}</button>`).join('')}</div></div>
+    <div class="field" style="grid-column:1/-1"><label>Level on the club page</label><div class="chips">${['gold','silver','bronze',''].map(k=>`<button class="chip" aria-pressed="${f.tier===k}" data-act="f-tier:${k}">${k?medal(k,18)+' '+TIERS[k].label:'No level'}</button>`).join('')}</div></div>
     <div class="field"><label for="f-name">Name</label><input id="f-name" data-f="name" value="${esc(f.name)}"></div>
     <div class="field"><label for="f-desc">Description</label><input id="f-desc" data-f="description" value="${esc(f.description)}"></div>
     <div class="field" style="grid-column:1/-1"><label>Covers</label><div class="chips">${[['TRAINING','Training runs'],['SINGLE_DAY','Race days']].map(([k,l])=>`<button class="chip" aria-pressed="${f.coverage.includes(k)}" data-act="f-cov:${k}">${l}</button>`).join('')}</div></div>
@@ -763,7 +1022,7 @@ V['h-pricing']=()=>`<div class="dhead"><div><span class="eyebrow">Experiences</s
   <div class="tbl"><table><thead><tr><th>Pass</th><th>Base</th>${S.plans.map(p=>`<th>${esc(p.name)}</th>`).join('')}</tr></thead><tbody>
   ${e.categories.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td class="num">${fmt(c.base)}</td>${S.plans.map(p=>{const pol=c.policies[p.id];const cov=p.coverage.includes(e.type);const v=pol?(pol.policy==='CUSTOM_FLAT'?'FLAT'+pol.value:pol.policy==='CUSTOM_PERCENT'?'PCT'+pol.value:pol.policy):'NONE';return `<td>${cov?`<select aria-label="${esc(p.name)} price on ${esc(c.name)}" data-pol="${e.id}|${c.id}|${p.id}"><option value="NONE" ${v==='NONE'?'selected':''}>No benefit</option><option value="FREE" ${v==='FREE'?'selected':''}>Free</option><option value="HALF" ${v==='HALF'?'selected':''}>Half</option><option value="FULL" ${v==='FULL'?'selected':''}>Full</option><option value="PCT30" ${v==='PCT30'?'selected':''}>30% off</option><option value="FLAT299" ${v==='FLAT299'?'selected':''}>₹299 off</option></select><div class="dim num" style="font-size:12px;margin-top:4px">${pol?fmt(priceFor(pol,c.base)):fmt(c.base)}</div>`:'<span class="dim" style="font-size:12px">Not covered</span>'}</td>`}).join('')}</tr>`).join('')}
   </tbody></table></div></div>`).join('')}`;
-V['h-perks']=()=>`<div class="dhead"><div><span class="eyebrow">Dashboard · ${esc(S.club.name)}</span><h1 class="d">Perks</h1><p class="sub">Choose what each plan gives your members. Changes show on the club page and members' plan cards straight away.</p></div></div>
+V['h-perks']=()=>`<div class="dhead"><div><span class="eyebrow">Admin · ${esc(S.club.name)}</span><h1 class="d">Perks</h1><p class="sub">Choose what each plan gives your members. Changes show on the club page and members' plan cards straight away.</p></div></div>
   <div class="tbl"><table><thead><tr><th>Plan</th><th>Early access</th><th>Guest passes / period</th>${S.perks.map(k=>`<th>${esc(k.partner.split(',')[0])}</th>`).join('')}</tr></thead><tbody>
   ${S.plans.map(p=>`<tr><td><b>${esc(p.name)}</b></td>
     <td><select aria-label="Early access for ${esc(p.name)}" data-perk="ea|${p.id}">${[0,24,48,72].map(h=>`<option value="${h}" ${p.perks.earlyAccessHours===h?'selected':''}>${h?h+' hours':'Off'}</option>`).join('')}</select></td>
@@ -780,7 +1039,7 @@ V['h-perks']=()=>`<div class="dhead"><div><span class="eyebrow">Dashboard · ${e
     <div class="field"><label for="k-cat">Category</label><select id="k-cat">${Object.entries(PERK_CATS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>
     <div class="field"><label for="k-vis">Who sees it</label><select id="k-vis"><option value="TEASER">Everyone (code for members)</option><option value="MEMBERS_ONLY">Members only</option></select></div>
   </div><div class="row" style="margin-top:12px;justify-content:flex-end"><span class="dim" style="font-size:12.5px">New perks unlock for every published membership.</span><button class="btn sm" data-act="addperk">Add perk</button></div></div></div>`;
-V['h-discounts']=()=>`<div class="dhead"><div><span class="eyebrow">Dashboard · ${esc(S.club.name)}</span><h1 class="d">Discounts</h1><p class="sub">Turn discount codes on for the plans you choose, then create codes for campaigns, students or partners. Members enter them at checkout.</p></div></div>
+V['h-discounts']=()=>`<div class="dhead"><div><span class="eyebrow">Admin · ${esc(S.club.name)}</span><h1 class="d">Discounts</h1><p class="sub">Turn discount codes on for the plans you choose, then create codes for campaigns, students or partners. Members enter them at checkout.</p></div></div>
   <div class="stack"><b>Plans that take codes</b><div class="menu">${S.plans.map(p=>`<label class="toggle" style="min-width:200px"><span>${esc(p.name)}</span><input type="checkbox" data-disc="allow|${p.id}" ${p.allowDiscounts?'checked':''}></label>`).join('')}</div></div>
   <div class="tbl" style="margin-top:16px"><table><thead><tr><th>Code</th><th>Discount</th><th>Plans</th><th>Applies to</th><th>Uses</th><th>On</th></tr></thead><tbody>
   ${S.discounts.map(dc=>`<tr><td><b class="code">${esc(dc.code)}</b></td><td class="num">${dc.kind==='PERCENT'?dc.value+'% off':fmt(dc.value)+' off'}</td><td>${dc.planIds.map(id=>esc(planById(id).name)).join(', ')}</td><td>${dc.applies==='EVERY'?'Every charge':'First payment'}</td><td class="num">${dc.used}${dc.maxUses!=null?' / '+dc.maxUses:''}</td><td><input type="checkbox" aria-label="${esc(dc.code)} on" data-disc="en|${dc.id}" ${dc.enabled?'checked':''}></td></tr>`).join('')}
@@ -809,7 +1068,7 @@ V['h-requests']=()=>{const reqs=allRequests().filter(r=>r.status==='PENDING');co
 /* ───────────────────────── Render ───────────────────────── */
 const NAV=[
   ['Member · phone',[['club','Club page'],['perkspage','Club perks'],['event:e1','Saturday 5K'],['event:e3','Monsoon 10K'],['passes','Passes · Plans']]],
-  ['Host · dashboard',[['h-plans','Plans'],['h-create','Create plan'],['h-pricing','Plan pricing'],['h-perks','Perks'],['h-discounts','Discounts'],['h-members','Members'],['h-requests','Requests']]],
+  ['Admin · dashboard',[['h-plans','Plans'],['h-create','Create plan'],['h-pricing','Plan pricing'],['h-perks','Perks'],['h-discounts','Discounts'],['h-members','Members'],['h-requests','Requests']]],
 ];
 function renderRail(){
   document.getElementById('rail').innerHTML=NAV.map(([g,items])=>`<div class="grp"><h3>${g}</h3><nav>${items.map(([id,l])=>`<button data-act="${id.startsWith('event:')?id:'go:'+id}" ${S.view===id||(S.view==='event'&&S.viewArg&&id==='event:'+S.viewArg)?'aria-current="page"':''}><span>${l}</span>${id==='h-requests'&&pendingCount()?`<span class="badge">${pendingCount()}</span>`:''}</button>`).join('')}</nav></div>`).join('');
@@ -901,7 +1160,7 @@ document.addEventListener('click',ev=>{
     case 'addperk':{const v=id=>(document.getElementById(id).value||'').trim();const partner=v('k-partner')||'Ather Space, Indiranagar',offer=v('k-offer')||'Free test ride + ₹2,000 off';
       const k={id:'k'+(S.seq++),partner,offer,redeem:v('k-redeem')||'Show your plan card',code:v('k-code')||null,cat:document.getElementById('k-cat').value,vis:document.getElementById('k-vis').value,color:'#4f46e5',reveals:0};S.perks.push(k);
       S.plans.filter(p=>p.kind==='MEMBERSHIP'&&p.published).forEach(p=>p.perks.perkIds.push(k.id));
-      log(`Host added partner perk: ${partner} (${offer}), unlocked for every published membership.`);toast('Perk added');render();break}
+      log(`Admin added partner perk: ${partner} (${offer}), unlocked for every published membership.`);toast('Perk added');render();break}
     case 'pcat':S.perkCat=arg;render();break;
     case 'reveal':{const k=perkById(arg);S.revealed=S.revealed||{};S.revealed[k.id]=true;k.reveals++;log(`Revealed ${k.partner} code (${k.reveals} reveals so far).`);render();break}
     case 'adddisc':{const v=id=>(document.getElementById(id).value||'').trim();const code=(v('dc-code')||'RUNCLUB25').toUpperCase().replace(/\s+/g,'');
@@ -909,49 +1168,56 @@ document.addEventListener('click',ev=>{
       const planIds=[...document.querySelectorAll('.dc-plan:checked')].map(x=>x.value);if(!planIds.length){toast('Pick at least one plan');break}
       const dc={id:'d'+(S.seq++),code,kind:v('dc-kind'),value:Number(v('dc-value'))||25,planIds,applies:v('dc-applies'),maxUses:v('dc-max')?Number(v('dc-max')):null,used:0,enabled:true};
       S.discounts.push(dc);planIds.forEach(id=>{planById(id).allowDiscounts=true});
-      log(`Host created ${code}: ${dc.kind==='PERCENT'?dc.value+'%':fmt(dc.value)} off ${dc.applies==='EVERY'?'every charge':'the first payment'} on ${planIds.map(id=>planById(id).name).join(', ')}.`);toast(code+' is live');render();break}
+      log(`Admin created ${code}: ${dc.kind==='PERCENT'?dc.value+'%':fmt(dc.value)} off ${dc.applies==='EVERY'?'every charge':'the first payment'} on ${planIds.map(id=>planById(id).name).join(', ')}.`);toast(code+' is live');render();break}
     case 'renew':advanceToRenewal();break;
     case 'failtoggle':S.failNextRenewal=el.checked;log(S.failNextRenewal?'Next renewal set to fail.':'Next renewal set to succeed.');renderPanel();break;
     case 'reset':S=seed();go('club');toast('Demo reset');break;
     // host
-    case 'toggleplan':{const p=planById(arg);p.published=!p.published;log(`Host ${p.published?'published':'unlisted'} ${p.name}.`);render();break}
+    case 'toggleplan':{const p=planById(arg);p.published=!p.published;log(`Admin ${p.published?'published':'unlisted'} ${p.name}.`);render();break}
+    case 'f-tier':S.form.tier=arg;render();break;
     case 'f-kind':S.form.kind=arg;S.form.limitPeriod=arg==='PACK'?'TOTAL':'PER_MONTH';render();break;
     case 'f-cov':{const c=S.form.coverage;const i=c.indexOf(arg);i>=0?c.splice(i,1):c.push(arg);render();break}
     case 'createplan':{const f=S.form;const id='p'+(S.seq++),pid='pp'+(S.seq++);
-      const plan={id,kind:f.kind,name:f.name.trim(),description:f.description.trim(),coverage:[...f.coverage],limitPeriod:f.limitPeriod,usageLimit:f.limitPeriod==='UNLIMITED'?null:Number(f.usageLimit),
+      const plan={id,tier:f.tier||null,kind:f.kind,name:f.name.trim(),description:f.description.trim(),coverage:[...f.coverage],limitPeriod:f.limitPeriod,usageLimit:f.limitPeriod==='UNLIMITED'?null:Number(f.usageLimit),
         prices:[f.kind==='PACK'?{id:pid,label:'One-time',amount:Number(f.amount),billing:'ONE_TIME',validityDays:Number(f.validityDays),joiningFee:0}:{id:pid,label:f.interval==='MONTHLY'?'Monthly':'Quarterly',amount:Number(f.amount),billing:'RECURRING',interval:f.interval,joiningFee:0}],
         intro:f.kind==='MEMBERSHIP'&&f.intro?{priceId:pid,amount:Number(f.introAmount),days:Number(f.introDays)}:null,approval:f.approval,cancellation:f.cancellation,minCommitment:0,featured:false,published:true,perks:{earlyAccessHours:0,guestPasses:0,perkIds:[]}};
       S.plans.push(plan);
       const pol=f.policy==='CUSTOM_PERCENT'?{policy:'CUSTOM_PERCENT',value:30}:{policy:f.policy};
       S.events.forEach(e=>{if(plan.coverage.includes(e.type))e.categories.forEach(c=>{c.policies[id]={...pol}})});
-      log(`Host published ${plan.name} and set "${policyLabel(pol)}" on every covered pass.`);S.form=null;toast(plan.name+' is live on the club page');go('h-plans');break}
-    case 'h-pause':{const up=S.userPlans.find(u=>u.id===arg);up.status='PAUSED';up.pausedAt=S.now;up.history.push({t:S.now,m:'Paused by the club'});log(`Host paused ${planById(up.planId).name} for ${S.user.name}. Billing and access stopped.`);toast('Plan paused');render();break}
-    case 'h-resume':{const up=S.userPlans.find(u=>u.id===arg);const paused=S.now-(up.pausedAt||S.now);up.periodEnd+=paused;up.status='ACTIVE';up.history.push({t:S.now,m:'Resumed by the club'});log(`Host resumed ${planById(up.planId).name}. End date moved by ${Math.round(paused/DAY)} days.`);toast('Plan resumed');render();break}
-    case 'h-credits':{const up=S.userPlans.find(u=>u.id===arg);const a=allowance(up,S.now);up.creditsOverride=(up.creditsOverride??planById(up.planId).usageLimit)+2;up.history.push({t:S.now,m:'Club added 2 credits'});log(`Host added 2 credits to ${S.user.name}'s ${planById(up.planId).name} (${a.left+2} left).`);toast('2 credits added');render();break}
-    case 'h-end':{const up=S.userPlans.find(u=>u.id===arg);up.status='ENDED';up.periodEnd=S.now;up.history.push({t:S.now,m:'Cancelled by the club'});log(`Host cancelled ${planById(up.planId).name} for ${S.user.name} immediately.`);toast('Plan cancelled');render();break}
-    case 'h-approvecancel':{const up=S.userPlans.find(u=>u.id===arg);up.status='CANCELS_AT_PERIOD_END';up.history.push({t:S.now,m:'Club approved cancellation'});log(`Host approved cancellation. ${planById(up.planId).name} ends ${d(up.periodEnd)}.`);toast('Cancellation approved');render();break}
-    case 'h-approve':case 'h-reject':{const r=S.joinRequests.find(x=>x.id===arg)||S.otherRequests.find(x=>x.id===arg);r.status=a==='h-approve'?'APPROVED':'REJECTED';log(`Host ${a==='h-approve'?'approved':'declined'} ${r.name||S.user.name}'s request for ${planById(r.planId).name}.`);toast(a==='h-approve'?'Approved. Member can now pay.':'Request declined');render();break}
+      log(`Admin published ${plan.name} and set "${policyLabel(pol)}" on every covered pass.`);S.form=null;toast(plan.name+' is live on the club page');go('h-plans');break}
+    case 'h-pause':{const up=S.userPlans.find(u=>u.id===arg);up.status='PAUSED';up.pausedAt=S.now;up.history.push({t:S.now,m:'Paused by the club'});log(`Admin paused ${planById(up.planId).name} for ${S.user.name}. Billing and access stopped.`);toast('Plan paused');render();break}
+    case 'h-resume':{const up=S.userPlans.find(u=>u.id===arg);const paused=S.now-(up.pausedAt||S.now);up.periodEnd+=paused;up.status='ACTIVE';up.history.push({t:S.now,m:'Resumed by the club'});log(`Admin resumed ${planById(up.planId).name}. End date moved by ${Math.round(paused/DAY)} days.`);toast('Plan resumed');render();break}
+    case 'h-credits':{const up=S.userPlans.find(u=>u.id===arg);const a=allowance(up,S.now);up.creditsOverride=(up.creditsOverride??planById(up.planId).usageLimit)+2;up.history.push({t:S.now,m:'Club added 2 credits'});log(`Admin added 2 credits to ${S.user.name}'s ${planById(up.planId).name} (${a.left+2} left).`);toast('2 credits added');render();break}
+    case 'h-end':{const up=S.userPlans.find(u=>u.id===arg);up.status='ENDED';up.periodEnd=S.now;up.history.push({t:S.now,m:'Cancelled by the club'});log(`Admin cancelled ${planById(up.planId).name} for ${S.user.name} immediately.`);toast('Plan cancelled');render();break}
+    case 'h-approvecancel':{const up=S.userPlans.find(u=>u.id===arg);up.status='CANCELS_AT_PERIOD_END';up.history.push({t:S.now,m:'Club approved cancellation'});log(`Admin approved cancellation. ${planById(up.planId).name} ends ${d(up.periodEnd)}.`);toast('Cancellation approved');render();break}
+    case 'h-approve':case 'h-reject':{const r=S.joinRequests.find(x=>x.id===arg)||S.otherRequests.find(x=>x.id===arg);r.status=a==='h-approve'?'APPROVED':'REJECTED';log(`Admin ${a==='h-approve'?'approved':'declined'} ${r.name||S.user.name}'s request for ${planById(r.planId).name}.`);toast(a==='h-approve'?'Approved. Member can now pay.':'Request declined');render();break}
   }
 });
 document.addEventListener('input',ev=>{const el=ev.target;
+  if(el.hasAttribute('data-calc')){S.calcRuns=Number(el.value);const tiered=S.plans.filter(p=>p.published&&['gold','silver','bronze'].includes(p.tier)).sort((a,b)=>TIERS[b.tier].rank-TIERS[a.tier].rank);document.getElementById('calc-runs').textContent=S.calcRuns+' runs a month';document.getElementById('calc-out').innerHTML=calcOut(tiered);return}
   if(el.hasAttribute('data-psearch')){S.perkQuery=el.value;render();const k=document.getElementById('psearch');if(k){k.focus();k.setSelectionRange(k.value.length,k.value.length)}return}
   if(el.dataset.f&&S.form){S.form[el.dataset.f]=el.type==='number'?Number(el.value):el.value;if(el.tagName==='SELECT')render();else{const card=document.querySelector('#stage .card');if(card){const keep=document.activeElement.id;render();const k=document.getElementById(keep);if(k){k.focus();const v=k.value;if(k.setSelectionRange&&k.type==='text')k.setSelectionRange(v.length,v.length)}}}}
   if(el.dataset.fb&&S.form){S.form[el.dataset.fb]=el.checked;render()}
 });
 document.addEventListener('change',ev=>{const el=ev.target;
   if(el.dataset.disc){const [kind,id]=el.dataset.disc.split('|');
-    if(kind==='allow'){const p=planById(id);p.allowDiscounts=el.checked;log(`Host ${el.checked?'turned on':'turned off'} discount codes for ${p.name}.`)}
-    if(kind==='en'){const dc=S.discounts.find(x=>x.id===id);dc.enabled=el.checked;log(`Host switched ${dc.code} ${el.checked?'on':'off'}.`)}
+    if(kind==='allow'){const p=planById(id);p.allowDiscounts=el.checked;log(`Admin ${el.checked?'turned on':'turned off'} discount codes for ${p.name}.`)}
+    if(kind==='en'){const dc=S.discounts.find(x=>x.id===id);dc.enabled=el.checked;log(`Admin switched ${dc.code} ${el.checked?'on':'off'}.`)}
     render();return}
   if(el.dataset.perk){const [kind,pid,kid]=el.dataset.perk.split('|');const p=planById(pid);
-    if(kind==='ea'){p.perks.earlyAccessHours=Number(el.value);log(`Host set early access on ${p.name} to ${el.value==='0'?'off':el.value+' hours'}.`)}
-    if(kind==='gp'){p.perks.guestPasses=Number(el.value);log(`Host set ${p.name} guest passes to ${el.value} per period.`)}
-    if(kind==='pk'){const i=p.perks.perkIds.indexOf(kid);if(el.checked&&i<0)p.perks.perkIds.push(kid);if(!el.checked&&i>=0)p.perks.perkIds.splice(i,1);log(`Host ${el.checked?'added':'removed'} ${perkById(kid).partner} ${el.checked?'to':'from'} ${p.name}.`)}
+    if(kind==='ea'){p.perks.earlyAccessHours=Number(el.value);log(`Admin set early access on ${p.name} to ${el.value==='0'?'off':el.value+' hours'}.`)}
+    if(kind==='gp'){p.perks.guestPasses=Number(el.value);log(`Admin set ${p.name} guest passes to ${el.value} per period.`)}
+    if(kind==='pk'){const i=p.perks.perkIds.indexOf(kid);if(el.checked&&i<0)p.perks.perkIds.push(kid);if(!el.checked&&i>=0)p.perks.perkIds.splice(i,1);log(`Admin ${el.checked?'added':'removed'} ${perkById(kid).partner} ${el.checked?'to':'from'} ${p.name}.`)}
     render();return}
   if(el.dataset.pol){const [eid,cid,pid]=el.dataset.pol.split('|');const c=eventById(eid).categories.find(x=>x.id===cid);const v=el.value;
     if(v==='NONE')delete c.policies[pid];else if(v.startsWith('PCT'))c.policies[pid]={policy:'CUSTOM_PERCENT',value:Number(v.slice(3))};else if(v.startsWith('FLAT'))c.policies[pid]={policy:'CUSTOM_FLAT',value:Number(v.slice(4))};else c.policies[pid]={policy:v};
-    log(`Host set ${planById(pid).name} on ${eventById(eid).name} · ${c.name} to ${c.policies[pid]?policyLabel(c.policies[pid]):'no benefit'}.`);render()}
+    log(`Admin set ${planById(pid).name} on ${eventById(eid).name} · ${c.name} to ${c.policies[pid]?policyLabel(c.policies[pid]):'no benefit'}.`);render()}
 });
+/* Chart tooltips: any element with data-tip */
+const tip=document.createElement('div');tip.className='tip';tip.setAttribute('role','tooltip');tip.hidden=true;document.body.appendChild(tip);
+document.addEventListener('mouseover',ev=>{const el=ev.target.closest('[data-tip]');if(!el){tip.hidden=true;return}tip.textContent=el.getAttribute('data-tip');tip.hidden=false});
+document.addEventListener('mousemove',ev=>{if(tip.hidden)return;const x=Math.min(ev.clientX+14,window.innerWidth-tip.offsetWidth-8);tip.style.left=x+'px';tip.style.top=(ev.clientY-36)+'px'});
+document.addEventListener('mouseout',ev=>{if(!ev.relatedTarget||!ev.relatedTarget.closest||!ev.relatedTarget.closest('[data-tip]'))tip.hidden=true});
 render();
 })();
 </script>
