@@ -2,6 +2,8 @@
 
 For engineering. It covers what must be true technically before we onboard Cubbon Classic's runners: registration on their site by **20 Nov 2026**, the engagement layer by **30 Nov**, and the 8-week programme from **25 Jan 2027** to race day on 21 Mar.
 
+Sections 6 and 7 apply to the whole platform, not only Cubbon: how the Strava integration scales, and the plan to move off Yoska for clubs, corporates, brands, races and coaches. **Scale and migration come before new features.** Cubbon is one design partner inside that plan.
+
 Back to the [README](README.md) (overview) and the [product note](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/) (journeys, checklist, tests).
 
 ## Scale we're planning for
@@ -66,7 +68,7 @@ The code is in [embedded-ticketing/code](../embedded-ticketing/code/). It's chec
 
 | # | Work | By |
 | --- | --- | --- |
-| E1 | Merge Yoska's engine into the peakst8 backend: missions (from the challenge library), points, leaderboards (individual, club, age group, gender), onboarding and race-prep quizzes, nudges | 30 Nov |
+| E1 | Phase 2 of the migration plan (section 7): move Yoska's engine into the peakst8 backend: missions (from the challenge library), points, leaderboards (individual, club, age group, gender), onboarding and race-prep quizzes, nudges | 30 Nov |
 | E2 | Organiser dashboard: programme builder, missions and points, leaderboards, rewards, nudges, clubs, insights. Screens are proposals to rebuild in our design language. | 30 Nov |
 | E3 | Runner app: this week's missions, leaderboard, rewards and badges, quiz | 15 Jan |
 | E4 | Club run check-in: the captain scans the runner's QR in the app, which counts the Community mission | 15 Jan |
@@ -91,6 +93,106 @@ The code is in [embedded-ticketing/code](../embedded-ticketing/code/). It's chec
 | S2 | Dashboards and alerts: Strava 429s per window, ingest lag (run to rank), queue depth, failed webhooks, checkout errors | 20 Jan |
 | S3 | Public embed endpoint cached (60 s, already in the code); leaderboard reads cached per board | 20 Jan |
 
+## 6. Strava at scale (platform-wide)
+
+### The principle
+
+Strava is one source among several, never the only pipe. We take runs **pushed** to us (Strava webhooks, Apple Health, Health Connect), fetch each run **once**, store it, and build everything from our own copy. We never poll, never re-fetch for a leaderboard, and never use more than one Strava app to get around limits (that breaks Strava's terms).
+
+### How many Strava calls we need
+
+With webhooks, one read per new run. **Assumptions:** a connected runner logs 3 runs a week; Sunday carries twice an average day's runs, a quarter of them in one peak hour.
+
+| Connected runners | Runs on an average day | Peak reads per 15 min | Fits Strava's default (100 per 15 min, 1,000 a day)? |
+| --- | --- | --- | --- |
+| 1,000 | ~430 | ~55 | Yes |
+| 3,500 (Cubbon at full turnout) | ~1,500 | ~190 | No. Needs a raised limit. |
+| 10,000 | ~4,300 | ~540 | No. Needs Strava's review at about 6× the default. |
+| 50,000 | ~21,500 | ~2,700 | Only with a negotiated limit; most runs must come from Apple Health and Health Connect |
+
+**Pulling** (what we do today) costs at least one call per runner per sync, whether they ran or not. That's why it breaks first.
+
+### The design that grows with us
+
+| Layer | What it does | Why it scales |
+| --- | --- | --- |
+| **Webhook receiver** | One Strava push subscription. Answer the handshake, acknowledge each event in under 2 seconds, and put it on a queue. Nothing else happens in the request. | No polling. Bursts are absorbed by the queue. |
+| **Fetch queue with a rate budget** | Reads Strava's limit headers after every call and keeps a shared budget per 15-minute window and per day in Redis. Priorities: new runs, then edits and deletes, then backfills. When the budget is spent, work waits for the next window; nothing is dropped. | Peaks delay updates by minutes, not hours, and backfills never starve live runs |
+| **Token store** | Refresh a runner's token only when a fetch needs it. Handle `deauthorize` events by stopping syncs and deleting their Strava data. | No wasted calls; complies with revocation |
+| **Our own activity store** | Every run from every source, in one shape, de-duplicated (same runner, start within 5 minutes, distance within 5%). | Leaderboards, missions and reports never call Strava |
+| **Event-driven scoring** | A stored run scores missions and updates leaderboard rows straight away. Leaderboards are read from precomputed rows with a short cache. | Reads scale with viewers, not with Strava |
+| **Source mix** | Ask runners to connect Apple Health or Health Connect first, and Strava when they use it. Later, consider Garmin's developer programme or an aggregator (Terra, Spike, Open Wearables) as build-or-buy. | Each new source moves load off Strava |
+| **Compliance by design** | Other runners see points, ranks and mission ticks, never Strava activity details (maps, pace, titles). A runner's own Strava data is shown only to them. | Fits Strava's Nov 2024 terms; confirm in the review |
+
+### How we grow the Strava limit
+
+1. **Now:** check the app's athlete capacity on the Strava API settings page and apply for review with the Cubbon plan (A1).
+2. **Before each big cohort:** send Strava the measured usage from the last 30 days (peak reads per window, runners connected) and ask for the next tier. Strava raises limits for apps near capacity, so we need the usage data to show it.
+3. **Always:** keep peak usage under 70% of the limit. Above that, onboard new cohorts to Apple Health and Health Connect first.
+
+### What changes in the code
+
+| Today (`main`) | Change |
+| --- | --- |
+| Backfill worker pulls each runner (concurrency 2, one-day lookback) | Backfill only on first connect (last 30 days, once), at lowest priority |
+| Organisers can trigger a leaderboard "recalculate", which calls Strava for every runner (up to 20 rebuilds per 15 min) | Recalculate reads our own activity store. No Strava calls. |
+| A 429 holds the whole queue until the next window | Keep this as the last line of defence; the budget should stop us reaching 429 |
+| Strava sync for Puma also runs through Yoska's own Strava app | Move to peakst8's app (see section 7). Runners must reconnect: Yoska's Strava tokens belong to Yoska's app and can't be moved. |
+| Public category leaderboards built from Strava data | Show points and ranks only, pending Strava's answer |
+
+## 7. Yoska migration plan (platform-wide)
+
+### Why
+
+The backend depends on Yoska in 48 files (about 236 references). That covers Puma athlete sign-up, groups, chat, broadcasts, device tokens, Strava and Ultrahuman sync (`yoska.infra.ts`, `yoskaChat.infra.ts`), and challenges and leaderboards through a separate gamification service (`gamification.infra.ts`). The coach dashboard at fit.yoska.in holds 85 challenges, 30 levels, 6 leaderboards and about 40 organisations. Every new feature built on top of that adds to the move later.
+
+### How we migrate
+
+- **No big bang.** peakst8 becomes the source of truth one capability at a time, behind the same calls the app makes today (strangler pattern).
+- **Data foundation first** (section 6), then the engine, then segments one by one.
+- **Every segment has entry criteria, a dual-run period, exit criteria and a rollback.**
+- **Freeze new features on Yoska** from the start of phase 2.
+
+### Phases
+
+| Phase | What | Done when | Proposed dates |
+| --- | --- | --- | --- |
+| **0 · Inventory** | Every Yoska capability, every caller in our code, every organisation, group and coach, and how many active athletes each has. Mark each capability: move, rebuild, or retire. | A signed-off sheet; no unknown callers | By 20 Nov 2026 |
+| **1 · Data foundation** | Section 6: Strava review, webhooks, rate budget, activity store with de-duplication, Apple Health and Health Connect, app public on both stores | Runs from all sources land in one store within 15 minutes at a 10,000-runner load test | Nov 2026 – 15 Jan 2027 |
+| **2 · Engine** | Missions (from the challenge library), points, levels, leaderboards, quizzes, nudges, broadcasts and group chat on peakst8. One-time import of Yoska's challenges, levels and organisations. | Same inputs give the same points and ranks as Yoska for a replayed month of Puma data | Dec 2026 – Jan 2027 |
+| **3 · Segments move** | One segment at a time (table below), each with a dual run | Each segment's exit criteria met | Jan – Apr 2027 |
+| **4 · Switch off** | Remove Yoska calls from the backend, stop Yoska's Strava app, archive the data | No traffic to Yoska for 30 days | After the last segment |
+
+### Segments
+
+| Segment | Who is on Yoska today | What must work on peakst8 first | Order | Exit criteria |
+| --- | --- | --- | --- | --- |
+| **Races and events** (Cubbon Classic) | New, nobody to move | Registration (Embedded Ticketing), programme, missions, leaderboards, rewards | 1st: 25 Jan 2027 | A 50-runner test cohort ranks correctly for a week, then the full programme |
+| **Clubs** (Find Your Fit, Sisters in Sweat, Run Crew) | Some community groups | Club pages, events, Memberships, club leaderboards, check-in | 2nd: Feb 2027 | Club admins run a month without Yoska |
+| **Corporates** (Puma and the other organisations: Goldman Sachs, Boeing, Goa Police and so on) | Puma: 94 athletes in a live programme; about 40 organisations, some duplicated | Organisations with admins, cohort programmes, weekly challenges, private leaderboards, chat and broadcasts, reports, athletes reconnecting Strava to peakst8 | 3rd: Mar 2027, Puma first, after replaying their data in phase 2 | Puma runs a full programme cycle on peakst8 with no gap in points or streaks |
+| **Brands** (Puma, Reebok, Cubbon sponsors) | Campaigns run through corporate programmes | Sponsor slot, brand content and quizzes, partner rewards and claims, reach reports | With corporates and races, as each campaign moves | Each brand gets its weekly report from peakst8 |
+| **Coaches and academies** (YRA, YCA, YFA, YTA, HYROX; one coach lists about 3,750 athletes) | Training plans, workout calendar, form review, coach chat | **Decision needed:** rebuild coach tools, keep Yoska for coaching only, or retire | Last: decide by 31 Jan 2027 | Per the decision |
+
+### Moving the data
+
+| Data | How |
+| --- | --- |
+| Athletes | Match by email to peakst8 users; create the rest; no passwords (email OTP) |
+| Organisations and groups | Merge duplicates (for example the three Goa Police groups) with the organisation's admin before import |
+| Challenges, levels, level ranges | One-time import into the mission library and levels |
+| Points, streaks and history | Import as opening balances so nobody's rank or streak resets |
+| Strava connections | Can't be moved: tokens belong to Yoska's Strava app. Each athlete reconnects to peakst8 in one tap, prompted in-app and by email, ahead of their segment's move. This also counts against peakst8's Strava capacity (section 6). |
+| Chat and broadcasts | Last 90 days imported read-only; new messages on peakst8 |
+
+### Risks
+
+| Risk | What we'll do |
+| --- | --- |
+| Athletes don't reconnect Strava and drop off leaderboards | Reconnect campaign two weeks ahead; Apple Health and Health Connect as the default; keep the Yoska sync read-only during the dual run |
+| Points differ between Yoska and peakst8 | Replay a month of real data in phase 2 and fix every difference before any segment moves |
+| A segment's move goes wrong mid-programme | Move between programme cycles only; the rollback is pointing the app back at Yoska's calls for that segment |
+| Strava capacity runs out during reconnects | Stagger reconnects by segment; apply for the next tier before each one |
+
 ## Go-live gates
 
 | Gate | Date | Passes when |
@@ -98,6 +200,7 @@ The code is in [embedded-ticketing/code](../embedded-ticketing/code/). It's chec
 | Registration | 20 Nov | R1–R5 done; 220 of 220 imported; one real booking by Nithin, then refunded |
 | Dashboard | 30 Nov | E1, E2 and E7 done; Nithin sets up week 1 alone on staging |
 | Data sources | 15 Jan | Strava review answered (A1); webhooks live (A2, A3); app public with HealthKit and Health Connect approved (A4–A6) |
+| Migration phase 0 | 20 Nov | Yoska inventory signed off (section 7) |
 | Programme | 25 Jan | A7–A9, E3–E6, P2–P4 and S1–S2 done; a test cohort of 50 runners ranks correctly for a week |
 
 ## Open technical questions
@@ -107,3 +210,5 @@ The code is in [embedded-ticketing/code](../embedded-ticketing/code/). It's chec
 3. Do Yoska's Strava and Ultrahuman links stay for Puma only, or move to peakst8's own connections?
 4. Is the iOS app's public release blocked on anything else?
 5. Who owns the mobile work (A4–A6): the Project 3 app team or a separate peakst8 app?
+6. Coaches and academies: rebuild coach tools on peakst8, keep Yoska for coaching only, or retire? (section 7)
+7. Build or buy for wearables beyond Apple Health and Health Connect (Garmin, an aggregator)?
