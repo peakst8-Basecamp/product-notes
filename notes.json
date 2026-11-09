@@ -103,10 +103,10 @@
       "title": "Athlete OS · Design Partner #2: Cubbon Classic 10K",
       "folder": "athlete-os-cubbon-classic/",
       "status": "Scoping",
-      "next": "Scope lock with Nitin Gowda on 11 Nov 2026",
+      "next": "Nithin shares the Road to Cubbon programme; Arvind introduces brands for consistency rewards",
       "owner": "Arvind",
       "updated": "2026-11-09",
-      "summary": "Athlete OS Design Partner #2 (after Run Crew × Reebok). Cubbon Classic 10K with Nitin Gowda (MyRace): registration on their own site plus an engagement layer of missions, points, leaderboards, rewards and nudges, configured by the organiser. Merges Yoska's engine into peakst8.",
+      "summary": "Athlete OS Design Partner #2 (after Run Crew × Reebok). Cubbon Classic 10K with Nithin Gowda (MyRace): registration on their own site plus an engagement layer of missions, points, leaderboards, rewards and nudges, configured by the organiser. Merges Yoska's engine into peakst8.",
       "links": {
         "Product note": "athlete-os-cubbon-classic/",
         "Product screens": "athlete-os-cubbon-classic/prototype/",
@@ -114,9 +114,9 @@
       },
       "milestones": [
         {
-          "name": "Scope lock",
-          "date": "2026-11-11",
-          "status": "doing"
+          "name": "9 Nov call: 3,500 expected, programme from Jan",
+          "date": "2026-11-09",
+          "status": "done"
         },
         {
           "name": "Registration live on cubbonclassic10k.com",
@@ -124,13 +124,13 @@
           "status": "todo"
         },
         {
-          "name": "Staging QA",
-          "date": "2026-11-26",
+          "name": "Dashboard live, off Yoska screens",
+          "date": "2026-11-30",
           "status": "todo"
         },
         {
-          "name": "Live on peakst8, off Yoska screens",
-          "date": "2026-11-30",
+          "name": "Programme and first brand locked",
+          "date": "2027-01-15",
           "status": "todo"
         },
         {

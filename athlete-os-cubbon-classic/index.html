@@ -94,12 +94,12 @@ footer a{color:var(--ink-2)}
 <section class="hero">
   <span class="lbl">Athlete OS · Design Partner #2</span>
   <h1>Cubbon Classic 10K: fill the race, then keep every runner moving until race day.</h1>
-  <p>Athlete OS keeps a cohort engaged while it builds up to an event. <a href="../run-crew/">Design Partner #1</a> is Run Crew × Reebok, about 250 runners on a training plan. Design Partner #2 is Cubbon Classic 10K, with Nitin Gowda of the MyRace team: the first race organiser, adding registration on their own site and an engagement layer they configure themselves. This note covers that partnership, not all of Athlete OS.</p>
-  <div class="facts"><span>DP1 · Run Crew × Reebok</span><span>DP2 · Cubbon Classic 10K</span><span>Edition 2 · 21 Mar 2027</span><span>Edition 1 · ~4,000 runners</span><span>Today · 400–500 on KonfHub</span><span>Ship · November 2026</span></div>
-  <div class="status" id="status" aria-live="polite"><span>Status</span><b>Scoping</b><span>Next: Scope lock with Nitin on 11 Nov 2026</span></div>
+  <p>Athlete OS keeps a cohort engaged while it builds up to an event. <a href="../run-crew/">Design Partner #1</a> is Run Crew × Reebok, about 250 runners on a training plan. Design Partner #2 is Cubbon Classic 10K, with Nithin Gowda of the MyRace team: the first race organiser, adding registration on their own site and an engagement layer they configure themselves. This note covers that partnership, not all of Athlete OS.</p>
+  <div class="facts"><span>DP1 · Run Crew × Reebok</span><span>DP2 · Cubbon Classic 10K</span><span>Edition 2 · 21 Mar 2027</span><span>Expected · 3,500 runners</span><span>9 Nov · ~220 registered</span><span>Ship · November 2026</span></div>
+  <div class="status" id="status" aria-live="polite"><span>Status</span><b>Scoping</b><span>Next: Scope lock with Nithin on 11 Nov 2026</span></div>
   <div class="ms" id="ms"></div>
   <a class="cta" href="prototype/">Open the product screens →</a>
-  <nav class="toc" aria-label="Sections"><a href="#board">Board summary</a><a href="#problem">Problem</a><a href="#what">What we build</a><a href="#programme">Road to Cubbon</a><a href="#november">November plan</a><a href="#checklist">Release checklist</a><a href="#nitin">Onboarding Nitin</a><a href="#metrics">Metrics</a><a href="#yoska">From Yoska</a><a href="#risks">Risks</a><a href="#open">Open questions</a></nav>
+  <nav class="toc" aria-label="Sections"><a href="#board">Board summary</a><a href="#call">9 Nov call</a><a href="#problem">Problem</a><a href="#what">What we build</a><a href="#programme">Road to Cubbon</a><a href="#november">November plan</a><a href="#checklist">Release checklist</a><a href="#nitin">Onboarding Nithin</a><a href="#metrics">Metrics</a><a href="#yoska">From Yoska</a><a href="#risks">Risks</a><a href="#open">Open questions</a></nav>
 </section>
 
 <article class="pr">
@@ -108,13 +108,44 @@ footer a{color:var(--ink-2)}
 <div class="board">
   <span class="lbl">For the board</span>
   <ul>
-    <li><b>Design Partner #2:</b> Cubbon Classic 10K, Edition 2, Bengaluru, 21 Mar 2027, 19 weeks away. Edition 1 had about 4,000 runners (figure from the organiser).</li>
-    <li><b>Today:</b> registration opened about 10 days ago on a KonfHub widget inside the race site, with 400 to 500 entries so far. The engagement programme sits on Yoska's coach dashboard, which was built for coaching, not events.</li>
-    <li><b>The deal:</b> if we ship this, Nitin moves the whole registration to peakst8 and runs "Road to Cubbon Classic" on it.</li>
+    <li><b>Design Partner #2:</b> Cubbon Classic 10K, Edition 2, Bengaluru, 21 Mar 2027, 19 weeks away. Edition 1 had about 4,000 runners, and the organiser expects 3,500 for Edition 2.</li>
+    <li><b>Today:</b> registration runs on a KonfHub widget inside the race site, with about 220 entries on 9 Nov and 4.5 months to go. The engagement programme sits on Yoska's coach dashboard, which was built for coaching, not events.</li>
+    <li><b>The deal:</b> if we ship this, Nithin moves the whole registration to peakst8 and runs "Road to Cubbon Classic" on it.</li>
     <li><b>In November we ship:</b> Embedded Ticketing live on their site, Yoska's backend merged into peakst8's, and a redesigned peakst8 dashboard where the organiser configures the engagement layer themselves.</li>
-    <li><b>Why it scales:</b> Design Partner #1 showed a 250-runner cohort on a training plan. Design Partner #2 is a 4,000-runner race on one configuration, with no engineering for each event. The same setup then goes to community clubs and other races. If the partnership with MyRace goes well, we integrate with MyRace directly for timing and results and offer it across clubs and events.</li>
+    <li><b>Why it scales:</b> Design Partner #1 showed a 250-runner cohort on a training plan. Design Partner #2 is a 3,500-runner race on one configuration, with no engineering for each event. The same setup then goes to community clubs and other races. If the partnership with MyRace goes well, we integrate with MyRace directly for timing and results and offer it across clubs and events.</li>
   </ul>
 </div>
+
+<h2 id="call">From the 9 Nov call</h2>
+<p class="answer">About 220 registered, 4.5 months to go and 3,500 expected. Engagement goes live in January as an 8-week programme, with brands backing rewards for consistency.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Topic</th><th>What we heard</th><th>What changes</th></tr></thead>
+  <tbody>
+    <tr><td>Registrations</td><td>~220 on 9 Nov, ~4.5 months to go</td><td>Baseline is 220</td></tr>
+    <tr><td>Expected turnout</td><td>3,500 participants</td><td>Target is 3,500</td></tr>
+    <tr><td>Ticket price</td><td>Early-bird tiers at 15%, 10% and 5% off. Bulk buy ~20% off.</td><td>Embedded Ticketing needs tiered early-bird prices and a bulk discount at launch</td></tr>
+    <tr><td>Engagement and leaderboard</td><td>Activate from Jan 2027, after TMM and alongside TCS 10K. 8 weeks to race day.</td><td>No December warm-up league. Programme runs 25 Jan to 21 Mar. The dashboard is still built in November.</td></tr>
+    <tr><td>Already registered</td><td>Send an emailer</td><td>Emailer when registration moves, and again when the programme opens</td></tr>
+    <tr><td>Brands</td><td>Onboard brands to reward consistency</td><td>Nithin designs the rewards, for a runner alone or with their group</td></tr>
+  </tbody>
+</table></div>
+<h3>Next steps</h3>
+<ol>
+  <li><b>Nithin Gowda</b> comes back with the programme: weekly missions, scoring, and personal and group rewards.</li>
+  <li><b>Arvind</b> introduces Nithin to brands that will back rewards for consistency, and picks one to take a bet on.</li>
+</ol>
+<h3>Metrics we track</h3>
+<div class="tbl"><table>
+  <thead><tr><th>Metric</th><th>Today</th><th>Target</th></tr></thead>
+  <tbody>
+    <tr><td>Registrations</td><td>~220 (9 Nov)</td><td>3,500 by race week</td></tr>
+    <tr><td>Sales by price tier</td><td>—</td><td>Early-bird tiers and bulk buys tracked separately</td></tr>
+    <tr><td>Registered runners who join the programme</td><td>—</td><td>50% by the end of week 1</td></tr>
+    <tr><td>Weekly active during the 8 weeks</td><td>—</td><td>40% of joiners</td></tr>
+    <tr><td>Rewards claimed, personal and group</td><td>—</td><td>Set once brands are in</td></tr>
+    <tr><td>Brands onboarded for rewards</td><td>0</td><td>At least 1 before 25 Jan</td></tr>
+  </tbody>
+</table></div>
 
 <h2 id="problem">The problem</h2>
 <div class="tbl"><table>
@@ -131,7 +162,7 @@ footer a{color:var(--ink-2)}
 <p class="answer">One peakst8 dashboard where the organiser sells entries on their own site and runs a season of missions, leaderboards and rewards, with no peakst8 engineer in the loop.</p>
 <ol>
   <li><b>Registration on the organiser's site.</b> Embedded Ticketing replaces the KonfHub iframe. Runners register individually or with a club code, and existing KonfHub registrations are imported. See the <a href="../embedded-ticketing/">Embedded Ticketing note</a>.</li>
-  <li><b>A programme the organiser builds.</b> A warm-up league from registration, then the 8-week Road to Cubbon Classic, with missions, points and a sponsor slot.</li>
+  <li><b>A programme the organiser builds.</b> Pre-season from registration, then the 8-week Road to Cubbon Classic from 25 Jan 2027, with missions, points and a sponsor slot.</li>
   <li><b>Missions that count themselves.</b> Runs come in from the watch or Strava. Club runs count on a captain's QR scan. Quizzes count when finished.</li>
   <li><b>Leaderboards people care about.</b> Individual, club, age group and gender boards, updating as runs arrive.</li>
   <li><b>Rewards and nudges.</b> Badges, merchandise, partner rewards, free entries and race-day recognition, plus reminders before a streak breaks.</li>
@@ -140,7 +171,7 @@ footer a{color:var(--ink-2)}
 <p>The <a href="prototype/">product screens</a> show nine organiser screens (event home, registration and embed, Road to Cubbon, missions and points, leaderboards, rewards, nudges, clubs, insights) and five runner screens (register on the race site, this week, leaderboard, rewards, quiz). They are new designs in the peakst8 app language. Yoska's screens were used only as a list of capabilities.</p>
 
 <h2 id="programme">Road to Cubbon Classic</h2>
-<p class="answer">A six-to-eight-week digital and physical training programme, "Powered by [Brand]", designed by Nitin Gowda (MyRace). We propose 8 weeks, 25 Jan to 21 Mar 2027, after a warm-up league that opens on 1 Dec.</p>
+<p class="answer">A six-to-eight-week digital and physical training programme, "Powered by [Brand]", designed by Nithin Gowda (MyRace). Agreed on 9 Nov: 8 weeks up to race day, live from January 2027 (25 Jan to 21 Mar), after TMM and alongside TCS 10K training.</p>
 <p>It includes weekly missions on peakst8, brand-led educational content, product sampling, club engagement, a digital leaderboard, race-day activation and post-race content.</p>
 <div class="tbl"><table>
   <thead><tr><th>Challenge</th><th>Example activity</th><th>Points</th><th>Counted by</th></tr></thead>
@@ -157,10 +188,10 @@ footer a{color:var(--ink-2)}
 <h2 id="november">November plan</h2>
 <p class="answer">Registration moves first and can stand alone. The engagement layer follows, and everything is live by 30 Nov.</p>
 <div class="nov">
-  <div><span class="lbl">9–15 Nov · Lock</span><b>Scope and data</b><ul><li>Kickoff and scope lock with Nitin (11 Nov)</li><li>Organiser login and Embed switched on</li><li>KonfHub export and club list in hand</li><li>Yoska backend audit</li><li>Dashboard designs signed off (13 Nov)</li></ul></div>
+  <div><span class="lbl">9–15 Nov · Lock</span><b>Scope and data</b><ul><li>Kickoff and scope lock with Nithin (11 Nov)</li><li>Organiser login and Embed switched on</li><li>KonfHub export and club list in hand</li><li>Yoska backend audit</li><li>Dashboard designs signed off (13 Nov)</li></ul></div>
   <div><span class="lbl">16–22 Nov · Register</span><b>Embedded Ticketing live</b><ul><li>Snippet on cubbonclassic10k.com/register (20 Nov)</li><li>KonfHub entries imported and confirmed</li><li>Club codes on approval, bibs</li><li>Merge starts: missions, points, leaderboards</li></ul></div>
-  <div><span class="lbl">23–29 Nov · Engage</span><b>Athlete OS dashboard</b><ul><li>Programme builder, missions, leaderboards, rewards, nudges, clubs, insights</li><li>Runner app: missions, ranks, rewards, quiz</li><li>Staging QA (26 Nov)</li><li>Nitin configures the warm-up league (27 Nov)</li></ul></div>
-  <div><span class="lbl">30 Nov · Go live</span><b>Off Yoska's screens</b><ul><li>Warm-up league opens 1 Dec</li><li>Cubbon runs only on peakst8</li><li>Board update</li></ul></div>
+  <div><span class="lbl">23–29 Nov · Engage</span><b>Athlete OS dashboard</b><ul><li>Programme builder, missions, leaderboards, rewards, nudges, clubs, insights</li><li>Runner app: missions, ranks, rewards, quiz</li><li>Staging QA (26 Nov)</li><li>Nithin configures the warm-up league (27 Nov)</li></ul></div>
+  <div><span class="lbl">30 Nov · Go live</span><b>Off Yoska's screens</b><ul><li>Registration and dashboard only on peakst8</li><li>Emailer to everyone already registered</li><li>Board update</li></ul></div>
 </div>
 <p>After November, Road to Cubbon Classic runs from 25 Jan to 21 Mar (V2: sponsor slot and report, auto-levels, plan library, leagues). If the pilot goes well, Phase 3 (Feb to Apr) integrates MyRace directly for bibs, timing and results, without separate syncing, and offers that layer to community clubs and other events.</p>
 
@@ -172,19 +203,19 @@ footer a{color:var(--ink-2)}
   <li><b>Yoska UI decoupled:</b> nobody at Cubbon logs into fit.yoska.in.</li>
   <li><b>Redesigned Athlete OS dashboard:</b> the organiser configures the programme, missions, leaderboards, rewards and nudges themselves.</li>
   <li><b>Runner app</b> shows missions, leaderboards, rewards and quizzes.</li>
-  <li><b>Nitin onboarded</b> and has set up the warm-up league alone.</li>
+  <li><b>Nithin onboarded</b> and has set up week 1 of the programme alone.</li>
 </ul>
 
-<h2 id="nitin">Onboarding Nitin Gowda</h2>
+<h2 id="nitin">Onboarding Nithin Gowda</h2>
 <div class="tbl"><table>
-  <thead><tr><th>When</th><th>Step</th><th>What Nitin does</th><th>What we do</th></tr></thead>
+  <thead><tr><th>When</th><th>Step</th><th>What Nithin does</th><th>What we do</th></tr></thead>
   <tbody>
     <tr><td>Wed 11 Nov</td><td>Kickoff</td><td>Agrees season shape, scoring, rewards and sponsor slot</td><td>Walks through the product screens and locks scope</td></tr>
     <tr><td>Thu 12 Nov</td><td>Access</td><td>Gets an organiser login and adds the team</td><td>Creates the account and switches Embed on</td></tr>
     <tr><td>Fri 13 Nov</td><td>Data</td><td>Shares the KonfHub export and club list</td><td>Maps fields and runs a test import</td></tr>
     <tr><td>Fri 20 Nov</td><td>Site swap</td><td>Their web team pastes the snippet on /register</td><td>Imports entries and sends the "entry moved" email</td></tr>
-    <tr><td>Fri 27 Nov</td><td>Configure</td><td>Builds the warm-up league in the dashboard</td><td>Sits beside them and fixes blockers the same day</td></tr>
-    <tr><td>From 1 Dec</td><td>Run</td><td>Weekly 30-minute review, Club of the Week, next missions</td><td>Brings the weekly report and the V2 list</td></tr>
+    <tr><td>Fri 27 Nov</td><td>Configure</td><td>Sets up week 1 of the programme in the dashboard</td><td>Sits beside them and fixes blockers the same day</td></tr>
+    <tr><td>From 25 Jan</td><td>Run</td><td>Weekly 30-minute review, Club of the Week, next missions</td><td>Brings the weekly report and the V2 list</td></tr>
   </tbody>
 </table></div>
 
@@ -192,7 +223,7 @@ footer a{color:var(--ink-2)}
 <div class="tbl"><table>
   <thead><tr><th>Metric</th><th>Baseline</th><th>Target</th><th>When</th></tr></thead>
   <tbody>
-    <tr><td>Registrations on peakst8</td><td>400–500 on KonfHub (day 10)</td><td>4,500 <span class="lbl">Assumption</span></td><td>Race week</td></tr>
+    <tr><td>Registrations on peakst8</td><td>~220 on KonfHub (9 Nov)</td><td>3,500 (organiser's expected count)</td><td>Race week</td></tr>
     <tr><td>Registrations lost in the move</td><td>—</td><td>0</td><td>20 Nov</td></tr>
     <tr><td>Registered runners who join the programme</td><td>—</td><td>50% <span class="lbl">Assumption</span></td><td>31 Jan 2027</td></tr>
     <tr><td>Weekly active (at least one mission)</td><td>—</td><td>40% of joiners</td><td>Each programme week</td></tr>
@@ -223,10 +254,10 @@ footer a{color:var(--ink-2)}
 <div class="tbl"><table>
   <thead><tr><th>Risk</th><th>What we'll do</th></tr></thead>
   <tbody>
-    <tr><td>Three weeks is tight for Embed, the merge and a new dashboard</td><td>Registration ships first and stands alone. Engagement can slip to 7 Dec without losing the season.</td></tr>
+    <tr><td>Three weeks is tight for Embed, the merge and a new dashboard</td><td>Registration ships first and stands alone. Engagement can slip into December: the programme only opens on 25 Jan.</td></tr>
     <tr><td>Entries lost or duplicated in the KonfHub move</td><td>Count-for-count check, a confirmation email to each runner, and KonfHub kept read-only for 30 days</td></tr>
     <tr><td>Leaderboards feel unfair</td><td>Only synced or checked-in activity counts. Outliers are held for review.</td></tr>
-    <tr><td>Leaderboards slow at 4,000+ runners</td><td>Rank as runs arrive and load test at 10,000 before 26 Nov</td></tr>
+    <tr><td>Leaderboards slow at 3,500+ runners</td><td>Rank as runs arrive and load test at 10,000 before 26 Nov</td></tr>
     <tr><td>No sponsor signed yet</td><td>The programme runs without one. The slot stays empty until signed.</td></tr>
     <tr><td>Merge pulls in coach features</td><td>Merge only the engine in the table above</td></tr>
   </tbody>
@@ -237,19 +268,19 @@ footer a{color:var(--ink-2)}
   <thead><tr><th>Question</th><th>Owner</th><th>Due</th></tr></thead>
   <tbody>
     <tr><td>Pull Cubbon go-live ahead of the other Embed pilots (20 Nov instead of 14 Dec)? Proposed: yes.</td><td>Arvind</td><td>11 Nov</td></tr>
-    <tr><td>Registration fee and passes (the page still says "to be announced")</td><td>Nitin</td><td>13 Nov</td></tr>
-    <tr><td>Can KonfHub export every registration with consent to contact?</td><td>Nitin</td><td>13 Nov</td></tr>
-    <tr><td>6 or 8 weeks for Road to Cubbon? Proposed: 8.</td><td>Nitin</td><td>11 Nov</td></tr>
-    <tr><td>Final points per mission</td><td>Nitin + Arvind</td><td>27 Nov</td></tr>
-    <tr><td>Sponsor and reward budget</td><td>Nitin</td><td>15 Dec</td></tr>
-    <tr><td>Does MyRace offer an API for bibs, timing and results?</td><td>Nitin</td><td>Phase 3</td></tr>
+    <tr><td>Base fee for Edition 2 (early-bird tiers at 15%, 10%, 5% off and ~20% off bulk buys agreed)</td><td>Nithin</td><td>13 Nov</td></tr>
+    <tr><td>Can KonfHub export every registration with consent to contact?</td><td>Nithin</td><td>13 Nov</td></tr>
+    <tr><td>Brands for consistency rewards and "Powered by [Brand]"</td><td>Arvind introduces, Nithin decides</td><td>15 Jan</td></tr>
+    <tr><td>Final points per mission</td><td>Nithin + Arvind</td><td>27 Nov</td></tr>
+    <tr><td>Sponsor and reward budget</td><td>Nithin</td><td>15 Dec</td></tr>
+    <tr><td>Does MyRace offer an API for bibs, timing and results?</td><td>Nithin</td><td>Phase 3</td></tr>
   </tbody>
 </table></div>
 
 </article>
 </main>
 
-<footer>peakst8 · internal product note, 9 Nov 2026. Programme, scoring and rewards from Nitin Gowda (MyRace). Yoska inventory taken read-only from fit.yoska.in on 9 Nov 2026. <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os">Source on GitHub</a>.</footer>
+<footer>peakst8 · internal product note, 9 Nov 2026. Programme, scoring and rewards from Nithin Gowda (MyRace). Yoska inventory taken read-only from fit.yoska.in on 9 Nov 2026. <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os">Source on GitHub</a>.</footer>
 </div>
 <script>
 (function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='athlete-os-cubbon-classic'});if(!n)return;

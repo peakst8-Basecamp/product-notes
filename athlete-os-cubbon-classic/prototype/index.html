@@ -246,9 +246,9 @@ const SCREENS=[
  {id:'a-quiz',grp:'Runner',n:'A5',t:'Race-prep quiz'},
 ];
 const PANEL={
- home:{what:'The organiser\'s first view: registrations against target, the season timeline, who is active this week and what needs a decision.',who:'Organiser (Nitin\'s team)',yoska:'No equivalent. Yoska opens on a coach\'s athlete list, with no event view.',phase:'V1 · 30 Nov'},
+ home:{what:'The organiser\'s first view: registrations against target, the season timeline, who is active this week and what needs a decision.',who:'Organiser (Nithin\'s team)',yoska:'No equivalent. Yoska opens on a coach\'s athlete list, with no event view.',phase:'V1 · 30 Nov'},
  reg:{what:'Switch on Embedded Ticketing, install it on cubbonclassic10k.com/register, import KonfHub registrations and watch them land.',who:'Organiser and their web person',yoska:'Not in Yoska. Today this is KonfHub plus a club form, with codes issued by hand in 24 to 48 hours.',phase:'V1a · 20 Nov'},
- prog:{what:'Lay out the season: a warm-up league from registration, then 8 weeks of Road to Cubbon. Each week is a checkpoint on the 10K route (1.25 km a week). Add the sponsor slot.',who:'Organiser',yoska:'Replaces Challenge "Schedule" and Training Blocks. Yoska has no season or programme view.',phase:'V1 warm-up · V2 Road to Cubbon'},
+ prog:{what:'Lay out the season: pre-season from registration (emailers, club sign-ups, brand rewards), then 8 weeks of Road to Cubbon from 25 Jan, as agreed on the 9 Nov call. Each week is a checkpoint on the 10K route (1.25 km a week). Add the sponsor slot.',who:'Organiser',yoska:'Replaces Challenge "Schedule" and Training Blocks. Yoska has no season or programme view.',phase:'V1 warm-up · V2 Road to Cubbon'},
  mis:{what:'Pick the missions for a week from the library, set points and choose how each one is counted: synced run, club check-in or finished quiz.',who:'Organiser',yoska:'Replaces the Challenge Library (85 challenges, levels 1 to 10, metric, rules) and Assign Challenge.',phase:'V1'},
  lb:{what:'Choose which boards runners see (individual, club, age group, gender) and how they rank. Boards update as activities arrive.',who:'Organiser',yoska:'Replaces Leaderboards and Challenge Leaderboard (categories, daily or weekly batch at 03:00, manual Sync all).',phase:'V1'},
  rw:{what:'Set what people win and when: weekly top performers, Club of the Week, badges, merchandise, partner rewards, race-day recognition, free entries.',who:'Organiser and sponsor',yoska:'New. Yoska has points and leagues but no rewards to claim.',phase:'V1 badges · V2 partner rewards'},
@@ -293,7 +293,7 @@ const weekMax=()=>MISSIONS.filter(m=>m.on).reduce((a,m)=>a+m.pts,0);
 
 /* ---------- shared pieces ---------- */
 function route(active,compact){
-  // 8 programme weeks spread along a 10K course line; W0 = warm-up league start, finish = race day
+  // 8 programme weeks spread along a 10K course line; W0 = pre-season, finish = race day
   const W=760,H=compact?90:120,pts=[];
   for(let i=0;i<=8;i++){const x=24+i*(W-48)/8;const y=H/2+Math.sin(i*0.9)*(compact?18:26);pts.push([x,y])}
   let d=`M${pts[0][0]},${pts[0][1]}`;for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i];const cx=(x0+x1)/2;d+=` C${cx},${y0} ${cx},${y1} ${x1},${y1}`}
@@ -341,24 +341,24 @@ function phone(inner,tab){
 
 /* ---------- organiser screens ---------- */
 function vHome(){
-  const regs=[38,52,44,61,47,40,58,49,63,71];const total=523;
+  const regs=[14,22,18,25,19,16,24,20,27,35];const total=220;
   return dashShell(`
   <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Athlete OS · Cubbon Classic 10K</span><h1 class="d">132 days to race day</h1></div>
    <div class="row" style="gap:8px"><span class="ex">Example data</span><button class="btn" data-go="prog">Open Road to Cubbon</button></div></div>
   <div class="kpis">
-   <div class="kpi"><small>Registrations</small><b>${total}</b><div class="meter"><i style="width:${(total/4500*100).toFixed(1)}%"></i></div><small>463 from KonfHub + 60 new · target 4,500</small></div>
-   <div class="kpi"><small>Joined the programme</small><b>287</b><small>54% of registrations</small></div>
-   <div class="kpi"><small>Active this week</small><b>162</b><small>56% of joiners finished a mission</small></div>
+   <div class="kpi"><small>Registrations</small><b>${total}</b><div class="meter"><i style="width:${(total/3500*100).toFixed(1)}%"></i></div><small>All on KonfHub today · target 3,500</small></div>
+   <div class="kpi"><small>Programme opens</small><b>25 Jan</b><small>8 weeks to race day</small></div>
+   <div class="kpi"><small>Brands for rewards</small><b>0</b><small>Arvind introducing brands</small></div>
    <div class="kpi"><small>Clubs</small><b>${CLUBS.length}</b><small>4 meet the entry rule</small></div>
   </div>
   <div class="two">
-   <div class="card stack"><div class="row"><h2 class="d">Registrations per day</h2><span class="pill cy">Run-rate ≈ 52/day</span></div>${spark(regs,'Registrations per day over 10 days, now 71 a day')}
-    <p class="sub">At today's rate the race reaches about 7,400 entries. Most races see a late spike, so the target stays at 4,500 until we have two weeks of peakst8 data.</p></div>
+   <div class="card stack"><div class="row"><h2 class="d">Registrations per day</h2><span class="pill cy">Run-rate ≈ 22/day</span></div>${spark(regs,'Registrations per day over 10 days, now 71 a day')}
+    <p class="sub">At today's rate the race reaches about 3,100 entries. Early-bird deadlines and bulk club buys should close the gap to 3,500.</p></div>
    <div class="card stack"><h2 class="d">Needs you</h2>
     ${[['2 club entries waiting for approval','clubs','warn'],['Week 1 missions are ready to publish','mis','cy'],['No sponsor in the "Powered by" slot','prog','warn'],['14 runners have streaks ending tonight','ndg','cy']].map(([t,g,c])=>`<button class="mis" style="grid-template-columns:minmax(0,1fr) auto;text-align:left" data-go="${g}"><span>${t}</span><span class="pill ${c}">Open</span></button>`).join('')}
    </div>
   </div>
-  <div class="card stack"><div class="row"><h2 class="d">The season</h2><span class="muted">Warm-up league from 1 Dec · Road to Cubbon 25 Jan → 21 Mar</span></div>${route(0,true)}</div>`);
+  <div class="card stack"><div class="row"><h2 class="d">The season</h2><span class="muted">Pre-season now · Road to Cubbon 25 Jan → 21 Mar</span></div>${route(0,true)}</div>`);
 }
 function vReg(){
   return dashShell(`
@@ -367,7 +367,7 @@ function vReg(){
    <div class="card stack">
     <h2 class="d">Go-live steps</h2>
     <div class="step done"><span class="dot">${ICONS.check}</span><div><b>Embed switched on</b><p class="sub">Book button and checkout use Cubbon orange and logo.</p></div></div>
-    <div class="step ${S.imported?'done':'now'}"><span class="dot">${S.imported?ICONS.check:'2'}</span><div><b>Import KonfHub registrations</b><p class="sub">${S.imported?'463 of 463 imported. Each runner got an email saying their entry has moved, with a link to the app.':'Upload the KonfHub export. We match each runner by email and phone, so nobody is charged twice.'}</p>${S.imported?'':'<button class="btn sm" data-act="import" style="margin-top:8px">Import 463 registrations</button>'}</div></div>
+    <div class="step ${S.imported?'done':'now'}"><span class="dot">${S.imported?ICONS.check:'2'}</span><div><b>Import KonfHub registrations</b><p class="sub">${S.imported?'220 of 220 imported. Each runner got an email saying their entry has moved, with a link to the app.':'Upload the KonfHub export. We match each runner by email and phone, so nobody is charged twice.'}</p>${S.imported?'':'<button class="btn sm" data-act="import" style="margin-top:8px">Import 220 registrations</button>'}</div></div>
     <div class="step now"><span class="dot">3</span><div><b>Replace the KonfHub widget on /register</b><p class="sub">Paste this where the iframe is today, or point <b>events.cubbonclassic10k.com</b> to peakst8 for pages that rank on Google.</p>
      <div class="code" style="margin-top:8px">&lt;script src="https://embed.ps8.club/v1.js"
   data-event="cubbon-classic-10k-e2"
@@ -377,26 +377,27 @@ function vReg(){
    </div>
    <div class="stack">
     <div class="card stack"><h2 class="d">Entry types</h2>
-     <div class="row"><span><b>Individual 10K</b><br><span class="muted">Chip timing, T-shirt, medal, breakfast</span></span><span class="pill">Fee: set by organiser</span></div>
+     <div class="row"><span><b>Individual 10K</b><br><span class="muted">Chip timing, T-shirt, medal, breakfast</span></span><span class="pill cb">Early bird 15% → 10% → 5% off</span></div>
+     <div class="row"><span><b>Bulk buy</b><br><span class="muted">Companies and clubs buying several entries</span></span><span class="pill gold">~20% off</span></div>
      <div class="row"><span><b>Club entry</b><br><span class="muted">Captain registers, members join with a code</span></span><span class="pill cb">Codes on approval</span></div>
     </div>
     <div class="card stack"><h2 class="d">Where entries come from</h2>
-     ${[['Imported from KonfHub',463,100],['cubbonclassic10k.com',41,9],['Club codes',14,3],['Instagram link',5,1]].map(([l,v,w])=>`<div class="stack" style="gap:6px"><div class="row"><span class="muted">${l}</span><b class="num">${v}</b></div><div class="meter"><i style="width:${w}%"></i></div></div>`).join('')}
+     ${[['Imported from KonfHub',220,100],['Early-bird 15% off',0,0],['Bulk buys (~20% off)',0,0],['Club codes',0,0]].map(([l,v,w])=>`<div class="stack" style="gap:6px"><div class="row"><span class="muted">${l}</span><b class="num">${v}</b></div><div class="meter"><i style="width:${w}%"></i></div></div>`).join('')}
      <p class="sub">Every booking also reaches Cubbon's own GA4 and Meta pixel.</p></div>
    </div>
   </div>`);
 }
 function vProg(){
-  const W=[[0,'Warm-up league','1 Dec – 24 Jan','Lighter weekly missions, club recruiting, onboarding quiz'],[1,'Base','25 Jan','Easy runs, build the habit'],[2,'Base','1 Feb','Add strength'],[3,'Build','8 Feb','First 6 km long run'],[4,'Build','15 Feb','Club run week, double community points'],[5,'Build','22 Feb','Long run 8 km'],[6,'Sharpen','1 Mar','Race-pace session'],[7,'Sharpen','8 Mar','Route recce in Cubbon Park'],[8,'Taper','15 Mar','Bib collection, race-day brief']];
+  const W=[[0,'Pre-season','Now – 24 Jan','Emailer to registered runners, club sign-ups, brands onboarded for rewards, programme from Nithin'],[1,'Base','25 Jan','Easy runs, build the habit'],[2,'Base','1 Feb','Add strength'],[3,'Build','8 Feb','First 6 km long run'],[4,'Build','15 Feb','Club run week, double community points'],[5,'Build','22 Feb','Long run 8 km'],[6,'Sharpen','1 Mar','Race-pace session'],[7,'Sharpen','8 Mar','Route recce in Cubbon Park'],[8,'Taper','15 Mar','Bib collection, race-day brief']];
   const w=W[S.week]||W[0];
   return dashShell(`
   <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Programme builder</span><h1 class="d">Road to Cubbon Classic</h1><p class="sub">Powered by <b>[Brand]</b> · 8 weeks · each week is 1.25 km of the race</p></div>
    <div class="row" style="gap:8px"><button class="btn ghost sm" data-toast="Preview opens the runner app as a new runner would see it">Preview as runner</button><button class="btn sm" data-toast="Week ${S.week} published. Runners see it on Monday at 6 am">Publish week ${S.week}</button></div></div>
   <div class="card stack">${route(S.week,false)}
-   <div class="wk">${W.map(([i,ph,d])=>`<button data-week="${i}" aria-pressed="${S.week===i}"><b>${i===0?'Warm-up':'W'+i}</b><span>${ph}</span></button>`).join('')}</div>
+   <div class="wk">${W.map(([i,ph,d])=>`<button data-week="${i}" aria-pressed="${S.week===i}"><b>${i===0?'Pre':'W'+i}</b><span>${ph}</span></button>`).join('')}</div>
   </div>
   <div class="two">
-   <div class="card stack"><div class="row"><h2 class="d">${w[0]===0?'Warm-up league':'Week '+w[0]+' · '+w[1]}</h2><span class="muted">${w[2]}</span></div><p class="sub">${w[3]}</p>
+   <div class="card stack"><div class="row"><h2 class="d">${w[0]===0?'Pre-season':'Week '+w[0]+' · '+w[1]}</h2><span class="muted">${w[2]}</span></div><p class="sub">${w[3]}</p>
     ${MISSIONS.filter(m=>m.on).map(m=>`<div class="mis"><div class="ic">${ICONS[m.ic]}</div><div><b>${m.name}</b><small>${m.ex}</small></div><div class="pts">${S.week===4&&m.id==='com'?m.pts*2:m.pts}<span class="dim" style="font-size:12px;font-family:var(--sans)">pts</span></div></div>`).join('')}
     <div class="row"><span class="muted">Up to this week</span><b class="num">${weekMax()+(S.week===4?15:0)} pts</b></div>
     <button class="btn ghost sm" data-go="mis">Edit missions</button>
@@ -415,7 +416,7 @@ function vProg(){
 }
 function vMis(){
   return dashShell(`
-  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Week ${S.week||1} · missions</span><h1 class="d">Missions & points</h1><p class="sub">Turn missions on or off and set their points. The illustrative scoring from Nitin is loaded.</p></div>
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Week ${S.week||1} · missions</span><h1 class="d">Missions & points</h1><p class="sub">Turn missions on or off and set their points. The illustrative scoring from Nithin is loaded.</p></div>
    <div class="kpi" style="min-width:160px"><small>Max a week</small><b>${weekMax()}</b><small>${weekMax()*8} over 8 weeks</small></div></div>
   <div class="stack">
   ${MISSIONS.map(m=>`<div class="mis ${m.on?'':'off'}"><div class="ic">${ICONS[m.ic]}</div>
@@ -448,7 +449,7 @@ function vLb(){
 function vRw(){
   const R=[['Weekly top performer','Top 3 on the individual board each Sunday','Shoutout in app + Instagram story','gold'],['Club of the Week','Highest points per member','Club photo at the start line, featured post','cy'],['Consistency badges','Finish every mission for 2, 4 and 8 weeks','Badge on the runner\'s profile','cy'],['Cubbon Classic merch','Top 50 at the end of the programme','Limited-edition tee, 50 in stock','cb'],['Partner rewards','Finish the Learning mission','Sample pack from [Brand], claim at bib collection','warn'],['Race-day recognition','Top 10 and Club of the Season','Called on stage at the celebration','gold'],['Free entry','Top runner in each age group','Free Edition 3 entry or partner experience','gold']];
   return dashShell(`
-  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Rewards</span><h1 class="d">What people win</h1><p class="sub">Each reward says who gets it and what they get. Runners claim in the app; you see who claimed.</p></div><button class="btn sm" data-toast="New reward form opens here">Add reward</button></div>
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Rewards</span><h1 class="d">What people win</h1><p class="sub">Each reward says who gets it and what they get, for one runner or their whole group. Brands back them; runners claim in the app.</p></div><button class="btn sm" data-toast="New reward form opens here">Add reward</button></div>
   <div class="rw">${R.map(([t,who,what,c])=>`<div class="rwc"><div class="hd"><b>${t}</b><span class="pill ${c}">${c==='warn'?'Needs sponsor':'On'}</span></div><span class="muted" style="font-size:13px">${who}</span><span style="font-size:13.5px">${what}</span></div>`).join('')}</div>`);
 }
 function vNdg(){
@@ -490,10 +491,10 @@ function vAReg(){
    <div class="hero"><small>EDITION 2 · 21 MARCH 2027</small><b>Run the 10K</b><span style="color:#bbb;font-size:12.5px">One bib. Full race. Festival included.</span><div><button class="slant" data-act="book">Register</button></div></div></div>
   ${S.booked?`<div class="sheet"><div class="row"><b style="font-size:18px">You're in</b><span class="pill ok">Bib 2214</span></div>
    <p class="sub">Your ticket is in the peakst8 app. Want a plan to get race-ready?</p>
-   <div class="card stack" style="background:linear-gradient(140deg,rgba(46,49,146,.35),rgba(27,255,255,.06));border-color:rgba(27,255,255,.25)"><span class="eyebrow" style="color:#cffafe">Road to Cubbon Classic</span><b style="font-family:var(--display);font-size:18px">Weekly missions, a leaderboard and rewards until race day</b><span class="muted" style="font-size:13px">Warm-up league starts 1 Dec</span></div>
+   <div class="card stack" style="background:linear-gradient(140deg,rgba(46,49,146,.35),rgba(27,255,255,.06));border-color:rgba(27,255,255,.25)"><span class="eyebrow" style="color:#cffafe">Road to Cubbon Classic</span><b style="font-family:var(--display);font-size:18px">Weekly missions, a leaderboard and rewards until race day</b><span class="muted" style="font-size:13px">Programme starts 25 Jan 2027</span></div>
    <button class="btn block" data-go="a-home">Join and open the app</button></div>`
   :`<div class="sheet"><div class="row"><b style="font-size:18px">Choose your entry</b><span class="muted" style="font-size:12px">peakst8 checkout</span></div>
-   <button class="pass" aria-checked="true"><span><b>Individual 10K</b><br><span style="font-size:12.5px;color:#dbeafe">Chip timing, tee, medal, breakfast</span></span><b>₹ —</b></button>
+   <button class="pass" aria-checked="true"><span><b>Individual 10K</b><br><span style="font-size:12.5px;color:#dbeafe">Chip timing, tee, medal, breakfast</span></span><span class="pill gold" style="border:0">15% off</span></button>
    <button class="pass" aria-checked="false"><span><b>Join with a club code</b><br><span class="muted" style="font-size:12.5px">From your captain</span></span><span>›</span></button>
    <button class="btn block" data-act="book">Continue</button><p class="sub" style="font-size:12px;text-align:center">Email OTP, then Razorpay. Fee set by the organiser.</p></div>`}`,false);
 }
@@ -546,7 +547,7 @@ function renderPanel(){
   document.getElementById('panel').innerHTML=`<div class="card"><h4>${s.n} · ${s.t}</h4><p>${p.what}</p></div>
   <div class="card"><h4>Who uses it</h4><p>${p.who}</p><h4>Phase</h4><p>${p.phase}</p></div>
   <div class="card"><h4>Replaces in fit.yoska</h4><p class="rep">${p.yoska}</p></div>
-  <div class="card"><h4>Design partner</h4><p>Design Partner #2: Cubbon Classic 10K, with Nitin Gowda (MyRace). Design Partner #1 is Run Crew × Reebok. Screens are new designs in the peakst8 app language, not copies of Yoska.</p></div>`;
+  <div class="card"><h4>Design partner</h4><p>Design Partner #2: Cubbon Classic 10K, with Nithin Gowda (MyRace). Design Partner #1 is Run Crew × Reebok. Screens are new designs in the peakst8 app language, not copies of Yoska.</p></div>`;
 }
 function renderToast(){document.getElementById('toastHost').innerHTML=S.toast?`<div class="toast" role="status">${esc(S.toast)}</div>`:''}
 function render(){renderRail();renderStage();renderPanel();renderToast()}
@@ -565,7 +566,7 @@ document.addEventListener('click',e=>{
   if(d.done){S.done[d.done]=!S.done[d.done];render();if(S.done[d.done])toast('Mission done. Points added to your week');return}
   if(d.quiz!==undefined&&S.quiz===null){S.quiz=+d.quiz;render();return}
   const a=d.act;
-  if(a==='import'){S.imported=true;render();toast('463 registrations imported. Confirmation emails are on their way');}
+  if(a==='import'){S.imported=true;render();toast('220 registrations imported. Confirmation emails are on their way');}
   if(a==='copy'){const txt='<script src="https://embed.ps8.club/v1.js" data-event="cubbon-classic-10k-e2" data-mode="book-button" async><\/script>';
     try{navigator.clipboard.writeText(txt).then(()=>toast('Snippet copied'),()=>toast('Select the snippet and copy it'))}catch(err){toast('Select the snippet and copy it')}}
   if(a==='check')toast('Checked cubbonclassic10k.com/register: KonfHub widget still there. Replace it with the snippet');
