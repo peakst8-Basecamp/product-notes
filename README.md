@@ -24,6 +24,8 @@ To give an engineer write access: repo **Settings â†’ Collaborators and teams â†
 
 ## Adding a note
 
+Every note has three layers: `README.md` for anyone across the board, `index.html` (the product note) for engineers and designers, and `prototype/` (product screens, marked with *) for designers to rebuild in our design language. See [`TEMPLATE.md`](TEMPLATE.md).
+
 1. Copy [`TEMPLATE.md`](TEMPLATE.md) into a new folder as `README.md`, for example `my-feature/README.md`, and fill it in. The note covers why and what; write features from the user's side, and put code and technical design in the folder's `code/` with an `ARCHITECTURE.md`. Add an `index.html` if the note has a page on the site.
 2. Add an entry to `notes.json` and a row to the table above.
 3. Add the page to `sitemap.xml` and `llms.txt` if it should be found by search and AI tools.

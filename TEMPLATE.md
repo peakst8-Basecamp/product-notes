@@ -2,6 +2,14 @@
 
 Copy this file into a new folder as `README.md` (for example `my-feature/README.md`) and fill it in. A product note says **why** we are building something and **what** it has to achieve. How it is built (data model, API, jobs, code) lives in the folder's `code/` with its own `ARCHITECTURE.md`, and the note links to it.
 
+Every note has three layers, each for a different reader:
+
+| Layer | File | Reader | What goes in it |
+| --- | --- | --- | --- |
+| **README** | `README.md` | Anyone across the board | The overview: what and why, calls or context so far, problem, who it's for, why now, goals, metrics, key journeys, timeline. Short, plain, no build detail. |
+| **Product note** | `index.html` | Engineers and designers | The build brief: what we're shipping, journeys with done criteria, how it works, rules, go-live checklist, how we test, design brief, risks, open questions. Links to `code/`. |
+| **Product screens** | `prototype/` | Designers | A proposal that captures flows and content, marked with an asterisk: designers rebuild it in our design language. |
+
 Rules that keep notes useful:
 
 - Write for someone outside the team. No internal shorthand without a one-line explanation.
