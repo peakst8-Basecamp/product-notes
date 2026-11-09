@@ -4,7 +4,7 @@
 
 This note doesn't define all of Athlete OS. It covers what Cubbon Classic needs, what we ship for them in November, and what it proves for the product.
 
-[Product note](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/) · [Product screens](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/prototype/) · [Design Partner #1: Run Crew](https://peakst8-basecamp.github.io/product-notes/run-crew/) · [Embedded Ticketing note](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/) · Status: Scoping · Owner: Arvind · updated 9 Nov 2026
+[Product note](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/) · [Product screens](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/prototype/) · [Design Partner #1: Run Crew](https://peakst8-basecamp.github.io/product-notes/run-crew/) · [Embedded Ticketing note](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/) · [Code](code/) · Status: Scoping · Owner: Arvind · updated 9 Nov 2026
 
 ## The short version (for the board)
 
@@ -183,7 +183,7 @@ This note doesn't define all of Athlete OS. It covers what Cubbon Classic needs,
 | --- | --- |
 | Product screens | [prototype/](prototype/) |
 | Registration module | [Embedded Ticketing note](../embedded-ticketing/) |
-| Code and architecture | `code/ARCHITECTURE.md` (to follow after scope lock) |
+| Code: embedded registration (replaces the KonfHub widget) | [code/](code/): backend package, embed loader, KonfHub import, early-bird and bulk pricing. Verified against backend `main` on 9 Nov. |
 | Yoska screen inventory | Appendix below |
 
 ## Appendix

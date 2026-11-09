@@ -102,7 +102,7 @@
       "id": "athlete-os-cubbon-classic",
       "title": "Athlete OS · Design Partner #2: Cubbon Classic 10K",
       "folder": "athlete-os-cubbon-classic/",
-      "status": "Scoping",
+      "status": "In build",
       "next": "Nithin shares the Road to Cubbon programme; Arvind introduces brands for consistency rewards",
       "owner": "Arvind",
       "updated": "2026-11-09",
@@ -110,7 +110,8 @@
       "links": {
         "Product note": "athlete-os-cubbon-classic/",
         "Product screens": "athlete-os-cubbon-classic/prototype/",
-        "Design Partner #1": "run-crew/"
+        "Design Partner #1": "run-crew/",
+        "Code": "https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os-cubbon-classic/code"
       },
       "milestones": [
         {

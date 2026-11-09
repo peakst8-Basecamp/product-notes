@@ -1,0 +1,120 @@
+// peakst8 Embed: registration on an organiser's own site (replaces the
+// KonfHub widget on cubbonclassic10k.com/register).
+// Paste these models and enums into prisma/schema.prisma, then apply the
+// "Changes to existing models" block at the bottom.
+
+enum IMPORT_SOURCE {
+  KONFHUB
+}
+
+enum IMPORTED_REGISTRATION_STATUS {
+  PENDING
+  TICKET_ISSUED
+  DUPLICATE
+  INVALID
+  FAILED
+}
+
+/// Embed settings for one event: where it may run, how it looks, tracking ids
+/// and the bulk-buy rule used when issuing group codes.
+model EventEmbed {
+  id               String   @id @default(uuid()) @db.Uuid
+  eventId          String   @unique
+  event            Event    @relation(fields: [eventId], references: [id])
+  isEnabled        Boolean  @default(false)
+  /// Exact origins such as https://cubbonclassic10k.com, or *.example.com.
+  allowedOrigins   String[]
+  buttonLabel      String?
+  accentColor      String?
+  ga4MeasurementId String?
+  metaPixelId      String?
+  /// Group codes need at least this many entries.
+  bulkMinQuantity  Int?
+  bulkPercentOff   Float?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+/// An early-bird price window on a pass. The first tier (by `order`) that is
+/// open and has seats left applies. Cubbon Classic: 15%, then 10%, then 5% off.
+model CategoryPriceTier {
+  id            String         @id @default(uuid()) @db.Uuid
+  categoryId    String         @db.Uuid
+  category      Category       @relation(fields: [categoryId], references: [id])
+  label         String
+  percentOff    Float
+  startsAt      DateTime?
+  endsAt        DateTime
+  /// Optional seat cap for this tier (e.g. first 500 entries).
+  capacity      Int?
+  order         Int            @default(0)
+  isDeleted     Boolean        @default(false)
+  registrations Registration[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([categoryId])
+}
+
+/// One upload of an external registration export.
+model RegistrationImport {
+  id             String                 @id @default(uuid()) @db.Uuid
+  eventId        String
+  event          Event                  @relation(fields: [eventId], references: [id])
+  source         IMPORT_SOURCE
+  fileName       String?
+  createdById    String                 @db.Uuid
+  totalRows      Int
+  issuedCount    Int                    @default(0)
+  duplicateCount Int                    @default(0)
+  invalidCount   Int                    @default(0)
+  failedCount    Int                    @default(0)
+  completedAt    DateTime?
+  createdAt      DateTime               @default(now())
+  rows           ImportedRegistration[]
+
+  @@index([eventId])
+}
+
+/// One row of an import and what happened to it.
+model ImportedRegistration {
+  id             String                       @id @default(uuid()) @db.Uuid
+  importId       String                       @db.Uuid
+  import         RegistrationImport           @relation(fields: [importId], references: [id])
+  externalId     String?
+  email          String
+  firstName      String
+  lastName       String?
+  phoneNumber    String?
+  ticketName     String
+  categoryId     String?                      @db.Uuid
+  amountPaid     Float                        @default(0)
+  status         IMPORTED_REGISTRATION_STATUS @default(PENDING)
+  error          String?
+  userId         String?                      @db.Uuid
+  registrationId String?                      @db.Uuid
+  createdAt      DateTime                     @default(now())
+
+  @@index([importId])
+}
+
+// ---------------------------------------------------------------------------
+// Changes to existing models
+// ---------------------------------------------------------------------------
+//
+// model Event {
+//   ...
+//   embed               EventEmbed?
+//   registrationImports RegistrationImport[]
+// }
+//
+// model Category {
+//   ...
+//   priceTiers CategoryPriceTier[]
+// }
+//
+// model Registration {
+//   ...
+//   priceTierId String?            @db.Uuid
+//   priceTier   CategoryPriceTier? @relation(fields: [priceTierId], references: [id])
+// }

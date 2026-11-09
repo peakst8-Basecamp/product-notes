@@ -1,0 +1,42 @@
+--- a/src/services/registration.service.ts
++++ b/src/services/registration.service.ts
+@@ -1,3 +1,4 @@
++import { embedService } from './embed.service';
+ import {
+   REGISTRATION_FLOW,
+   calculateRegistrationAmount,
+@@ -200,9 +201,22 @@
+         productVariantIds,
+       });
+     }
++
++    // peakst8 Embed: early-bird tier or coupon, whichever is cheaper.
++    const embedPrice = await embedService.priceForRegistration({
++      categoryId,
++      baseAmount: resolvedCategoryBaseAmount,
++      coupon: coupon
++        ? {
++            offerPercentage: coupon.offerPercentage ?? null,
++            flatDiscountAmount: coupon.flatDiscountAmount ?? null,
++          }
++        : null,
++    });
++    await embedService.recordPriceTier(registrationId, embedPrice.priceTierId);
+ 
+     const { finalAmountPayable } = calculateRegistrationAmount({
+-      categoryBaseAmount: resolvedCategoryBaseAmount,
++      categoryBaseAmount: embedPrice.categoryBaseAmount,
+       categoryBasedActivities: activityForm?.activityGroup.flatMap((group) =>
+         group.categoryBasedActivities.map(
+           ({ baseAmount, openOnGroundActivity }) => ({
+@@ -212,8 +226,8 @@
+         ),
+       ),
+       eventId,
+-      offerPercentage: coupon?.offerPercentage ?? null,
+-      flatDiscountAmount: coupon?.flatDiscountAmount ?? null,
++      offerPercentage: embedPrice.offerPercentage,
++      flatDiscountAmount: embedPrice.flatDiscountAmount,
+       gstPercentage: event.club.clubRegistrationInfo?.gstPercentage ?? null,
+       isAmountInclusiveGST,
+     });

@@ -1,0 +1,18 @@
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -10,6 +10,7 @@
+ import chalk from 'chalk';
+ import { PrismaPg } from '@prisma/adapter-pg';
+ 
++import { embedRoutes } from './routes/embed.routes';
+ import { PrismaClient } from './generated/prisma/client';
+ import { env } from './config/env';
+ import {
+@@ -102,6 +103,7 @@
+ app.use('/registration', registrationRoutes);
+ app.use('/athlete', userRoutes);
+ app.use('/coupon', couponRoutes);
++app.use('/embed', embedRoutes);
+ app.use('/club', clubRoutes);
+ app.use('/website', websiteRoutes);
+ app.use('/integration', integrationRoutes);
