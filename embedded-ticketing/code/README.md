@@ -1,6 +1,6 @@
-# Cubbon Classic: embedded registration code package
+# Embedded Ticketing: race-site registration code package
 
-Code that replaces the KonfHub registration widget on [cubbonclassic10k.com/register](https://cubbonclassic10k.com/register) with peakst8. It belongs to the [Athlete OS · Design Partner #2: Cubbon Classic 10K](../README.md) note and implements V1a in that note: registration on the race's own site, early-bird and bulk pricing, and moving existing KonfHub registrations onto peakst8.
+Code for [peakst8 Embedded Ticketing](../README.md): registration on an organiser's own site, early-bird and bulk pricing, and moving existing registrations off another ticketing tool. First user: design partner [Cubbon Classic 10K](../../athlete-os-cubbon-classic/README.md), replacing the KonfHub widget on [cubbonclassic10k.com/register](https://cubbonclassic10k.com/register).
 
 It is **not** on a branch in `peakst8-backend` or `peakst8-frontend` yet. The engineer who picks it up copies it in, applies the two patches and ships it from there.
 

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;600;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"CollectionPage","name":"peakst8 product notes","url":"https://peakst8-basecamp.github.io/product-notes/","publisher":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"hasPart":[{"@type":"TechArticle","headline":"peakst8 Embedded Ticketing: product note","url":"https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/"},{"@type":"TechArticle","headline":"peakst8 Club Memberships: product note","url":"https://peakst8-basecamp.github.io/product-notes/memberships/"},{"@type":"TechArticle","headline":"Athlete OS · Design Partner #2: Cubbon Classic 10K","url":"https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/"}]}
+{"@context":"https://schema.org","@type":"CollectionPage","name":"peakst8 product notes","url":"https://peakst8-basecamp.github.io/product-notes/","publisher":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"hasPart":[{"@type":"TechArticle","headline":"peakst8 Embedded Ticketing: product note","url":"https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/"},{"@type":"TechArticle","headline":"peakst8 Club Memberships: product note","url":"https://peakst8-basecamp.github.io/product-notes/memberships/"},{"@type":"TechArticle","headline":"Design partner conversations: Cubbon Classic 10K","url":"https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/"}]}
 </script>
 <style>
 :root{color-scheme:light;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148}
@@ -32,6 +32,9 @@ h1{font-family:"Newsreader",Georgia,serif;font-weight:300;font-size:clamp(40px,7
 .links a{font-size:13.5px;font-weight:600;color:var(--ink);background:#fff;border-radius:999px;padding:8px 14px;text-decoration:none;box-shadow:inset 0 0 0 1px var(--line)}
 footer{margin-top:48px;color:var(--ink-3);font-size:13px}
 footer a{color:var(--ink-2)}
+.grp{margin:36px 0 4px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8b8c92;font-weight:600}
+.hn{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin:8px 0}
+.hn ul{margin:6px 0 0;padding-left:18px;display:grid;gap:3px;font-size:14px;color:#505157}
 </style>
 </head>
 <body>
@@ -40,30 +43,37 @@ footer a{color:var(--ink-2)}
 <main>
 <h1>Product notes</h1>
 <p class="lead">What peakst8 is building, who it's for, the screens and the timeline to go live.</p>
+<h2 class="grp">Product features</h2>
 <article class="note" data-id="embedded-ticketing">
-  <span class="lbl">Scoping · scope lock 30 Oct 2026</span>
-  <h2>1 · peakst8 Embedded Ticketing</h2>
-  <p>Clubs sell events on their own website. Event pages rank on Google and get cited by AI answer engines, while peakst8 runs checkout, payments and check-in. Pilots: Find Your Fit, Sisters in Sweat, Cubbon Classic 10K.</p>
-  <div class="links"><a href="embedded-ticketing/">Product note</a><a href="embedded-ticketing/prototype/">Prototype</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing">Source</a></div>
-</article>
-<article class="note" data-id="run-crew">
-  <span class="lbl">Live · Reebok training plan rollout</span>
-  <h2>2 · Run Crew × peakst8 Playbook</h2>
-  <p>Moving about 250 Run Crew runners on the Reebok training plan onto the peakst8 app: the roster, app setup, install guide, messages and the Reebok review.</p>
-  <div class="links"><a href="run-crew/">Product note</a><a href="run-crew/install-guide/">Install guide</a><a href="run-crew/app-screens/">App screens</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/run-crew">Source</a></div>
+  <span class="lbl">In build · Cubbon Classic live on its own site by 20 Nov 2026</span>
+  <h2>peakst8 Embedded Ticketing</h2>
+  <p>Clubs and races sell entries on their own website with peakst8 checkout. Now includes early-bird tiers, bulk group codes and import from KonfHub. Design partners: Cubbon Classic 10K (first), Find Your Fit, Sisters in Sweat.</p>
+  <div class="hn"><div><span class="lbl">Have</span><ul><li>Product note and 17-screen prototype</li><li>Code: race-site loader, early-bird tiers, bulk group codes, KonfHub import (checked, not merged)</li></ul></div><div><span class="lbl">Not yet</span><ul><li>Live for any organiser</li><li>Code merged into backend and frontend</li><li>Event pages on the organiser&#x27;s domain (SEO)</li><li>Club codes and bib export</li><li>Organiser dashboard screens</li></ul></div></div>
+  <div class="links"><a href="embedded-ticketing/">Product note</a><a href="embedded-ticketing/prototype/">Product screens*</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code">Code</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/">Source</a></div>
 </article>
 <article class="note" data-id="memberships">
-  <span class="lbl">Draft · renewal reminders first, then pilot clubs</span>
-  <h2>3 · peakst8 Club Memberships</h2>
-  <p>Clubs sell recurring memberships and prepaid packs. Members book each session as usual and peakst8 applies the plan at checkout. Reverse-engineered from SweatPals Plans, with a Prisma schema draft.</p>
-  <div class="links"><a href="memberships/">Product note</a><a href="memberships/prototype/">Prototype</a><a href="memberships/coverage/">Feature list</a><a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/memberships/code">Code</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/memberships">Source</a></div>
+  <span class="lbl">Draft · Build renewal reminders (launch prerequisite), then pick pilot clubs</span>
+  <h2>peakst8 Club Memberships</h2>
+  <p>Clubs sell recurring memberships and prepaid packs. Members book each session as usual and peakst8 applies the plan at checkout. Reverse-engineered from SweatPals Plans, mapped onto the peakst8 backend with a Prisma schema draft.</p>
+  <div class="hn"><div><span class="lbl">Have</span><ul><li>Product note, prototype and 110-row feature list</li><li>Backend code package (checked 2 Nov, not merged)</li></ul></div><div><span class="lbl">Not yet</span><ul><li>Live for any club</li><li>Renewal reminders (needed before launch)</li><li>Frontend</li><li>Pilot clubs and prices</li></ul></div></div>
+  <div class="links"><a href="memberships/">Product note</a><a href="memberships/prototype/">Product screens*</a><a href="memberships/coverage/">Feature list</a><a href="memberships/code/">Code</a><a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/memberships/code/backend/prisma/memberships.prisma">Schema</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/memberships/">Source</a></div>
+</article>
+<h2 class="grp">Design partner conversations</h2>
+<article class="note" data-id="run-crew">
+  <span class="lbl">Live · Reebok training plan rollout to about 250 runners</span>
+  <h2>Design partner conversations: Run Crew × Reebok</h2>
+  <p>Moving about 250 Run Crew runners on the Reebok training plan onto the peakst8 app: the roster, app setup, install guide, messages and the Reebok review.</p>
+  <div class="hn"><div><span class="lbl">Have</span><ul><li>Playbook, roster and app setup</li><li>Install guide for Android and iPhone</li><li>App screens</li></ul></div></div>
+  <div class="links"><a href="run-crew/">Product note</a><a href="run-crew/install-guide/">Install guide</a><a href="run-crew/app-screens/">App screens</a><a href="https://claude.ai/artifact/MNZVVd8tXVs9Xgjrm6MLSz">Rollout checklist</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/run-crew/">Source</a></div>
 </article>
 <article class="note" data-id="athlete-os-cubbon-classic">
-  <span class="lbl">Scoping · next: Nithin's programme, brand intros</span>
-  <h2>4 · Athlete OS · Design Partner #2: Cubbon Classic 10K</h2>
-  <p>Athlete OS Design Partner #2, after Run Crew × Reebok. Cubbon Classic 10K moves registration onto its own site with peakst8 checkout and runs a season of missions, leaderboards and rewards it configures itself. With Nithin Gowda (MyRace).</p>
-  <div class="links"><a href="athlete-os-cubbon-classic/">Product note</a><a href="athlete-os-cubbon-classic/prototype/">Product screens*</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os">Source</a></div>
+  <span class="lbl">In build · Nithin shares the Road to Cubbon programme; Arvind introduces brands for consistency rewards</span>
+  <h2>Design partner conversations: Cubbon Classic 10K</h2>
+  <p>Cubbon Classic 10K (21 Mar 2027) moves registration from KonfHub to peakst8 and runs an 8-week programme on Athlete OS. With Nithin Gowda (MyRace). ~220 registered, 3,500 expected.</p>
+  <div class="hn"><div><span class="lbl">Have</span><ul><li>Two calls done; programme brief and 9 Nov numbers</li><li>Product note with go-live checklist and test plan</li><li>Product screens (proposal)</li><li>Registration code (in Embedded Ticketing)</li></ul></div><div><span class="lbl">Not yet</span><ul><li>Registration still on KonfHub (~220 runners)</li><li>Engagement layer: missions, leaderboards, rewards</li><li>Programme from Nithin</li><li>A brand backing rewards</li></ul></div></div>
+  <div class="links"><a href="athlete-os-cubbon-classic/">Product note</a><a href="athlete-os-cubbon-classic/prototype/">Product screens*</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code">Code (Embedded Ticketing)</a><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os-cubbon-classic/">Source</a></div>
 </article>
+<p class="lead" style="font-size:13px">* Product screens are a proposal for designers to rebuild in our design language.</p>
 </main>
 <footer>peakst8 · <a href="https://github.com/peakst8-Basecamp/product-notes">github.com/peakst8-Basecamp/product-notes</a></footer>
 </div>

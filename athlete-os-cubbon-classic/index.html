@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Athlete OS · Cubbon Classic</title>
-<meta name="description" content="Athlete OS Design Partner #2: Cubbon Classic 10K. Registration on the organiser's own site plus an engagement layer of missions, points, leaderboards, rewards and nudges, shipped in November 2026.">
+<title>Cubbon Classic Conversations</title>
+<meta name="description" content="Design partner conversations: Cubbon Classic 10K. Registration on the organiser's own site plus an engagement layer of missions, points, leaderboards, rewards and nudges, shipped in November 2026.">
 <link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Athlete OS · Design Partner #2: Cubbon Classic 10K">
+<meta property="og:title" content="Design partner conversations: Cubbon Classic 10K">
 <meta property="og:description" content="Embedded registration and a race-season engagement layer in one peakst8 dashboard, built with Cubbon Classic 10K.">
 <meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/">
 <meta name="twitter:card" content="summary">
@@ -16,7 +16,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"Organization","@id":"#peakst8","name":"peakst8","url":"https://ps8.club"},
-{"@type":"TechArticle","headline":"Athlete OS · Design Partner #2: Cubbon Classic 10K","datePublished":"2026-11-09","dateModified":"2026-11-09","author":{"@id":"#peakst8"},"publisher":{"@id":"#peakst8"},"about":"Event registration and runner engagement (missions, leaderboards, rewards) for races and clubs","inLanguage":"en-IN"}
+{"@type":"TechArticle","headline":"Design partner conversations: Cubbon Classic 10K","datePublished":"2026-11-09","dateModified":"2026-11-09","author":{"@id":"#peakst8"},"publisher":{"@id":"#peakst8"},"about":"Event registration and runner engagement (missions, leaderboards, rewards) for races and clubs","inLanguage":"en-IN"}
 ]}
 </script>
 <style>
@@ -91,13 +91,13 @@ footer a{color:var(--ink-2)}
 <header class="top"><span class="wm">peakst8</span><span class="lbl">Product note · engineers and designers · 9 Nov 2026</span></header>
 <main>
 <section class="hero">
-  <span class="lbl">Athlete OS · Design Partner #2</span>
+  <span class="lbl">Design partner conversations</span>
   <h1>Cubbon Classic 10K</h1>
   <p>Move registration from KonfHub to peakst8 by 20 Nov, and give the organiser a dashboard to run an 8-week engagement programme (25 Jan to race day, 21 Mar 2027). This page is the build brief: how it works, what has to be true to go live, and how we test it.</p>
   <div class="facts"><span>Race · 21 Mar 2027</span><span>~220 registered · 3,500 expected</span><span>Registration · 20 Nov</span><span>Dashboard · 30 Nov</span></div>
   <div class="status" id="status" aria-live="polite"><span>Status</span><b>In build</b></div>
   <div class="ms" id="ms"></div>
-  <div class="facts"><a class="cta" href="prototype/">Product screens* →</a> <a class="cta" href="https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os-cubbon-classic/code" style="background:var(--fill);color:var(--ink)!important">Code →</a></div>
+  <div class="facts"><a class="cta" href="prototype/">Product screens* →</a> <a class="cta" href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code" style="background:var(--fill);color:var(--ink)!important">Code →</a></div>
   <p style="font-size:13.5px;color:var(--ink-3)">* Screens are a proposal for designers to rebuild in our design language.</p>
   <nav class="toc" aria-label="Sections"><a href="#what-we-re-shipping">What we're shipping</a><a href="#key-journeys-and-done-criteria">Key journeys and done criteria</a><a href="#how-it-works">How it works</a><a href="#rules">Rules</a><a href="#go-live-checklist">Go-live checklist</a><a href="#how-we-test">How we test</a><a href="#design-brief">Design brief</a><a href="#risks">Risks</a><a href="#open-questions">Open questions</a></nav>
 </section>
@@ -109,7 +109,7 @@ footer a{color:var(--ink-2)}
 <div class="tbl"><table><thead><tr><th>Journey</th><th>Done when</th></tr></thead><tbody><tr><td>Runner registers on cubbonclassic10k.com</td><td>Booking in the peakst8 dashboard, ticket issued, purchase event in Cubbon's GA4 and pixel</td></tr><tr><td>Existing KonfHub runner moves over</td><td>220 of 220 ticketed with the amount paid; refunds skipped; no double tickets</td></tr><tr><td>Company or club buys in bulk</td><td>Group code at ~20% off, one use per entry, refused below the minimum</td></tr><tr><td>Early-bird price steps down</td><td>Price shown on the site equals the price charged, at every tier</td></tr><tr><td>Organiser sets up a week of missions</td><td>Nithin does week 1 alone in the dashboard</td></tr><tr><td>Runner checks missions and rank</td><td>A synced run moves them on the leaderboard within a minute</td></tr></tbody></table></div>
 <h2 id="how-it-works">How it works</h2>
 <ol><li><b>Settings.</b> The organiser turns Embed on for the event: allowed websites, colour, button label, GA4 and pixel ids, bulk minimum and discount.</li><li><b>Loader.</b> The race site includes <code>&lt;div data-peakst8-event="…"&gt;</code> and <code>/embed/v1.js</code>. The loader calls <code>GET /embed/v1/events/:eventId</code> (CORS limited to the event's websites, cached 60 s) and renders passes with the current price.</li><li><b>Checkout.</b> Register opens the existing peakst8 event page in embed mode inside an overlay (<code>?embed=1&amp;register=1</code>): details, email OTP, Razorpay, ticket. On success the page posts <code>purchase</code> to the race site, and the loader fires GA4 and the pixel.</li><li><b>Pricing.</b> <code>registrationService.register</code> asks <code>embedService.priceForRegistration</code> for the active early-bird tier, compares it with any coupon, and charges the cheaper. The tier is saved on the registration for sales-by-tier reports.</li><li><b>Bulk.</b> A group code is an existing coupon with one use per entry bought, at the bulk discount.</li><li><b>Import.</b> The organiser previews a KonfHub CSV, then imports it. Each row becomes a peakst8 registration with a real ticket (QR code and image) in the background.</li></ol>
-<div class="tbl"><table><thead><tr><th>Piece</th><th>Where</th></tr></thead><tbody><tr><td>Backend package (schema, service, routes, two patches, rule checks)</td><td><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os-cubbon-classic/code/backend">code/backend</a></td></tr><tr><td>Loader and embed-mode helper</td><td><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os-cubbon-classic/code/frontend">code/frontend</a></td></tr><tr><td>Endpoints, rules, integration steps</td><td><a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/athlete-os-cubbon-classic/code/README.md">code/README.md</a></td></tr></tbody></table></div>
+<div class="tbl"><table><thead><tr><th>Piece</th><th>Where</th></tr></thead><tbody><tr><td>Backend package (schema, service, routes, two patches, rule checks)</td><td><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code/backend">code/backend</a></td></tr><tr><td>Loader and embed-mode helper</td><td><a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code/frontend">code/frontend</a></td></tr><tr><td>Endpoints, rules, integration steps</td><td><a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/embedded-ticketing/code/README.md">code/README.md</a></td></tr></tbody></table></div>
 <p>Verified on 9 Nov against backend <code>main</code> (<code>5ff71d9</code>): prisma validate and generate pass, whole-backend <code>tsc</code> has 0 errors, ESLint has 0 errors and 0 warnings, prettier and cspell are clean, and 35 of 35 rule checks pass. Not yet run against a database, Razorpay or a browser.</p>
 <h2 id="rules">Rules</h2>
 <ul><li><b>No stacking.</b> A runner gets the bigger of the early-bird tier and their coupon or group code. A 20% bulk code beats the 15% tier.</li><li><b>Tiers</b> apply in order while they're open and have seats. Paid and pending registrations hold a tier seat. Tiers apply on ps8.club too, so prices match everywhere.</li><li><b>Imports</b> never send emails. The "your entry has moved" email goes out separately once the counts are checked.</li></ul>

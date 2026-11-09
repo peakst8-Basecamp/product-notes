@@ -16,29 +16,30 @@
       "id": "embedded-ticketing",
       "title": "peakst8 Embedded Ticketing",
       "folder": "embedded-ticketing/",
-      "status": "Scoping",
-      "next": "Scope lock on 30 Oct 2026",
-      "owner": "",
-      "updated": "2026-10-28",
-      "summary": "Clubs sell events on their own website. Event pages rank on Google and get cited by AI answer engines, while peakst8 runs checkout, payments and check-in. Pilots: Find Your Fit, Sisters in Sweat, Cubbon Classic 10K.",
+      "status": "In build",
+      "next": "Cubbon Classic live on its own site by 20 Nov 2026",
+      "owner": "Arvind",
+      "updated": "2026-11-09",
+      "summary": "Clubs and races sell entries on their own website with peakst8 checkout. Now includes early-bird tiers, bulk group codes and import from KonfHub. Design partners: Cubbon Classic 10K (first), Find Your Fit, Sisters in Sweat.",
       "links": {
         "Product note": "embedded-ticketing/",
-        "Prototype": "embedded-ticketing/prototype/"
+        "Product screens*": "embedded-ticketing/prototype/",
+        "Code": "https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code"
       },
       "milestones": [
         {
           "name": "Scope lock",
           "date": "2026-10-30",
-          "status": "doing"
+          "status": "done"
         },
         {
-          "name": "Build complete",
+          "name": "Code package checked",
+          "date": "2026-11-09",
+          "status": "done"
+        },
+        {
+          "name": "Cubbon Classic 10K live",
           "date": "2026-11-20",
-          "status": "todo"
-        },
-        {
-          "name": "QA and staging",
-          "date": "2026-11-27",
           "status": "todo"
         },
         {
@@ -52,20 +53,27 @@
           "status": "todo"
         },
         {
-          "name": "Cubbon Classic 10K live",
-          "date": "2026-12-14",
-          "status": "todo"
-        },
-        {
           "name": "Go / no-go for all organisers",
           "date": "2027-01-15",
           "status": "todo"
         }
+      ],
+      "kind": "Product feature",
+      "have": [
+        "Product note and 17-screen prototype",
+        "Code: race-site loader, early-bird tiers, bulk group codes, KonfHub import (checked, not merged)"
+      ],
+      "notYet": [
+        "Live for any organiser",
+        "Code merged into backend and frontend",
+        "Event pages on the organiser's domain (SEO)",
+        "Club codes and bib export",
+        "Organiser dashboard screens"
       ]
     },
     {
       "id": "run-crew",
-      "title": "Run Crew × peakst8 Playbook",
+      "title": "Design partner conversations: Run Crew × Reebok",
       "folder": "run-crew/",
       "status": "Live",
       "next": "Reebok training plan rollout to about 250 runners",
@@ -78,7 +86,14 @@
         "App screens": "run-crew/app-screens/",
         "Rollout checklist": "https://claude.ai/artifact/MNZVVd8tXVs9Xgjrm6MLSz"
       },
-      "milestones": []
+      "milestones": [],
+      "kind": "Design partner",
+      "have": [
+        "Playbook, roster and app setup",
+        "Install guide for Android and iPhone",
+        "App screens"
+      ],
+      "notYet": []
     },
     {
       "id": "memberships",
@@ -91,27 +106,37 @@
       "summary": "Clubs sell recurring memberships and prepaid packs. Members book each session as usual and peakst8 applies the plan at checkout. Reverse-engineered from SweatPals Plans, mapped onto the peakst8 backend with a Prisma schema draft.",
       "links": {
         "Product note": "memberships/",
-        "Prototype": "memberships/prototype/",
+        "Product screens*": "memberships/prototype/",
         "Feature list": "memberships/coverage/",
         "Code": "memberships/code/",
         "Schema": "https://github.com/peakst8-Basecamp/product-notes/blob/main/memberships/code/backend/prisma/memberships.prisma"
       },
-      "milestones": []
+      "milestones": [],
+      "kind": "Product feature",
+      "have": [
+        "Product note, prototype and 110-row feature list",
+        "Backend code package (checked 2 Nov, not merged)"
+      ],
+      "notYet": [
+        "Live for any club",
+        "Renewal reminders (needed before launch)",
+        "Frontend",
+        "Pilot clubs and prices"
+      ]
     },
     {
       "id": "athlete-os-cubbon-classic",
-      "title": "Athlete OS · Design Partner #2: Cubbon Classic 10K",
+      "title": "Design partner conversations: Cubbon Classic 10K",
       "folder": "athlete-os-cubbon-classic/",
       "status": "In build",
       "next": "Nithin shares the Road to Cubbon programme; Arvind introduces brands for consistency rewards",
       "owner": "Arvind",
       "updated": "2026-11-09",
-      "summary": "Athlete OS Design Partner #2 (after Run Crew × Reebok). Cubbon Classic 10K with Nithin Gowda (MyRace): registration on their own site plus an engagement layer of missions, points, leaderboards, rewards and nudges, configured by the organiser. Merges Yoska's engine into peakst8.",
+      "summary": "Cubbon Classic 10K (21 Mar 2027) moves registration from KonfHub to peakst8 and runs an 8-week programme on Athlete OS. With Nithin Gowda (MyRace). ~220 registered, 3,500 expected.",
       "links": {
         "Product note": "athlete-os-cubbon-classic/",
-        "Product screens": "athlete-os-cubbon-classic/prototype/",
-        "Design Partner #1": "run-crew/",
-        "Code": "https://github.com/peakst8-Basecamp/product-notes/tree/main/athlete-os-cubbon-classic/code"
+        "Product screens*": "athlete-os-cubbon-classic/prototype/",
+        "Code (Embedded Ticketing)": "https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code"
       },
       "milestones": [
         {
@@ -144,7 +169,21 @@
           "date": "2027-03-21",
           "status": "todo"
         }
+      ],
+      "kind": "Design partner",
+      "have": [
+        "Two calls done; programme brief and 9 Nov numbers",
+        "Product note with go-live checklist and test plan",
+        "Product screens (proposal)",
+        "Registration code (in Embedded Ticketing)"
+      ],
+      "notYet": [
+        "Registration still on KonfHub (~220 runners)",
+        "Engagement layer: missions, leaderboards, rewards",
+        "Programme from Nithin",
+        "A brand backing rewards"
       ]
     }
-  ]
+  ],
+  "_kinds": "kind is \"Product feature\" or \"Design partner\". have / notYet are short plain lists of what exists today and what does not; release.ps8.in shows them."
 }

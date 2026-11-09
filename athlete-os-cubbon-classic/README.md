@@ -1,6 +1,6 @@
-# Athlete OS · Design Partner #2: Cubbon Classic 10K
+# Design partner conversations: Cubbon Classic 10K
 
-Cubbon Classic 10K is moving its registration from KonfHub to peakst8 and running an 8-week engagement programme on Athlete OS until race day, 21 Mar 2027. We're working with Nithin Gowda (MyRace). Design Partner #1 is [Run Crew × Reebok](../run-crew/).
+Cubbon Classic 10K is a design partner, like [Run Crew × Reebok](../run-crew/). They are moving registration from KonfHub to peakst8 (product feature: [Embedded Ticketing](../embedded-ticketing/)) and running an 8-week engagement programme on Athlete OS until race day, 21 Mar 2027. We're working with Nithin Gowda (MyRace).
 
 **Status:** In build · **Owner:** Arvind · **Updated:** 9 Nov 2026
 

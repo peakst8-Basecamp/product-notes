@@ -80,7 +80,7 @@ footer a{color:var(--ink-2)}
 </head>
 <body>
 <div class="pg">
-<header class="top"><span class="wm">peakst8</span><span class="lbl">Product note · 21 Oct 2026</span></header>
+<header class="top"><span class="wm">peakst8</span><span class="lbl">Product note · engineers and designers · updated 9 Nov 2026</span></header>
 
 <main>
 <section class="hero">
@@ -90,10 +90,25 @@ footer a{color:var(--ink-2)}
   <div class="facts"><span>ICP · community fitness clubs</span><span>SEO + AEO by default</span><span>Live in &lt; 10 min</span><span>Pilot live · 30 Nov 2026</span></div>
   <div class="status" id="status" aria-live="polite"><span>Status</span><b>Scoping</b><span>Next: Scope lock on 30 Oct 2026</span></div>
   <div class="ms" id="ms"></div>
-  <nav class="toc" aria-label="Sections"><a href="#icp">ICP</a><a href="#problem">Problem</a><a href="#case">Case study</a><a href="#scale">Launch → scale</a><a href="#seo-aeo">SEO + AEO</a><a href="#how">How it works</a><a href="#scope">Scope</a><a href="#faq">FAQ</a><a href="#timeline">Timeline</a><a href="#open">Open questions</a><a href="prototype/" style="background:var(--ink);color:#fff">Prototype →</a></nav>
+  <nav class="toc" aria-label="Sections"><a href="#update">9 Nov update</a><a href="#icp">ICP</a><a href="#problem">Problem</a><a href="#case">Case study</a><a href="#scale">Launch → scale</a><a href="#seo-aeo">SEO + AEO</a><a href="#how">How it works</a><a href="#scope">Scope</a><a href="#faq">FAQ</a><a href="#timeline">Timeline</a><a href="#open">Open questions</a><a href="prototype/" style="background:var(--ink);color:#fff">Prototype →</a></nav>
 </section>
 
 <article class="pr">
+
+<h2 id="update">Update, 9 Nov 2026: Cubbon Classic goes first</h2>
+<p class="answer">Cubbon Classic 10K moves its registration off KonfHub by <b>20 Nov</b>, ahead of the other pilots. V1 grows to cover what a race needs on day one.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Added to V1</th><th>Why</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Race-site loader: one <code>&lt;div&gt;</code> and <code>/embed/v1.js</code> render passes and live prices in the organiser's page; checkout opens over it</td><td>Fastest way off the KonfHub iframe, before the SEO event pages ship</td><td>Code written and checked</td></tr>
+    <tr><td>Early-bird tiers by date or seats (Cubbon: 15%, 10%, 5% off)</td><td>Agreed on the 9 Nov call</td><td>Code written and checked</td></tr>
+    <tr><td>Bulk buys as group codes (~20% off), never stacked with early bird</td><td>Agreed on the 9 Nov call</td><td>Code written and checked</td></tr>
+    <tr><td>KonfHub CSV import that issues real peakst8 tickets</td><td>220 runners already registered</td><td>Code written and checked</td></tr>
+    <tr><td>Per-event allowed websites (CORS) and GA4 / pixel forwarding</td><td>Security and attribution</td><td>Code written and checked</td></tr>
+  </tbody>
+</table></div>
+<p><b>Code:</b> <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code">embedded-ticketing/code</a>. It was checked against backend <code>main</code> (<code>5ff71d9</code>): prisma, <code>tsc</code>, ESLint, prettier and cspell are clean, and 35 of 35 rule checks pass. It hasn't run against a database, Razorpay or a browser yet. <b>Go-live checklist and test plan:</b> <a href="../athlete-os-cubbon-classic/">Cubbon Classic product note</a>.</p>
+<p><b>Still to come for full V1:</b> server-rendered event pages on the organiser's domain (SEO and AEO), club codes on approval with bib export, and the organiser dashboard screens below.</p>
 
 <h2 id="icp">Who it's for</h2>
 <p class="answer">The ICP is a community fitness organiser in an Indian metro that runs recurring paid events and has a website it wants to grow, such as the three pilots: Find Your Fit, Sisters in Sweat and Cubbon Classic 10K.</p>
