@@ -136,7 +136,8 @@
       "links": {
         "Product note": "athlete-os-cubbon-classic/",
         "Product screens*": "athlete-os-cubbon-classic/prototype/",
-        "Code (Embedded Ticketing)": "https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code"
+        "Code (Embedded Ticketing)": "https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code",
+        "Technical spec": "https://github.com/peakst8-Basecamp/product-notes/blob/main/athlete-os-cubbon-classic/TECH-SPEC.md"
       },
       "milestones": [
         {
@@ -173,15 +174,17 @@
       "kind": "Design partner",
       "have": [
         "Two calls done; programme brief and 9 Nov numbers",
-        "Product note with go-live checklist and test plan",
+        "Product note, technical spec, go-live checklist and test plan",
         "Product screens (proposal)",
-        "Registration code (in Embedded Ticketing)"
+        "Registration code (in Embedded Ticketing)",
+        "Strava connect (pull-based, default limits)"
       ],
       "notYet": [
         "Registration still on KonfHub (~220 runners)",
+        "Strava review: capacity, higher limits, OK to rank by points",
+        "Apple Health and Health Connect approved; app public on both stores",
         "Engagement layer: missions, leaderboards, rewards",
-        "Programme from Nithin",
-        "A brand backing rewards"
+        "Programme from Nithin and a brand backing rewards"
       ]
     }
   ],

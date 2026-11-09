@@ -8,6 +8,7 @@ Cubbon Classic 10K is a design partner, like [Run Crew × Reebok](../run-crew/).
 | --- | --- |
 | Anyone | This page |
 | Engineers and designers | [Product note](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/): how it works, go-live checklist, how we test, code |
+| Engineers | [Technical spec](TECH-SPEC.md): what has to be ready to onboard 3,500 runners (Strava limits, Apple Health and Health Connect, registration, engagement, privacy, scale) |
 | Designers | [Product screens*](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/prototype/): rebuild in our design language |
 
 \* The screens are a proposal to capture the idea, not final designs.
