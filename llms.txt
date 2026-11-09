@@ -24,4 +24,11 @@
 - [Working prototype](https://peakst8-basecamp.github.io/product-notes/memberships/prototype/): member and host screens in the peakst8 app design, with live plan pricing, renewals and host actions
 - [Feature list](https://peakst8-basecamp.github.io/product-notes/memberships/coverage/): what members and club admins can do with memberships, by phase: renewal reminders before launch, perks and brand offers, discounts, plans, joining, booking, cancelling
 
+## Athlete OS · Design Partner #2: Cubbon Classic 10K
+
+> Athlete OS Design Partner #2 (Design Partner #1 is Run Crew × Reebok). Event organisers sell entries on their own website with peakst8 checkout and run a race-season engagement layer (weekly missions, points, leaderboards, rewards, nudges) from one peakst8 dashboard. Design partner: Cubbon Classic 10K (Edition 2, 21 March 2027) with Nitin Gowda of MyRace.
+
+- [Product note](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/): board summary, problem, Road to Cubbon Classic programme and scoring, November plan, release checklist, onboarding the organiser, metrics, what carries over from Yoska, risks, open questions
+- [Product screens](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/prototype/): organiser dashboard (event home, registration and embed, programme builder, missions, leaderboards, rewards, nudges, clubs, insights) and runner app screens
+
 - [Status of every note](https://peakst8-basecamp.github.io/product-notes/notes.json)

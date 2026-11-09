@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cubbon Classic Screens</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Athlete OS Design Partner #2 product screens for Cubbon Classic 10K: organiser dashboard to set up registration and the Road to Cubbon engagement layer, plus the runner's app.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+/* Layout: screen rail | stage (organiser dashboard or runner phone) | behind-the-scenes panel.
+   peakst8 app language: night gradient, Outfit body, Bricolage display, blue CTA, indigo→cyan progress, gold for wins. */
+:root{
+  color-scheme:dark;
+  --bg:#060709; --bg-2:#1a202a; --panel:#0b0c0e; --surface:#121316; --bar:#2f3032;
+  --fg:#fafafa; --muted:#a1a1aa; --dim:#71717a; --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.16);
+  --blue-a:#0469d4; --blue-b:#002750;
+  --pass-a:#2e3192; --pass-b:#1bffff;
+  --gold-a:#d8c6aa; --gold-b:#c97e05; --gold-ink:#3a3b40;
+  --cubbon:#ff5a1f;
+  --ok:#34d399; --warn:#fbbf24; --bad:#ef4444;
+  --sans:"Outfit",system-ui,-apple-system,sans-serif;
+  --display:"Bricolage Grotesque","Outfit",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;-webkit-font-smoothing:antialiased;background-image:linear-gradient(141deg,var(--bg-2) 0%,var(--bg) 29%);background-attachment:fixed}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pass-b);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.wm{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em}
+.brand span{color:var(--muted);font-size:13px;border-left:1px solid var(--line-2);padding-left:12px}
+.hint{color:var(--dim);font-size:12.5px}
+.grid{display:grid;grid-template-columns:220px minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:1200px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Rail */
+.rail{display:grid;gap:18px;position:sticky;top:max(16px,env(safe-area-inset-top,0px))}
+.rail h3{margin:0 0 6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500}
+.rail nav{display:grid;gap:2px}
+.rail button{display:flex;align-items:center;gap:10px;text-align:left;background:none;border:0;border-radius:8px;padding:8px 10px;color:var(--muted);font-size:14px}
+.rail button i{font-style:normal;font-size:11px;color:var(--dim);width:22px;font-variant-numeric:tabular-nums}
+.rail button:hover{background:rgba(255,255,255,.05);color:var(--fg)}
+.rail button[aria-current="page"]{background:rgba(255,255,255,.08);color:var(--fg)}
+@media (max-width:1200px){
+  .rail{position:static}
+  .rail nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .rail button{flex:none;border:1px solid var(--line-2);border-radius:999px;padding:7px 12px;font-size:13px}
+}
+
+/* Stage frames */
+.stage{display:grid;justify-items:center;min-width:0}
+.dash{width:100%;min-height:760px;border-radius:24px;border:1px solid var(--line-2);background:var(--panel);overflow:hidden;display:grid;grid-template-columns:200px minmax(0,1fr)}
+@media (max-width:860px){.dash{grid-template-columns:minmax(0,1fr)}.side{display:none}}
+.side{border-right:1px solid var(--line);padding:18px 12px;display:grid;align-content:start;gap:14px;background:rgba(255,255,255,.015)}
+.side .ev{display:flex;gap:10px;align-items:center;padding:6px}
+.side .ev .lg{width:34px;height:34px;border-radius:10px;background:var(--cubbon);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:12px;color:#1a0b05;flex:none}
+.side .ev b{display:block;font-size:13px}
+.side .ev small{color:var(--dim);font-size:11.5px}
+.side nav{display:grid;gap:2px}
+.side nav button{text-align:left;background:none;border:0;border-radius:8px;padding:8px 10px;color:var(--muted);font-size:13.5px}
+.side nav button:hover{color:var(--fg);background:rgba(255,255,255,.04)}
+.side nav button[aria-current="page"]{color:var(--fg);background:rgba(255,255,255,.08)}
+.side .cap{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);padding:0 10px}
+.main{padding:22px clamp(16px,3vw,28px) 36px;min-width:0;display:grid;gap:16px;align-content:start}
+.phone{width:min(100%,392px);height:800px;border-radius:44px;border:1px solid var(--line-2);background:var(--bg);background-image:linear-gradient(141deg,var(--bg-2) 0%,var(--bg) 29%);position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.phone .scroll{position:absolute;inset:0;overflow-y:auto;padding:16px 18px 96px;display:grid;gap:14px;align-content:start}
+.sb{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:0 6px}
+.tabbar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:10px 8px 22px;background:linear-gradient(transparent,rgba(5,5,6,.95) 35%);font-size:11px;color:var(--dim)}
+.tabbar button{background:none;border:0;display:grid;justify-items:center;gap:4px;color:var(--dim);font-size:11px}
+.tabbar button[aria-current="page"]{color:var(--fg)}
+.tabbar svg{width:20px;height:20px}
+
+/* Type + pieces */
+h1.d,h2.d,h3.d{font-family:var(--display);font-weight:700;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1.d{font-size:28px;line-height:1.05}
+h2.d{font-size:19px;line-height:1.15}
+h3.d{font-size:15.5px}
+.sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.stack{display:grid;gap:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 16px;border-radius:8px;border:0;font-weight:500;font-size:14px;color:var(--fg);background:linear-gradient(90deg,var(--blue-a),var(--blue-b))}
+.btn:hover{opacity:.92}.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;border:1px solid var(--line-2)}
+.btn.sm{height:32px;padding:0 12px;font-size:13px}
+.btn.block{width:100%;height:50px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid var(--line-2);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+.pill.warn{color:var(--warn);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+.pill.gold{color:var(--gold-ink);border:0;background:linear-gradient(108deg,var(--gold-a),var(--gold-b))}
+.pill.cy{color:#cffafe;border-color:rgba(27,255,255,.35);background:rgba(27,255,255,.06)}
+.pill.cb{color:#ffd2c0;border-color:rgba(255,90,31,.4);background:rgba(255,90,31,.08)}
+.card{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:grid;gap:4px}
+.kpi b{font-family:var(--display);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi small{color:var(--dim);font-size:12px}
+.two{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px}
+@media (max-width:980px){.two{grid-template-columns:minmax(0,1fr)}}
+.meter{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--pass-a),var(--pass-b))}
+.meter.gold i{background:linear-gradient(90deg,var(--gold-a),var(--gold-b))}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.tbl table{width:100%;min-width:560px;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding:11px 14px;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td.r,.tbl th.r{text-align:right;font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.05);border-radius:10px;padding:4px;flex-wrap:wrap}
+.tabs button{flex:1;min-width:max-content;height:32px;padding:0 12px;border:0;border-radius:8px;background:none;color:var(--muted);font-weight:500;font-size:13px}
+.tabs button[aria-selected="true"]{background:var(--bar);color:var(--fg)}
+.av{width:30px;height:30px;border-radius:999px;display:grid;place-items:center;font-size:11.5px;font-weight:600;flex:none;background:rgba(255,255,255,.08)}
+.who{display:flex;gap:10px;align-items:center;min-width:0}
+.who span{display:grid;min-width:0}
+.who small{color:var(--dim);font-size:12px}
+.toggle{width:38px;height:22px;border-radius:999px;border:0;background:rgba(255,255,255,.14);position:relative;flex:none}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:999px;background:#fff;transition:transform .2s}
+.toggle[aria-checked="true"]{background:linear-gradient(90deg,var(--pass-a),var(--pass-b))}
+.toggle[aria-checked="true"]::after{transform:translateX(16px)}
+.field{display:grid;gap:6px}
+.field label{font-size:12.5px;color:var(--muted)}
+.field input,.field select{width:100%;height:38px;background:#141518;border:1px solid var(--line-2);border-radius:8px;padding:0 10px}
+.form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:720px){.form{grid-template-columns:minmax(0,1fr)}}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step .dot{width:22px;height:22px;border-radius:999px;display:grid;place-items:center;font-size:11px;font-weight:600;flex:none;border:1px solid var(--line-2);color:var(--muted)}
+.step.done .dot{background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.4);color:var(--ok)}
+.step.now .dot{background:linear-gradient(108deg,var(--gold-a),var(--gold-b));border:0;color:var(--gold-ink)}
+.step b{font-size:14px;font-weight:600}
+.code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:#141518;border:1px solid var(--line-2);border-radius:10px;padding:12px;color:#cbd5e1;overflow-x:auto;white-space:pre}
+
+/* The route: 8 weeks laid along the 10K */
+.route{position:relative;padding:8px 0 4px}
+.route svg{width:100%;height:auto;display:block;overflow:visible}
+.wk{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;margin-top:6px}
+.wk button{background:none;border:0;padding:6px 2px;border-radius:8px;display:grid;justify-items:center;gap:2px;color:var(--muted);font-size:11.5px}
+.wk button b{font-size:12.5px;color:var(--fg);font-weight:600}
+.wk button[aria-pressed="true"]{background:rgba(27,255,255,.08);color:#cffafe}
+@media (max-width:640px){.wk button span{display:none}}
+
+/* Missions */
+.mis{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+.mis .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.06)}
+.mis .ic svg{width:22px;height:22px}
+.mis b{font-size:14.5px;font-weight:600}
+.mis small{display:block;color:var(--muted);font-size:12.5px;line-height:1.4}
+.mis.off{opacity:.45}
+.pts{font-family:var(--display);font-weight:700;font-size:18px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+.stepper button{width:28px;height:30px;border:0;background:rgba(255,255,255,.04)}
+.stepper span{min-width:34px;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+.done-tick{width:24px;height:24px;border-radius:999px;display:grid;place-items:center;background:rgba(52,211,153,.15);color:var(--ok);border:1px solid rgba(52,211,153,.4)}
+.todo-tick{width:24px;height:24px;border-radius:999px;border:1px dashed var(--line-2)}
+
+/* Leaderboard podium */
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:end}
+.podium div{border-radius:14px 14px 6px 6px;padding:12px 8px;text-align:center;display:grid;gap:4px;justify-items:center;border:1px solid var(--line)}
+.podium .p1{background:linear-gradient(180deg,rgba(216,198,170,.22),rgba(201,126,5,.06));border-color:rgba(216,198,170,.4);min-height:150px}
+.podium .p2{background:rgba(255,255,255,.05);min-height:124px}
+.podium .p3{background:rgba(255,90,31,.07);min-height:108px}
+.podium b{font-size:13px}
+.podium .sc{font-family:var(--display);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}
+.me{background:linear-gradient(90deg,rgba(46,49,146,.35),rgba(27,255,255,.08));}
+
+/* Rewards */
+.rw{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.rwc{display:grid;gap:8px;padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.025);align-content:start}
+.rwc .hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.badge-big{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:13px;line-height:1;text-align:center}
+.badges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.badges div{display:grid;justify-items:center;gap:6px;font-size:11.5px;color:var(--muted);text-align:center}
+.badges .lock .badge-big{background:rgba(255,255,255,.04);color:var(--dim);border:1px dashed var(--line-2)}
+
+/* Chart */
+.spark svg{width:100%;height:auto;display:block}
+
+/* Quiz */
+.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;padding:13px 14px;border-radius:12px;border:0;outline:1px solid #4b5563;background:transparent;font-size:14.5px}
+.opt:hover{outline-color:#9ca3af}
+.opt.right{background:linear-gradient(90deg,var(--pass-a) -1.67%,var(--pass-b) 186.67%);outline-color:transparent}
+.opt.wrong{outline-color:rgba(239,68,68,.6);color:#fca5a5}
+
+/* Club site (embed) */
+.site{border-radius:16px;overflow:hidden;border:1px solid var(--line-2);background:#111}
+.site .nv{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:11px;color:#bbb;border-bottom:1px solid rgba(255,255,255,.08)}
+.site .nv b{color:#fff;font-family:var(--display);letter-spacing:.02em}
+.site .hero{padding:16px 14px;display:grid;gap:6px;background:radial-gradient(120% 90% at 100% 0%,rgba(255,90,31,.28),transparent 60%)}
+.site .hero small{color:var(--cubbon);font-size:10.5px;letter-spacing:.12em;font-weight:600}
+.site .hero b{font-family:var(--display);font-size:26px;font-weight:800;line-height:1}
+.slant{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 16px;background:var(--cubbon);color:#160700;font-weight:600;border:0;clip-path:polygon(0 0,100% 0,94% 100%,0 100%)}
+.sheet{border-radius:24px 24px 0 0;background:#050506;border:1px solid var(--line);border-bottom:0;padding:18px 16px;display:grid;gap:12px}
+.pass{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;padding:12px 14px;border-radius:12px;border:0;outline:1px solid #6b7280;background:transparent}
+.pass[aria-checked="true"]{background:linear-gradient(90deg,var(--pass-a) -1.67%,var(--pass-b) 186.67%);outline-color:transparent}
+
+/* Panel */
+.panel{display:grid;gap:14px;position:sticky;top:max(16px,env(safe-area-inset-top,0px))}
+@media (max-width:1200px){.panel{position:static}}
+.panel .card{display:grid;gap:10px}
+.panel h4{margin:0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500}
+.panel p,.panel li{margin:0;color:var(--muted);font-size:13.5px;line-height:1.5}
+.panel ul{margin:0;padding-left:18px;display:grid;gap:5px}
+.panel .rep{border-left:2px solid var(--line-2);padding-left:10px}
+.panel .rep b{color:var(--fg);font-weight:500}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--bar);border:1px solid var(--line-2);padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.ex{font-size:11px;color:var(--dim);border:1px dashed var(--line-2);border-radius:999px;padding:2px 8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@keyframes glow{0%,100%{opacity:.5}50%{opacity:1}}
+.pulse{animation:glow 1.8s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="wm">peakst8</span><span>Athlete OS · Design Partner #2 · Cubbon Classic 10K</span></div>
+    <div class="hint">Example data. Pick a screen on the left; the right panel explains it.</div>
+  </header>
+  <div class="grid">
+    <aside class="rail" id="rail"></aside>
+    <main class="stage" id="stage"></main>
+    <aside class="panel" id="panel"></aside>
+  </div>
+</div>
+<div id="toastHost"></div>
+<script>
+const SCREENS=[
+ {id:'home',grp:'Organiser dashboard',n:'D1',t:'Event home'},
+ {id:'reg',grp:'Organiser dashboard',n:'D2',t:'Registration & embed'},
+ {id:'prog',grp:'Organiser dashboard',n:'D3',t:'Road to Cubbon'},
+ {id:'mis',grp:'Organiser dashboard',n:'D4',t:'Missions & points'},
+ {id:'lb',grp:'Organiser dashboard',n:'D5',t:'Leaderboards'},
+ {id:'rw',grp:'Organiser dashboard',n:'D6',t:'Rewards'},
+ {id:'ndg',grp:'Organiser dashboard',n:'D7',t:'Nudges'},
+ {id:'clubs',grp:'Organiser dashboard',n:'D8',t:'Clubs'},
+ {id:'ins',grp:'Organiser dashboard',n:'D9',t:'Insights & sponsor'},
+ {id:'a-reg',grp:'Runner',n:'A1',t:'Register on club site'},
+ {id:'a-home',grp:'Runner',n:'A2',t:'This week'},
+ {id:'a-lb',grp:'Runner',n:'A3',t:'Leaderboard'},
+ {id:'a-rw',grp:'Runner',n:'A4',t:'Rewards & badges'},
+ {id:'a-quiz',grp:'Runner',n:'A5',t:'Race-prep quiz'},
+];
+const PANEL={
+ home:{what:'The organiser\'s first view: registrations against target, the season timeline, who is active this week and what needs a decision.',who:'Organiser (Nitin\'s team)',yoska:'No equivalent. Yoska opens on a coach\'s athlete list, with no event view.',phase:'V1 · 30 Nov'},
+ reg:{what:'Switch on Embedded Ticketing, install it on cubbonclassic10k.com/register, import KonfHub registrations and watch them land.',who:'Organiser and their web person',yoska:'Not in Yoska. Today this is KonfHub plus a club form, with codes issued by hand in 24 to 48 hours.',phase:'V1a · 20 Nov'},
+ prog:{what:'Lay out the season: a warm-up league from registration, then 8 weeks of Road to Cubbon. Each week is a checkpoint on the 10K route (1.25 km a week). Add the sponsor slot.',who:'Organiser',yoska:'Replaces Challenge "Schedule" and Training Blocks. Yoska has no season or programme view.',phase:'V1 warm-up · V2 Road to Cubbon'},
+ mis:{what:'Pick the missions for a week from the library, set points and choose how each one is counted: synced run, club check-in or finished quiz.',who:'Organiser',yoska:'Replaces the Challenge Library (85 challenges, levels 1 to 10, metric, rules) and Assign Challenge.',phase:'V1'},
+ lb:{what:'Choose which boards runners see (individual, club, age group, gender) and how they rank. Boards update as activities arrive.',who:'Organiser',yoska:'Replaces Leaderboards and Challenge Leaderboard (categories, daily or weekly batch at 03:00, manual Sync all).',phase:'V1'},
+ rw:{what:'Set what people win and when: weekly top performers, Club of the Week, badges, merchandise, partner rewards, race-day recognition, free entries.',who:'Organiser and sponsor',yoska:'New. Yoska has points and leagues but no rewards to claim.',phase:'V1 badges · V2 partner rewards'},
+ ndg:{what:'Automatic reminders and celebrations, plus a manual message to a segment. Messages go by app, WhatsApp or email.',who:'Organiser',yoska:'Replaces Nudges (templates such as league promoted or demoted, manual send by in-app or SMS, AI rewrite).',phase:'V1'},
+ clubs:{what:'Approve club entries and issue codes straight away. Track each roster against the 10 runners, 7 men + 3 women rule, and see club points for Club of the Week.',who:'Organiser and club captains',yoska:'Replaces Organizations, which today has duplicates such as three Goa Police groups.',phase:'V1'},
+ ins:{what:'One report for the organiser, and a weekly summary for the sponsor: reach, quiz completions, samples claimed, active runners.',who:'Organiser and sponsor',yoska:'Replaces Admin Reports (groups, coaches, subscriptions, geography).',phase:'V1 · sponsor view V2'},
+ 'a-reg':{what:'The runner registers on the Cubbon Classic site. peakst8 checkout opens over the page, then offers to join Road to Cubbon in the app.',who:'Runner',yoska:'Not in Yoska. Comes from the Embedded Ticketing note (attendee flow).',phase:'V1a · 20 Nov'},
+ 'a-home':{what:'This week\'s missions, points so far and where the runner is on the route to race day. Synced runs tick themselves off.',who:'Runner',yoska:'Replaces the athlete\'s challenge list in the Yoska app.',phase:'V1'},
+ 'a-lb':{what:'The runner\'s rank overall, in their club and in their age group, with the gap to the next person.',who:'Runner',yoska:'Same data as Yoska leaderboards, redesigned for a runner instead of a coach.',phase:'V1'},
+ 'a-rw':{what:'Badges earned and locked, rewards to claim, and the reward for Club of the Week.',who:'Runner',yoska:'New.',phase:'V1 badges · V2 partner rewards'},
+ 'a-quiz':{what:'The Learning mission: a short race-prep quiz, often brand-led. Finishing it adds 10 points.',who:'Runner and sponsor',yoska:'Built on Topic Questions (onboarding questionnaire with auto-level).',phase:'V1'},
+};
+const MISSIONS=[
+ {id:'cons',name:'Running consistency',ex:'Complete 3 planned runs this week',pts:30,how:'Synced runs',on:true,ic:'run'},
+ {id:'long',name:'Long-run milestone',ex:'One long run at your level (week 3: 6 km)',pts:20,how:'Synced runs',on:true,ic:'route'},
+ {id:'str',name:'Strength & mobility',ex:'Complete 2 sessions',pts:20,how:'Synced or logged session',on:true,ic:'str'},
+ {id:'com',name:'Community',ex:'Attend an organised club run',pts:15,how:'Captain scans QR',on:true,ic:'club'},
+ {id:'learn',name:'Learning',ex:'Race-prep quiz: fuelling for a 10K',pts:10,how:'Quiz finished',on:true,ic:'book'},
+];
+const RUNNERS=[['Ananya Rao','F 30-39','Indiranagar Run Club',665],['Karthik Menon','M 30-39','Cubbon Striders',640],['Meera Iyer','F 40-49','Sisters in Sweat',610],['Rahul Shetty','M 20-29','Find Your Fit',595],['Divya Nair','F 20-29','Cubbon Striders',580],['Arjun Gowda','M 40-49','HSR Harriers',560],['Sana Qureshi','F 30-39','Find Your Fit',545],['Vikram Pillai','M 30-39','Indiranagar Run Club',530]];
+const CLUBS=[['Cubbon Striders',46,31,15,412],['Indiranagar Run Club',38,24,14,398],['Sisters in Sweat',52,3,49,377],['Find Your Fit',29,19,10,351],['HSR Harriers',12,9,3,288],['Whitefield Wolves',8,6,2,0]];
+const S={screen:'home',lbTab:'ind',aLbTab:'all',week:3,quiz:null,embedded:true,imported:true,toast:null,done:{cons:true,long:false,str:true,com:false,learn:false},boards:{ind:true,club:true,age:true,gender:false,city:false}};
+try{const h=location.hash.slice(1);if(SCREENS.some(s=>s.id===h))S.screen=h}catch(e){}
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ini=n=>n.split(' ').map(x=>x[0]).join('').slice(0,2);
+const ICONS={
+ run:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="4.5" r="1.8"/><path d="M8 21l3-6 3 2v5M6 12l3-3 4 1 2 3 3 1M11 15l-1-5"/></svg>',
+ route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a3.5 3.5 0 000-7H10a3.5 3.5 0 010-7h7"/></svg>',
+ str:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12"/></svg>',
+ club:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c3 0 6 1.8 6 5"/></svg>',
+ book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5c3-1 5-1 8 1 3-2 5-2 8-1v14c-3-1-5-1-8 1-3-2-5-2-8-1z"/><path d="M12 6v14"/></svg>',
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7v9H4z"/></svg>',
+ trophy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 4h8v5a4 4 0 01-8 0zM8 6H4a3 3 0 003 4M16 6h4a3 3 0 01-3 4M12 13v4M8 20h8"/></svg>',
+ gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M12 9v11M4 13h16M12 9c-2-4-6-3-5 0M12 9c2-4 6-3 5 0"/></svg>',
+ user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+ check:'<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',
+};
+function toast(m){S.toast=m;renderToast();clearTimeout(toast.t);toast.t=setTimeout(()=>{S.toast=null;renderToast()},2400)}
+function go(id){S.screen=id;try{history.replaceState(null,'','#'+id)}catch(e){}render();window.scrollTo({top:0,behavior:'smooth'})}
+const weekMax=()=>MISSIONS.filter(m=>m.on).reduce((a,m)=>a+m.pts,0);
+
+/* ---------- shared pieces ---------- */
+function route(active,compact){
+  // 8 programme weeks spread along a 10K course line; W0 = warm-up league start, finish = race day
+  const W=760,H=compact?90:120,pts=[];
+  for(let i=0;i<=8;i++){const x=24+i*(W-48)/8;const y=H/2+Math.sin(i*0.9)*(compact?18:26);pts.push([x,y])}
+  let d=`M${pts[0][0]},${pts[0][1]}`;for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i];const cx=(x0+x1)/2;d+=` C${cx},${y0} ${cx},${y1} ${x1},${y1}`}
+  const nodes=pts.map(([x,y],i)=>{const past=i<active,now=i===active,fin=i===8;
+    const r=now?9:fin?8:6;const fill=fin?'#d8c6aa':past?'#1bffff':now?'#fafafa':'#2f3032';
+    return `${now?`<circle cx="${x}" cy="${y}" r="16" fill="rgba(27,255,255,.18)" class="pulse"/>`:''}<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="#060709" stroke-width="2"/>
+    <text x="${x}" y="${y-(compact?16:20)}" text-anchor="middle" fill="${now?'#fafafa':'#71717a'}" font-size="11" font-family="Outfit">${fin?'Race':i===0?'Start':'W'+i}</text>
+    <text x="${x}" y="${y+(compact?24:28)}" text-anchor="middle" fill="#71717a" font-size="10" font-family="Outfit">${(i*1.25).toFixed(i%4===0?0:2).replace('.00','')} km</text>`}).join('');
+  const cut=pts[Math.min(active,8)][0];
+  return `<div class="route"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Season route: 8 weeks along the 10K, now at week ${active}">
+   <defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#2e3192"/><stop offset="1" stop-color="#1bffff"/></linearGradient>
+   <clipPath id="rc"><rect x="0" y="0" width="${cut}" height="${H}"/></clipPath></defs>
+   <path d="${d}" fill="none" stroke="#2f3032" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 10"/>
+   <path d="${d}" fill="none" stroke="url(#rg)" stroke-width="6" stroke-linecap="round" clip-path="url(#rc)"/>${nodes}</svg></div>`;
+}
+function spark(vals,label){
+  const W=520,H=150,p=28,max=Math.max(...vals)*1.15;
+  const x=i=>p+i*(W-p*2)/(vals.length-1),y=v=>H-22-(v/max)*(H-44);
+  const line=vals.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const area=`${line} L${x(vals.length-1)},${H-22} L${x(0)},${H-22} Z`;
+  const grid=[0.25,0.5,0.75].map(f=>`<line x1="${p}" x2="${W-p}" y1="${y(max*f/1.15*1.0)}" y2="${y(max*f/1.15)}" stroke="rgba(255,255,255,.06)"/>`).join('');
+  const last=vals.length-1;
+  return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">
+  <defs><linearGradient id="sa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(27,255,255,.28)"/><stop offset="1" stop-color="rgba(27,255,255,0)"/></linearGradient></defs>
+  ${grid}<path d="${area}" fill="url(#sa)"/><path d="${line}" fill="none" stroke="#1bffff" stroke-width="2"/>
+  <circle cx="${x(last)}" cy="${y(vals[last])}" r="4.5" fill="#1bffff" stroke="#0b0c0e" stroke-width="2"/>
+  <text x="${x(last)-6}" y="${y(vals[last])-10}" text-anchor="end" fill="#fafafa" font-size="12" font-family="Outfit">${vals[last]}/day</text>
+  <text x="${p}" y="${H-6}" fill="#71717a" font-size="10.5" font-family="Outfit">30 Oct</text>
+  <text x="${W-p}" y="${H-6}" text-anchor="end" fill="#71717a" font-size="10.5" font-family="Outfit">Today</text></svg></div>`;
+}
+function dashShell(inner){
+  const nav=SCREENS.filter(s=>s.grp==='Organiser dashboard');
+  return `<div class="dash"><div class="side">
+   <div class="ev"><div class="lg">CC</div><div><b>Cubbon Classic 10K</b><small>Edition 2 · 21 Mar 2027</small></div></div>
+   <div class="cap">Athlete OS</div>
+   <nav>${nav.map(s=>`<button data-go="${s.id}" ${S.screen===s.id?'aria-current="page"':''}>${s.t}</button>`).join('')}</nav>
+   <div class="cap">Event</div><nav><button data-toast="Event details, passes and payouts stay in the existing peakst8 event screens">Event settings</button><button data-toast="Orders, refunds and check-in stay in the existing peakst8 screens">Orders & check-in</button></nav>
+  </div><div class="main">${inner}</div></div>`;
+}
+function phone(inner,tab){
+  const tabs=[['a-home','Home','home'],['a-lb','Ranks','trophy'],['a-rw','Rewards','gift'],['a-quiz','Learn','book']];
+  return `<div class="phone"><div class="scroll"><div class="sb"><span>9:41</span><span>peakst8</span></div>${inner}</div>
+  ${tab?`<div class="tabbar">${tabs.map(([id,l,ic])=>`<button data-go="${id}" ${S.screen===id?'aria-current="page"':''}>${ICONS[ic]}${l}</button>`).join('')}</div>`:''}</div>`;
+}
+
+/* ---------- organiser screens ---------- */
+function vHome(){
+  const regs=[38,52,44,61,47,40,58,49,63,71];const total=523;
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Athlete OS · Cubbon Classic 10K</span><h1 class="d">132 days to race day</h1></div>
+   <div class="row" style="gap:8px"><span class="ex">Example data</span><button class="btn" data-go="prog">Open Road to Cubbon</button></div></div>
+  <div class="kpis">
+   <div class="kpi"><small>Registrations</small><b>${total}</b><div class="meter"><i style="width:${(total/4500*100).toFixed(1)}%"></i></div><small>463 from KonfHub + 60 new · target 4,500</small></div>
+   <div class="kpi"><small>Joined the programme</small><b>287</b><small>54% of registrations</small></div>
+   <div class="kpi"><small>Active this week</small><b>162</b><small>56% of joiners finished a mission</small></div>
+   <div class="kpi"><small>Clubs</small><b>${CLUBS.length}</b><small>4 meet the entry rule</small></div>
+  </div>
+  <div class="two">
+   <div class="card stack"><div class="row"><h2 class="d">Registrations per day</h2><span class="pill cy">Run-rate ≈ 52/day</span></div>${spark(regs,'Registrations per day over 10 days, now 71 a day')}
+    <p class="sub">At today's rate the race reaches about 7,400 entries. Most races see a late spike, so the target stays at 4,500 until we have two weeks of peakst8 data.</p></div>
+   <div class="card stack"><h2 class="d">Needs you</h2>
+    ${[['2 club entries waiting for approval','clubs','warn'],['Week 1 missions are ready to publish','mis','cy'],['No sponsor in the "Powered by" slot','prog','warn'],['14 runners have streaks ending tonight','ndg','cy']].map(([t,g,c])=>`<button class="mis" style="grid-template-columns:minmax(0,1fr) auto;text-align:left" data-go="${g}"><span>${t}</span><span class="pill ${c}">Open</span></button>`).join('')}
+   </div>
+  </div>
+  <div class="card stack"><div class="row"><h2 class="d">The season</h2><span class="muted">Warm-up league from 1 Dec · Road to Cubbon 25 Jan → 21 Mar</span></div>${route(0,true)}</div>`);
+}
+function vReg(){
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Registration</span><h1 class="d">Sell entries on cubbonclassic10k.com</h1></div><span class="pill ok">Embed on</span></div>
+  <div class="two">
+   <div class="card stack">
+    <h2 class="d">Go-live steps</h2>
+    <div class="step done"><span class="dot">${ICONS.check}</span><div><b>Embed switched on</b><p class="sub">Book button and checkout use Cubbon orange and logo.</p></div></div>
+    <div class="step ${S.imported?'done':'now'}"><span class="dot">${S.imported?ICONS.check:'2'}</span><div><b>Import KonfHub registrations</b><p class="sub">${S.imported?'463 of 463 imported. Each runner got an email saying their entry has moved, with a link to the app.':'Upload the KonfHub export. We match each runner by email and phone, so nobody is charged twice.'}</p>${S.imported?'':'<button class="btn sm" data-act="import" style="margin-top:8px">Import 463 registrations</button>'}</div></div>
+    <div class="step now"><span class="dot">3</span><div><b>Replace the KonfHub widget on /register</b><p class="sub">Paste this where the iframe is today, or point <b>events.cubbonclassic10k.com</b> to peakst8 for pages that rank on Google.</p>
+     <div class="code" style="margin-top:8px">&lt;script src="https://embed.ps8.club/v1.js"
+  data-event="cubbon-classic-10k-e2"
+  data-mode="book-button" async&gt;&lt;/script&gt;</div>
+     <div class="row" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn sm" data-act="copy">Copy snippet</button><button class="btn sm ghost" data-act="check">Check my page</button></div></div></div>
+    <div class="step"><span class="dot">4</span><div><b>Close KonfHub</b><p class="sub">Keep it read-only for 30 days, then switch it off.</p></div></div>
+   </div>
+   <div class="stack">
+    <div class="card stack"><h2 class="d">Entry types</h2>
+     <div class="row"><span><b>Individual 10K</b><br><span class="muted">Chip timing, T-shirt, medal, breakfast</span></span><span class="pill">Fee: set by organiser</span></div>
+     <div class="row"><span><b>Club entry</b><br><span class="muted">Captain registers, members join with a code</span></span><span class="pill cb">Codes on approval</span></div>
+    </div>
+    <div class="card stack"><h2 class="d">Where entries come from</h2>
+     ${[['Imported from KonfHub',463,100],['cubbonclassic10k.com',41,9],['Club codes',14,3],['Instagram link',5,1]].map(([l,v,w])=>`<div class="stack" style="gap:6px"><div class="row"><span class="muted">${l}</span><b class="num">${v}</b></div><div class="meter"><i style="width:${w}%"></i></div></div>`).join('')}
+     <p class="sub">Every booking also reaches Cubbon's own GA4 and Meta pixel.</p></div>
+   </div>
+  </div>`);
+}
+function vProg(){
+  const W=[[0,'Warm-up league','1 Dec – 24 Jan','Lighter weekly missions, club recruiting, onboarding quiz'],[1,'Base','25 Jan','Easy runs, build the habit'],[2,'Base','1 Feb','Add strength'],[3,'Build','8 Feb','First 6 km long run'],[4,'Build','15 Feb','Club run week, double community points'],[5,'Build','22 Feb','Long run 8 km'],[6,'Sharpen','1 Mar','Race-pace session'],[7,'Sharpen','8 Mar','Route recce in Cubbon Park'],[8,'Taper','15 Mar','Bib collection, race-day brief']];
+  const w=W[S.week]||W[0];
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Programme builder</span><h1 class="d">Road to Cubbon Classic</h1><p class="sub">Powered by <b>[Brand]</b> · 8 weeks · each week is 1.25 km of the race</p></div>
+   <div class="row" style="gap:8px"><button class="btn ghost sm" data-toast="Preview opens the runner app as a new runner would see it">Preview as runner</button><button class="btn sm" data-toast="Week ${S.week} published. Runners see it on Monday at 6 am">Publish week ${S.week}</button></div></div>
+  <div class="card stack">${route(S.week,false)}
+   <div class="wk">${W.map(([i,ph,d])=>`<button data-week="${i}" aria-pressed="${S.week===i}"><b>${i===0?'Warm-up':'W'+i}</b><span>${ph}</span></button>`).join('')}</div>
+  </div>
+  <div class="two">
+   <div class="card stack"><div class="row"><h2 class="d">${w[0]===0?'Warm-up league':'Week '+w[0]+' · '+w[1]}</h2><span class="muted">${w[2]}</span></div><p class="sub">${w[3]}</p>
+    ${MISSIONS.filter(m=>m.on).map(m=>`<div class="mis"><div class="ic">${ICONS[m.ic]}</div><div><b>${m.name}</b><small>${m.ex}</small></div><div class="pts">${S.week===4&&m.id==='com'?m.pts*2:m.pts}<span class="dim" style="font-size:12px;font-family:var(--sans)">pts</span></div></div>`).join('')}
+    <div class="row"><span class="muted">Up to this week</span><b class="num">${weekMax()+(S.week===4?15:0)} pts</b></div>
+    <button class="btn ghost sm" data-go="mis">Edit missions</button>
+   </div>
+   <div class="stack">
+    <div class="card stack"><h2 class="d">Sponsor slot</h2>
+     <div style="border:1px dashed var(--line-2);border-radius:14px;padding:16px;display:grid;gap:6px;justify-items:start"><span class="pill warn">Not signed yet</span><p class="sub">The brand's name goes on the programme title, the weekly quiz and partner rewards. The programme runs without it.</p><button class="btn sm ghost" data-toast="Invite sent to the sponsor contact you add">Add sponsor</button></div>
+    </div>
+    <div class="card stack"><h2 class="d">Race week & after</h2>
+     <div class="row"><span class="muted">Race-day activation</span><span class="pill cy">Top 10 + Club of the Season on stage</span></div>
+     <div class="row"><span class="muted">Post-race</span><span class="pill">Results and photos in the app</span></div>
+     <div class="row"><span class="muted">Results source</span><span class="pill">Timing CSV · MyRace in Phase 3</span></div>
+    </div>
+   </div>
+  </div>`);
+}
+function vMis(){
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Week ${S.week||1} · missions</span><h1 class="d">Missions & points</h1><p class="sub">Turn missions on or off and set their points. The illustrative scoring from Nitin is loaded.</p></div>
+   <div class="kpi" style="min-width:160px"><small>Max a week</small><b>${weekMax()}</b><small>${weekMax()*8} over 8 weeks</small></div></div>
+  <div class="stack">
+  ${MISSIONS.map(m=>`<div class="mis ${m.on?'':'off'}"><div class="ic">${ICONS[m.ic]}</div>
+    <div><b>${m.name}</b><small>${m.ex}</small><small style="margin-top:4px"><span class="pill" style="height:20px;font-size:11px">Counted by: ${m.how}</span></small></div>
+    <div class="row" style="gap:10px;flex-wrap:nowrap"><div class="stepper" aria-label="Points for ${m.name}"><button data-pts="${m.id}" data-d="-5" aria-label="Fewer points">−</button><span>${m.pts}</span><button data-pts="${m.id}" data-d="5" aria-label="More points">+</button></div>
+    <button class="toggle" role="switch" aria-checked="${m.on}" aria-label="${m.name} on" data-tog="${m.id}"></button></div></div>`).join('')}
+  </div>
+  <div class="card stack"><div class="row"><h2 class="d">Add from the library</h2><span class="muted">Carried over from Yoska's challenge library</span></div>
+   <div class="row" style="justify-content:flex-start;gap:8px">${['Run 25 km this week','5-day streak','Parkrun or timed 5K','Hydration log, 5 days','Mobility, 3 × 15 min','Bring a friend to a club run'].map(t=>`<button class="pill" style="height:32px;background:none" data-toast="Added “${t}” to week ${S.week||1}">+ ${t}</button>`).join('')}</div>
+  </div>
+  <div class="card"><p class="sub"><b style="color:var(--fg)">Fair play.</b> Only activities synced from a watch or Strava count for running missions. Manual entries and runs faster than 2:30 per km are held for review.</p></div>`);
+}
+function vLb(){
+  const b=S.boards;const opts=[['ind','Individual','Every runner, all season'],['club','Clubs','Average points per member, for Club of the Week'],['age','Age group','18-29, 30-39, 40-49, 50+'],['gender','Gender','Women and men'],['city','Neighbourhood','From the runner\'s pin code']];
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Leaderboards</span><h1 class="d">What runners compete on</h1></div><span class="pill ok">Updates as runs arrive</span></div>
+  <div class="two">
+   <div class="card stack"><h2 class="d">Boards</h2>
+    ${opts.map(([k,t,d])=>`<div class="row" style="flex-wrap:nowrap"><span><b>${t}</b><br><span class="muted">${d}</span></span><button class="toggle" role="switch" aria-checked="${b[k]}" aria-label="${t} board" data-board="${k}"></button></div>`).join('')}
+    <div class="field"><label for="rankby">Rank by</label><select id="rankby"><option>Mission points (recommended)</option><option>Distance</option><option>Points + distance</option></select></div>
+    <div class="field"><label for="reset">Weekly winners</label><select id="reset"><option>Announce every Sunday 8 pm</option><option>Announce every Monday 7 am</option></select></div>
+   </div>
+   <div class="card stack"><div class="row"><h2 class="d">Live preview</h2><span class="ex">Example data</span></div>
+    <div class="tabs" role="tablist">${[['ind','Individual'],['club','Clubs'],['age','30-39']].filter(([k])=>k==='age'?b.age:b[k]).map(([k,l])=>`<button role="tab" aria-selected="${S.lbTab===k}" data-lbtab="${k}">${l}</button>`).join('')}</div>
+    ${S.lbTab==='club'?`<div class="tbl"><table><thead><tr><th>#</th><th>Club</th><th class="r">Per member</th></tr></thead><tbody>${CLUBS.slice(0,5).map((c,i)=>`<tr><td class="num">${i+1}</td><td>${c[0]}</td><td class="r">${c[4]}</td></tr>`).join('')}</tbody></table></div>`
+     :`<div class="tbl"><table><thead><tr><th>#</th><th>Runner</th><th class="r">Points</th></tr></thead><tbody>${RUNNERS.filter(r=>S.lbTab!=='age'||r[1].includes('30-39')).slice(0,6).map((r,i)=>`<tr><td class="num">${i+1}</td><td><div class="who"><span class="av">${ini(r[0])}</span><span>${r[0]}<small>${r[2]}</small></span></div></td><td class="r">${r[3]}</td></tr>`).join('')}</tbody></table></div>`}
+   </div>
+  </div>`);
+}
+function vRw(){
+  const R=[['Weekly top performer','Top 3 on the individual board each Sunday','Shoutout in app + Instagram story','gold'],['Club of the Week','Highest points per member','Club photo at the start line, featured post','cy'],['Consistency badges','Finish every mission for 2, 4 and 8 weeks','Badge on the runner\'s profile','cy'],['Cubbon Classic merch','Top 50 at the end of the programme','Limited-edition tee, 50 in stock','cb'],['Partner rewards','Finish the Learning mission','Sample pack from [Brand], claim at bib collection','warn'],['Race-day recognition','Top 10 and Club of the Season','Called on stage at the celebration','gold'],['Free entry','Top runner in each age group','Free Edition 3 entry or partner experience','gold']];
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Rewards</span><h1 class="d">What people win</h1><p class="sub">Each reward says who gets it and what they get. Runners claim in the app; you see who claimed.</p></div><button class="btn sm" data-toast="New reward form opens here">Add reward</button></div>
+  <div class="rw">${R.map(([t,who,what,c])=>`<div class="rwc"><div class="hd"><b>${t}</b><span class="pill ${c}">${c==='warn'?'Needs sponsor':'On'}</span></div><span class="muted" style="font-size:13px">${who}</span><span style="font-size:13.5px">${what}</span></div>`).join('')}</div>`);
+}
+function vNdg(){
+  const N=[['Mission reminder','Thursday 7 pm, to runners with missions left','You\'re 2 runs from 30 points this week. Cubbon\'s waiting.',true],['Streak about to end','Day 6 of a streak with no activity yet','Your 5-day streak ends at midnight. A 20-minute easy run keeps it.',true],['Moved up','Runner climbs 10+ places','Up 14 places to #38. Keep it rolling.',true],['Club of the Week','Sunday 8 pm, to the winning club','Cubbon Striders are Club of the Week! Photo at the start line is yours.',true],['Not started','Registered 7 days ago, not in the programme','Your bib\'s booked. Join Road to Cubbon and get week 1 missions.',false]];
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Nudges</span><h1 class="d">Reminders that keep runners going</h1></div><button class="btn sm" data-toast="Pick a segment, write the message, choose app, WhatsApp or email">Send a message</button></div>
+  <div class="stack">${N.map(([t,when,msg,on],i)=>`<div class="mis" style="grid-template-columns:minmax(0,1fr) auto"><div><b>${t}</b><small>${when}</small><small style="margin-top:6px;color:var(--fg);background:rgba(255,255,255,.04);border-radius:10px;padding:8px 10px">“${esc(msg)}”</small></div><button class="toggle" role="switch" aria-checked="${on}" aria-label="${t}" data-ndg="${i}"></button></div>`).join('')}</div>
+  <div class="card"><p class="sub">Messages go by app notification first, then WhatsApp if the app isn't installed. Nobody gets more than one nudge a day.</p></div>`);
+}
+function vClubs(){
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Clubs</span><h1 class="d">Club entries</h1><p class="sub">Approve a club and its code goes to the captain straight away.</p></div><span class="ex">Example data</span></div>
+  <div class="card stack"><div class="row"><b>Waiting for approval</b><span class="pill warn">2</span></div>
+   ${[['Whitefield Wolves','Captain: Rohan K.','Whitefield'],['Jayanagar Joggers','Captain: Priya S.','Jayanagar']].map(([n,c,city])=>`<div class="row"><span><b>${n}</b><br><span class="muted">${c} · ${city}</span></span><span class="row" style="gap:8px"><button class="btn sm ghost" data-toast="Asked ${n} for more details">Ask</button><button class="btn sm" data-toast="Approved. Code ${n.split(' ')[0].toUpperCase().slice(0,5)}26 sent to the captain">Approve</button></span></div>`).join('')}
+  </div>
+  <div class="tbl"><table><thead><tr><th>Club</th><th class="r">Runners</th><th>Entry rule (7 men + 3 women)</th><th class="r">Points / member</th></tr></thead><tbody>
+  ${CLUBS.map(([n,t,m,f,p])=>{const ok=m>=7&&f>=3;return `<tr><td>${n}</td><td class="r">${t}</td><td>${ok?'<span class="pill ok">Meets the rule</span>':`<span class="pill warn">Needs ${Math.max(0,7-m)} men, ${Math.max(0,3-f)} women</span>`}</td><td class="r">${p||'—'}</td></tr>`}).join('')}
+  </tbody></table></div>`);
+}
+function vIns(){
+  return dashShell(`
+  <div class="row"><div class="stack" style="gap:4px"><span class="eyebrow">Insights</span><h1 class="d">How the season is going</h1></div><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Organiser</button><button role="tab" aria-selected="false" data-toast="The sponsor sees reach, quiz completions and claims, never runners' contact details">Sponsor view</button></div></div>
+  <div class="kpis">
+   <div class="kpi"><small>Missions finished</small><b>1,284</b><small>Since 1 Dec</small></div>
+   <div class="kpi"><small>Km run by programme runners</small><b>9,410</b><small>Synced from watches and Strava</small></div>
+   <div class="kpi"><small>Quiz completions</small><b>612</b><small>Brand-led content</small></div>
+   <div class="kpi"><small>Samples claimed</small><b>—</b><small>Starts when a sponsor signs</small></div>
+  </div>
+  <div class="card stack"><h2 class="d">The funnel</h2>
+   ${[['Registered',1059,100],['Joined Road to Cubbon',574,54],['Active this week',321,30],['On a 4-week streak',118,11]].map(([l,v,w])=>`<div class="stack" style="gap:6px"><div class="row"><span>${l}</span><b class="num">${v.toLocaleString('en-IN')}</b></div><div class="meter ${l.includes('streak')?'gold':''}"><i style="width:${w}%"></i></div></div>`).join('')}
+   <p class="sub">Example season numbers for illustration, not Cubbon's actual figures.</p></div>
+  <div class="card row"><span class="muted">Weekly summary goes to the organiser and sponsor every Monday at 9 am.</span><button class="btn sm ghost" data-toast="Export starts. You'll get a CSV by email">Export CSV</button></div>`);
+}
+
+/* ---------- runner screens ---------- */
+function vAReg(){
+  return phone(`
+  <div class="site"><div class="nv"><b>CUBBON CLASSIC</b><span>Story · Clubs · Race info · FAQ</span></div>
+   <div class="hero"><small>EDITION 2 · 21 MARCH 2027</small><b>Run the 10K</b><span style="color:#bbb;font-size:12.5px">One bib. Full race. Festival included.</span><div><button class="slant" data-act="book">Register</button></div></div></div>
+  ${S.booked?`<div class="sheet"><div class="row"><b style="font-size:18px">You're in</b><span class="pill ok">Bib 2214</span></div>
+   <p class="sub">Your ticket is in the peakst8 app. Want a plan to get race-ready?</p>
+   <div class="card stack" style="background:linear-gradient(140deg,rgba(46,49,146,.35),rgba(27,255,255,.06));border-color:rgba(27,255,255,.25)"><span class="eyebrow" style="color:#cffafe">Road to Cubbon Classic</span><b style="font-family:var(--display);font-size:18px">Weekly missions, a leaderboard and rewards until race day</b><span class="muted" style="font-size:13px">Warm-up league starts 1 Dec</span></div>
+   <button class="btn block" data-go="a-home">Join and open the app</button></div>`
+  :`<div class="sheet"><div class="row"><b style="font-size:18px">Choose your entry</b><span class="muted" style="font-size:12px">peakst8 checkout</span></div>
+   <button class="pass" aria-checked="true"><span><b>Individual 10K</b><br><span style="font-size:12.5px;color:#dbeafe">Chip timing, tee, medal, breakfast</span></span><b>₹ —</b></button>
+   <button class="pass" aria-checked="false"><span><b>Join with a club code</b><br><span class="muted" style="font-size:12.5px">From your captain</span></span><span>›</span></button>
+   <button class="btn block" data-act="book">Continue</button><p class="sub" style="font-size:12px;text-align:center">Email OTP, then Razorpay. Fee set by the organiser.</p></div>`}`,false);
+}
+function vAHome(){
+  const pts=MISSIONS.filter(m=>m.on&&S.done[m.id]).reduce((a,m)=>a+m.pts,0);const max=weekMax();
+  return phone(`
+  <div class="row"><div><span class="eyebrow">Road to Cubbon · Week 3</span><h1 class="d" style="font-size:24px">Hi Ananya</h1></div><span class="pill gold">#1 · 665</span></div>
+  <div class="card" style="padding:10px 6px 4px">${route(3,true)}</div>
+  <div class="card stack"><div class="row"><b>This week</b><span class="num"><b style="font-family:var(--display);font-size:20px">${pts}</b><span class="muted"> / ${max} pts</span></span></div><div class="meter"><i style="width:${max?pts/max*100:0}%"></i></div><span class="muted" style="font-size:12.5px">Ends Sunday 8 pm · 4 days left</span></div>
+  ${MISSIONS.filter(m=>m.on).map(m=>`<button class="mis" style="text-align:left" data-done="${m.id}"><div class="ic">${ICONS[m.ic]}</div><div><b>${m.name}</b><small>${m.id==='cons'?'3 of 3 runs synced from Strava':m.id==='str'?'2 of 2 sessions':m.ex}</small></div><div class="row" style="gap:8px;flex-wrap:nowrap"><span class="pts" style="font-size:15px">+${m.pts}</span>${S.done[m.id]?`<span class="done-tick">${ICONS.check}</span>`:'<span class="todo-tick"></span>'}</div></button>`).join('')}
+  `,true);
+}
+function vALb(){
+  const list=S.aLbTab==='club'?RUNNERS.filter(r=>r[2]==='Indiranagar Run Club'):S.aLbTab==='age'?RUNNERS.filter(r=>r[1].includes('30-39')):RUNNERS;
+  const [a,b,c]=list;
+  return phone(`
+  <div><span class="eyebrow">Leaderboard · Week 3</span><h1 class="d" style="font-size:24px">Where you stand</h1></div>
+  <div class="tabs" role="tablist">${[['all','Everyone'],['club','My club'],['age','F 30-39']].map(([k,l])=>`<button role="tab" aria-selected="${S.aLbTab===k}" data-albtab="${k}">${l}</button>`).join('')}</div>
+  <div class="podium">${[[b,'p2',2],[a,'p1',1],[c,'p3',3]].map(([r,cl,n])=>r?`<div class="${cl}"><span class="av">${ini(r[0])}</span><b>${r[0].split(' ')[0]}</b><span class="sc">${r[3]}</span><span class="dim" style="font-size:11px">#${n}</span></div>`:'<div></div>').join('')}</div>
+  <div class="stack" style="gap:6px">${list.slice(3).map((r,i)=>`<div class="row" style="padding:10px 12px;border-radius:12px;border:1px solid var(--line);flex-wrap:nowrap"><div class="who"><span class="dim num" style="width:18px">${i+4}</span><span class="av">${ini(r[0])}</span><span>${r[0]}<small>${r[2]}</small></span></div><b class="num">${r[3]}</b></div>`).join('')}
+  <div class="row me" style="padding:10px 12px;border-radius:12px;border:1px solid rgba(27,255,255,.3);flex-wrap:nowrap"><div class="who"><span class="num" style="width:18px">1</span><span class="av">AR</span><span>You<small>25 pts clear of #2</small></span></div><b class="num">665</b></div></div>
+  <div class="card row"><span class="muted" style="font-size:13px">Club of the Week</span><b>Cubbon Striders</b></div>`,true);
+}
+function vARw(){
+  const B=[['2-WEEK STREAK',1,'linear-gradient(135deg,#2e3192,#1bffff)'],['FIRST LONG RUN',1,'linear-gradient(135deg,#d8c6aa,#c97e05)'],['CLUB REGULAR',1,'linear-gradient(135deg,#ff5a1f,#ffb547)'],['4-WEEK STREAK',0],['QUIZ WHIZ',0],['8-WEEK STREAK',0],['TOP 50',0],['RACE READY',0]];
+  return phone(`
+  <div><span class="eyebrow">Rewards</span><h1 class="d" style="font-size:24px">Your badges</h1></div>
+  <div class="badges">${B.map(([t,on,bg])=>`<div class="${on?'':'lock'}"><span class="badge-big" style="${on?`background:${bg};color:#0b0c0e`:''}">${t.split(' ').slice(0,2).join('<br>')}</span>${on?'Earned':'Locked'}</div>`).join('')}</div>
+  <div class="card stack" style="border-color:rgba(216,198,170,.35);background:linear-gradient(140deg,rgba(216,198,170,.12),rgba(201,126,5,.06))"><span class="pill gold" style="justify-self:start">You're in the top 50</span><b style="font-family:var(--display);font-size:17px">Cubbon Classic limited tee</b><span class="muted" style="font-size:13px">Stay in the top 50 until 15 Mar to claim it at bib collection.</span></div>
+  <div class="card stack"><div class="row"><b>Partner sample pack</b><span class="pill">Needs Learning mission</span></div><span class="muted" style="font-size:13px">Finish this week's quiz to unlock. Claim at bib collection.</span><button class="btn sm ghost" data-go="a-quiz">Take the quiz</button></div>`,true);
+}
+function vAQuiz(){
+  const Q={q:'What should you eat in the 2 hours before a 10K?',o:['A big plate of biryani','A banana or toast with honey','Nothing at all, run empty','Two energy drinks'],a:1};
+  return phone(`
+  <div><span class="eyebrow">Learning · Powered by [Brand]</span><h1 class="d" style="font-size:24px">Fuelling for a 10K</h1></div>
+  <div class="card stack"><span class="muted" style="font-size:12.5px">Question 3 of 5</span><div class="meter"><i style="width:60%"></i></div><b style="font-size:16px;line-height:1.35">${Q.q}</b></div>
+  <div class="stack" style="gap:8px">${Q.o.map((o,i)=>{const cl=S.quiz===null?'':i===Q.a?'right':i===S.quiz?'wrong':'';return `<button class="opt ${cl}" data-quiz="${i}" ${S.quiz!==null?'aria-disabled="true"':''}>${o}${cl==='right'?ICONS.check:''}</button>`}).join('')}</div>
+  ${S.quiz!==null?`<div class="card stack"><b>${S.quiz===Q.a?'Right.':'Not quite.'} Easy carbs, 60 to 120 minutes before.</b><span class="muted" style="font-size:13px">Something light you've tried in training. Nothing new on race day.</span><button class="btn" data-act="finishquiz">Finish quiz · +10 pts</button></div>`:''}`,true);
+}
+
+const VIEWS={home:vHome,reg:vReg,prog:vProg,mis:vMis,lb:vLb,rw:vRw,ndg:vNdg,clubs:vClubs,ins:vIns,'a-reg':vAReg,'a-home':vAHome,'a-lb':vALb,'a-rw':vARw,'a-quiz':vAQuiz};
+
+function renderRail(){
+  const g={};SCREENS.forEach(s=>(g[s.grp]=g[s.grp]||[]).push(s));
+  document.getElementById('rail').innerHTML=Object.entries(g).map(([k,v])=>`<div class="grp"><h3>${k}</h3><nav>${v.map(s=>`<button data-go="${s.id}" ${S.screen===s.id?'aria-current="page"':''}><i>${s.n}</i>${s.t}</button>`).join('')}</nav></div>`).join('');
+}
+function renderStage(){document.getElementById('stage').innerHTML=VIEWS[S.screen]()}
+function renderPanel(){
+  const s=SCREENS.find(x=>x.id===S.screen),p=PANEL[S.screen];
+  document.getElementById('panel').innerHTML=`<div class="card"><h4>${s.n} · ${s.t}</h4><p>${p.what}</p></div>
+  <div class="card"><h4>Who uses it</h4><p>${p.who}</p><h4>Phase</h4><p>${p.phase}</p></div>
+  <div class="card"><h4>Replaces in fit.yoska</h4><p class="rep">${p.yoska}</p></div>
+  <div class="card"><h4>Design partner</h4><p>Design Partner #2: Cubbon Classic 10K, with Nitin Gowda (MyRace). Design Partner #1 is Run Crew × Reebok. Screens are new designs in the peakst8 app language, not copies of Yoska.</p></div>`;
+}
+function renderToast(){document.getElementById('toastHost').innerHTML=S.toast?`<div class="toast" role="status">${esc(S.toast)}</div>`:''}
+function render(){renderRail();renderStage();renderPanel();renderToast()}
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;const d=t.dataset;
+  if(d.go){go(d.go);return}
+  if(d.toast){toast(d.toast);return}
+  if(d.week!==undefined){S.week=+d.week;render();return}
+  if(d.tog){const m=MISSIONS.find(x=>x.id===d.tog);m.on=!m.on;render();return}
+  if(d.pts){const m=MISSIONS.find(x=>x.id===d.pts);m.pts=Math.max(0,Math.min(100,m.pts+(+d.d)));render();return}
+  if(d.board){S.boards[d.board]=!S.boards[d.board];if(!S.boards[S.lbTab])S.lbTab='ind';render();return}
+  if(d.lbtab){S.lbTab=d.lbtab;render();return}
+  if(d.albtab){S.aLbTab=d.albtab;render();return}
+  if(d.ndg!==undefined){t.setAttribute('aria-checked',t.getAttribute('aria-checked')!=='true');return}
+  if(d.done){S.done[d.done]=!S.done[d.done];render();if(S.done[d.done])toast('Mission done. Points added to your week');return}
+  if(d.quiz!==undefined&&S.quiz===null){S.quiz=+d.quiz;render();return}
+  const a=d.act;
+  if(a==='import'){S.imported=true;render();toast('463 registrations imported. Confirmation emails are on their way');}
+  if(a==='copy'){const txt='<script src="https://embed.ps8.club/v1.js" data-event="cubbon-classic-10k-e2" data-mode="book-button" async><\/script>';
+    try{navigator.clipboard.writeText(txt).then(()=>toast('Snippet copied'),()=>toast('Select the snippet and copy it'))}catch(err){toast('Select the snippet and copy it')}}
+  if(a==='check')toast('Checked cubbonclassic10k.com/register: KonfHub widget still there. Replace it with the snippet');
+  if(a==='book'){S.booked=true;render()}
+  if(a==='finishquiz'){S.done.learn=true;S.quiz=null;go('a-home');toast('Quiz done. +10 points')}
+});
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(VIEWS[h]&&h!==S.screen){S.screen=h;render()}});
+render();
+</script>
+</body>
+</html>
