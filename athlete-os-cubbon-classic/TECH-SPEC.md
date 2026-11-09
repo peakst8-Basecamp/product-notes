@@ -1,5 +1,7 @@
 # Technical spec: going live with Cubbon Classic 10K
 
+> **This spec sets direction, not the final design.** The engineer will run a proof of concept (POC) and share the exact specifics: architecture, numbers, limits and dates. The POC findings replace the assumptions and proposed dates here before build starts.
+
 For engineering. It covers what must be true technically before we onboard Cubbon Classic's runners: registration on their site by **20 Nov 2026**, the engagement layer by **30 Nov**, and the 8-week programme from **25 Jan 2027** to race day on 21 Mar.
 
 Sections 6 and 7 apply to the whole platform, not only Cubbon: how the Strava integration scales, and the plan to move off Yoska for clubs, corporates, brands, races and coaches. **Scale and migration come before new features.** Cubbon is one design partner inside that plan.
