@@ -188,16 +188,16 @@
       ]
     },
     {
-      "id": "hyrox-training-clubs",
-      "title": "peakst8 HYROX Training Clubs",
-      "folder": "hyrox-training-clubs/",
+      "id": "onboarding-clubs",
+      "title": "peakst8 Onboarding Clubs",
+      "folder": "onboarding-clubs/",
       "status": "Scoping",
       "next": "Shoumik confirms the estimate; first 10 founding gyms shortlisted",
       "owner": "Shoumik",
       "updated": "2026-11-18",
-      "summary": "HYROX Training Clubs and run clubs list weekly sessions as one programme and sell monthly memberships. Built on what peakst8 already runs: about 60–65 hours over two weeks, owned end to end by Shoumik.",
+      "summary": "Onboarding HYROX Training Clubs (HTC), run clubs and training clubs: weekly sessions as one programme, plus monthly memberships. Built on what peakst8 already runs: about 60–65 hours over two weeks, owned end to end by Shoumik.",
       "links": {
-        "Product note": "hyrox-training-clubs/",
+        "Product note": "onboarding-clubs/",
         "Arvind's memo": "https://claude.ai/artifact/X94okaXab5KP2pjErztato",
         "App prototype": "https://claude.ai/artifact/JsuvSreB1iYxb4kXRXM2y6",
         "Tech spec (Shoumik)": "https://claude.ai/artifact/NyYUbp9fRHPM9yWNBe7uzt"

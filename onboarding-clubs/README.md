@@ -1,8 +1,8 @@
-# peakst8 HYROX Training Clubs
+# peakst8 Onboarding Clubs
 
-**A peakst8 product feature.** HYROX Training Clubs (HTC), run clubs and other training clubs list their weekly sessions on peakst8 as one programme and sell memberships. Athletes find a club, pick a date and book, the same way they book an event today.
+**A peakst8 product feature.** We onboard HYROX Training Clubs (HTC), run clubs and other training clubs onto peakst8. Each club lists its weekly sessions as one programme and sells monthly memberships; athletes find the club, pick a date and book, the same way they book an event today.
 
-[Product note](https://peakst8-basecamp.github.io/product-notes/hyrox-training-clubs/) · Status: Scoping · Owner: Shoumik · updated 18 Nov 2026
+[Product note](https://peakst8-basecamp.github.io/product-notes/onboarding-clubs/) · Status: Scoping · Owner: Shoumik · updated 18 Nov 2026
 
 ## Where this comes from
 
@@ -38,7 +38,17 @@ Most of the stack is live on app.peakst8.club. The gap is grouping sessions and 
 | Find any HYROX gym on a map | Prototype only | Later |
 | HYROX and coach training plans | Not built | Later |
 
-## What we're building
+## How we onboard a club
+
+1. **Shortlist and call.** Shoumik picks the club (a HYROX gym or a run club) and walks the founder through peakst8.
+2. **Set up.** The club, its hosts and its weekly sessions go live on peakst8. Until recurring sessions ship, each date is its own training event, named so it joins a programme later.
+3. **First bookings.** The club shares its programme link with its members, and the first sessions get booked and paid on peakst8.
+4. **Membership.** Pilot clubs offer a monthly plan once memberships are live.
+5. **Weekly check-in.** Shoumik reviews bookings, members and the payout with the club, and fixes what got in the way.
+
+**A club counts as onboarded** when it has at least one weekly programme live and its first paid bookings on peakst8.
+
+## What we're building to make onboarding easy
 
 1. A club admin creates a training session and says it repeats weekly, on the days they pick, until a date.
 2. peakst8 creates every date at once. Each date has its own seats, price and ticket, so booking, payouts and check-in work as they do today.
@@ -48,7 +58,7 @@ Most of the stack is live on app.peakst8.club. The gap is grouping sessions and 
 
 ## Owner
 
-**Shoumik owns this end to end**: builds it across backend, web and the app where needed, and onboards the clubs. Shoumik talks to HYROX gyms and run clubs, sets them up, and gets their first sessions and members live, working with Arvind.
+**Shoumik owns onboarding end to end**: talks to HYROX gyms and run clubs, sets them up, and gets their first sessions and members live, working with Arvind. Shoumik also builds what onboarding needs, across backend, web and the app where needed.
 
 ## Plan and estimate
 
@@ -65,7 +75,7 @@ Monthly schedules, series coupons, programme reports, the gym map, perks and gue
 ## Next steps
 
 1. Shoumik reads this note, the tech spec and the [memberships code](../memberships/code/README.md), then confirms the estimate by 19 Nov.
-2. Arvind and Shoumik answer the five open questions in the [product note](https://peakst8-basecamp.github.io/product-notes/hyrox-training-clubs/#decisions).
+2. Arvind and Shoumik answer the five open questions in the [product note](https://peakst8-basecamp.github.io/product-notes/onboarding-clubs/#decisions).
 3. Shoumik shortlists 10 founding HYROX gyms and two run clubs, and books the first calls this week.
 4. Week 1 build starts and the first gyms go live with dated sessions.
 5. Membership pilot goes live with two clubs in week 2.

@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>peakst8 HYROX Training Clubs</title>
-<meta name="description" content="peakst8 HYROX Training Clubs: clubs list weekly sessions as one programme and sell monthly memberships. Parity with what peakst8 runs today, the lean plan, the estimate, the owner and the go-live checklist.">
-<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/hyrox-training-clubs/">
+<title>peakst8 Onboarding Clubs</title>
+<meta name="description" content="peakst8 Onboarding Clubs: onboarding HYROX Training Clubs and run clubs, with weekly sessions as one programme and monthly memberships. Parity with what peakst8 runs today, the lean plan, the estimate, the owner and the go-live checklist.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/onboarding-clubs/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="peakst8 HYROX Training Clubs: product note">
-<meta property="og:description" content="Recurring sessions and memberships for HYROX Training Clubs and run clubs, built on what peakst8 already runs.">
-<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/hyrox-training-clubs/">
+<meta property="og:title" content="peakst8 Onboarding Clubs: product note">
+<meta property="og:description" content="Onboarding HYROX Training Clubs and run clubs onto peakst8, built on what it already runs.">
+<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/onboarding-clubs/">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"TechArticle","headline":"peakst8 HYROX Training Clubs: product note","datePublished":"2026-11-18","dateModified":"2026-11-18","author":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"about":"Recurring training sessions and memberships for HYROX Training Clubs and run clubs"}
+{"@context":"https://schema.org","@type":"TechArticle","headline":"peakst8 Onboarding Clubs: product note","datePublished":"2026-11-18","dateModified":"2026-11-18","author":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"about":"Recurring training sessions and memberships for HYROX Training Clubs and run clubs"}
 </script>
 <style>
 :root{color-scheme:light;--bg:#fff;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148;--ok:#17945a;
@@ -84,12 +84,12 @@ svg text{font-family:Figtree,system-ui,sans-serif}
 
 <main>
 <section class="hero">
-  <span class="lbl">peakst8 HYROX Training Clubs</span>
-  <h1>Every session, one booking away.</h1>
-  <p>HYROX Training Clubs (HTC), run clubs and other training clubs list their weekly sessions on peakst8 as one programme and sell monthly memberships. Most of it already runs on peakst8. We add the grouping and the memberships, then onboard the clubs.</p>
+  <span class="lbl">peakst8 Onboarding Clubs</span>
+  <h1>Onboard the clubs. Fill every session.</h1>
+  <p>We onboard HYROX Training Clubs (HTC), run clubs and other training clubs onto peakst8: their weekly sessions listed as one programme, and monthly memberships. Most of what a club needs already runs on peakst8. We add the grouping and the memberships while Shoumik onboards the clubs.</p>
   <div class="facts"><span>Owner: Shoumik</span><span>~60–65 hours</span><span>Two weeks</span><span>Built on what's live</span></div>
   <div class="status" id="status" aria-live="polite"><span>Status</span><b>Scoping</b><span>Next: Shoumik confirms the estimate; first 10 founding gyms shortlisted</span></div>
-  <nav class="toc" aria-label="Sections"><a href="#sources">Sources</a><a href="#opportunity">Opportunity</a><a href="#parity">Today vs plan</a><a href="#what">What we build</a><a href="#plan">Plan</a><a href="#owner">Owner</a><a href="#checklist">Checklist</a><a href="#decisions">Decisions</a></nav>
+  <nav class="toc" aria-label="Sections"><a href="#sources">Sources</a><a href="#opportunity">Opportunity</a><a href="#parity">Today vs plan</a><a href="#onboarding">Onboarding a club</a><a href="#what">What we build</a><a href="#plan">Plan</a><a href="#owner">Owner</a><a href="#checklist">Checklist</a><a href="#decisions">Decisions</a></nav>
 </section>
 
 <article class="pr">
@@ -134,7 +134,18 @@ svg text{font-family:Figtree,system-ui,sans-serif}
 </table></div>
 <p>Checked on 18 Nov 2026 against peakst8-backend and peakst8-frontend <code>main</code>, <code>dev</code> and <code>staging</code>: there is no series or membership code on any of them yet.</p>
 
-<h2 id="what">4. What we build</h2>
+<h2 id="onboarding">4. Onboarding a club</h2>
+<p class="answer">A club counts as onboarded when it has at least one weekly programme live and its first paid bookings on peakst8.</p>
+<div class="stages">
+  <div><span class="lbl">1 · Shortlist and call</span><b>Pick the club</b><p>Shoumik picks a HYROX gym or run club and walks the founder through peakst8.</p></div>
+  <div><span class="lbl">2 · Set up</span><b>Club and sessions live</b><p>The club, its hosts and its weekly sessions go live. Until recurring sessions ship, each date is its own training event, named to join a programme later.</p></div>
+  <div><span class="lbl">3 · First bookings</span><b>Members book on peakst8</b><p>The club shares its programme link; the first sessions are booked and paid on peakst8.</p></div>
+  <div><span class="lbl">4 · Membership</span><b>Monthly plan</b><p>Pilot clubs offer Gold, Silver and Bronze plans once memberships are live.</p></div>
+  <div><span class="lbl">5 · Weekly check-in</span><b>Bookings, members, payout</b><p>Shoumik reviews the week with the club and fixes what got in the way.</p></div>
+</div>
+<p><b>First wave:</b> 10 founding HYROX gyms (the memo's first 30 days) and two run clubs for the membership pilot.</p>
+
+<h2 id="what">5. What we build to make onboarding easy</h2>
 <p class="answer">A leaner cut of Shoumik's spec, plus the membership pilot.</p>
 <h3>Recurring sessions</h3>
 <ol>
@@ -153,7 +164,7 @@ svg text{font-family:Figtree,system-ui,sans-serif}
 <p><b>Cut from the spec for now:</b> daily and monthly schedules, the daily rolling-window job (dates are made up front), series coupons, programme reports, the gym map. <b>Cut from memberships for now:</b> perks, the brand wall, guest passes, discount codes.</p>
 <p><b>Why they fit:</b> the membership code counts one booking per session, which is exactly what recurring sessions create. Build sessions first.</p>
 
-<h2 id="plan">5. Plan and estimate</h2>
+<h2 id="plan">6. Plan and estimate</h2>
 <p class="answer">About 60–65 hours for one full-stack developer using Claude: recurring sessions live in week 1, memberships live in week 2.</p>
 <div class="tbl"><table>
   <thead><tr><th>Work</th><th>When</th><th>Hours</th></tr></thead>
@@ -173,15 +184,15 @@ svg text{font-family:Figtree,system-ui,sans-serif}
 </table></div>
 <p>Week 1 is 19–25 Nov, week 2 is 26 Nov–2 Dec. Claude speeds up the code; the slow parts are testing payouts and renewals, and Razorpay and WhatsApp approvals.</p>
 
-<h2 id="owner">6. Owner</h2>
-<p class="answer">Shoumik owns this end to end, from code to clubs.</p>
+<h2 id="owner">7. Owner</h2>
+<p class="answer">Shoumik owns onboarding end to end, from the first club call to the code it needs.</p>
 <ul>
-  <li><b>Build:</b> backend, web and the app where needed, shipped to production.</li>
   <li><b>Onboard:</b> talks to HYROX gyms and run clubs, sets up their programmes and plans, and gets their first sessions booked and members signed up.</li>
+  <li><b>Build:</b> backend, web and the app where needed, shipped to production.</li>
   <li><b>Report:</b> a weekly update to Arvind on clubs live, sessions booked and members.</li>
 </ul>
 
-<h2 id="checklist">7. Next steps and checklist</h2>
+<h2 id="checklist">8. Next steps and checklist</h2>
 <div class="tbl"><table>
   <thead><tr><th>Step</th><th>Who</th><th>By</th></tr></thead>
   <tbody>
@@ -205,7 +216,7 @@ svg text{font-family:Figtree,system-ui,sans-serif}
   <li>A test membership renews, sends its reminder, applies at checkout and shows in the weekly payout.</li>
 </ul>
 
-<h2 id="decisions">8. Open questions and decisions</h2>
+<h2 id="decisions">9. Open questions and decisions</h2>
 <div class="tbl"><table>
   <thead><tr><th>Question</th><th>Owner</th><th>Decision</th></tr></thead>
   <tbody>
@@ -222,10 +233,10 @@ svg text{font-family:Figtree,system-ui,sans-serif}
 </article>
 </main>
 
-<footer>peakst8 · internal product note, 18 Nov 2026 · <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/hyrox-training-clubs">Source</a> · Written from the <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/TEMPLATE.md">product note template</a></footer>
+<footer>peakst8 · internal product note, 18 Nov 2026 · <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/onboarding-clubs">Source</a> · Written from the <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/TEMPLATE.md">product note template</a></footer>
 </div>
 <script>
-(function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='hyrox-training-clubs'});if(!n)return;
+(function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='onboarding-clubs'});if(!n)return;
 var st=document.getElementById('status');st.innerHTML='<span>Status</span><b></b><span></span><span></span>';st.children[1].textContent=n.status;st.children[2].textContent=n.next?'Next: '+n.next:'';st.children[3].textContent='Updated '+n.updated+(n.owner?' · '+n.owner:'')}).catch(function(){})})();
 </script>
 </body>
