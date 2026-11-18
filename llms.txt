@@ -31,4 +31,10 @@
 - [Product note](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/): board summary, problem, Road to Cubbon Classic programme and scoring, November plan, release checklist, onboarding the organiser, metrics, what carries over from Yoska, risks, open questions
 - [Product screens](https://peakst8-basecamp.github.io/product-notes/athlete-os-cubbon-classic/prototype/): organiser dashboard (event home, registration and embed, programme builder, missions, leaderboards, rewards, nudges, clubs, insights) and runner app screens
 
+## peakst8 HYROX Training Clubs
+
+> HYROX Training Clubs (HTC), run clubs and other training clubs list their weekly sessions on peakst8 as one programme and sell monthly memberships. Each session date stays its own event, so booking, checkout, tickets and payouts work as today. Owned end to end by Shoumik, from build to club onboarding.
+
+- [Product note](https://peakst8-basecamp.github.io/product-notes/hyrox-training-clubs/): sources, the HYROX 365 opportunity in India, parity with what peakst8 runs today, what we build, two-week plan and estimate, owner, checklist, open questions
+
 - [Status of every note](https://peakst8-basecamp.github.io/product-notes/notes.json)

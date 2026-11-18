@@ -186,6 +186,52 @@
         "Engagement layer: missions, leaderboards, rewards",
         "Programme from Nithin and a brand backing rewards"
       ]
+    },
+    {
+      "id": "hyrox-training-clubs",
+      "title": "peakst8 HYROX Training Clubs",
+      "folder": "hyrox-training-clubs/",
+      "status": "Scoping",
+      "next": "Shoumik confirms the estimate; first 10 founding gyms shortlisted",
+      "owner": "Shoumik",
+      "updated": "2026-11-18",
+      "summary": "HYROX Training Clubs and run clubs list weekly sessions as one programme and sell monthly memberships. Built on what peakst8 already runs: about 60–65 hours over two weeks, owned end to end by Shoumik.",
+      "links": {
+        "Product note": "hyrox-training-clubs/",
+        "Arvind's memo": "https://claude.ai/artifact/X94okaXab5KP2pjErztato",
+        "App prototype": "https://claude.ai/artifact/JsuvSreB1iYxb4kXRXM2y6",
+        "Tech spec (Shoumik)": "https://claude.ai/artifact/NyYUbp9fRHPM9yWNBe7uzt"
+      },
+      "milestones": [
+        {
+          "name": "Scope and estimate confirmed",
+          "date": "2026-11-19",
+          "status": "todo"
+        },
+        {
+          "name": "Recurring sessions live; first five clubs onboarded",
+          "date": "2026-11-25",
+          "status": "todo"
+        },
+        {
+          "name": "Membership pilot live with two clubs",
+          "date": "2026-12-02",
+          "status": "todo"
+        }
+      ],
+      "kind": "Product feature",
+      "have": [
+        "Opportunity memo and app prototype (Arvind)",
+        "Event Series tech spec (Shoumik)",
+        "Booking, checkout, tickets, payouts and leaderboards live",
+        "Membership backend code (checked, not merged)"
+      ],
+      "notYet": [
+        "Recurring sessions and programme pages",
+        "Memberships live for any club",
+        "Founding gyms onboarded",
+        "Gym map and HYROX training plans"
+      ]
     }
   ],
   "_kinds": "kind is \"Product feature\" or \"Design partner\". have / notYet are short plain lists of what exists today and what does not; release.ps8.in shows them."
