@@ -7,7 +7,7 @@
 | For | Open |
 | --- | --- |
 | Anyone | This page |
-| Engineers and designers | [Product note](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/): how it works, SEO and AEO requirements, scope, timeline · [Code](code/) |
+| Engineers and designers | [Product note](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/): how it works, SEO and AEO requirements, scope, timeline · [User experience](USER-EXPERIENCE.md): no-code install, the release note we ship against · [Code](code/) |
 | Designers | [Product screens*](https://peakst8-basecamp.github.io/product-notes/embedded-ticketing/prototype/): 17 V1 screens |
 
 \* The screens are a proposal to capture the idea. Rebuild them in our design language.
@@ -30,9 +30,13 @@ Community fitness clubs and races in Indian metros that run paid events, have a 
 
 Cubbon Classic has registration open on KonfHub today and has offered to move it if we ship. Every week we wait, more runners sign up elsewhere.
 
+## User experience (19 Nov 2026)
+
+Organisers never touch code. They paste their website link, and peakst8 installs the ticket bar, sends it to their developer, or gives them one line with the steps for their site builder. Every install is checked on the live page. The full spec, including the release note we publish when it ships, is in [USER-EXPERIENCE.md](USER-EXPERIENCE.md). Until then, send organisers the help doc [release.ps8.in/#website-tickets](https://release.ps8.in/#website-tickets), never the npm link.
+
 ## Goals
 
-1. Organisers go live on their own site in under 10 minutes, with one snippet.
+1. Organisers go live on their own site without touching code: peakst8 installs the ticket bar, or they paste one line in under 10 minutes. See [User experience](USER-EXPERIENCE.md).
 2. Cubbon Classic leaves KonfHub by 20 Nov without losing a single registration.
 3. Bookings through Embed show up in the organiser's own analytics.
 4. Event pages rank on Google and get quoted by AI answer engines (V1 full scope).

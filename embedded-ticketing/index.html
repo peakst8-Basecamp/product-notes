@@ -90,10 +90,22 @@ footer a{color:var(--ink-2)}
   <div class="facts"><span>ICP · community fitness clubs</span><span>SEO + AEO by default</span><span>Live in &lt; 10 min</span><span>Pilot live · 30 Nov 2026</span></div>
   <div class="status" id="status" aria-live="polite"><span>Status</span><b>Scoping</b><span>Next: Scope lock on 30 Oct 2026</span></div>
   <div class="ms" id="ms"></div>
-  <nav class="toc" aria-label="Sections"><a href="#update">9 Nov update</a><a href="#icp">ICP</a><a href="#problem">Problem</a><a href="#case">Case study</a><a href="#scale">Launch → scale</a><a href="#seo-aeo">SEO + AEO</a><a href="#how">How it works</a><a href="#scope">Scope</a><a href="#faq">FAQ</a><a href="#timeline">Timeline</a><a href="#open">Open questions</a><a href="prototype/" style="background:var(--ink);color:#fff">Prototype →</a></nav>
+  <nav class="toc" aria-label="Sections"><a href="#ux">User experience</a><a href="#update">9 Nov update</a><a href="#icp">ICP</a><a href="#problem">Problem</a><a href="#case">Case study</a><a href="#scale">Launch → scale</a><a href="#seo-aeo">SEO + AEO</a><a href="#how">How it works</a><a href="#scope">Scope</a><a href="#faq">FAQ</a><a href="#timeline">Timeline</a><a href="#open">Open questions</a><a href="prototype/" style="background:var(--ink);color:#fff">Prototype →</a></nav>
 </section>
 
 <article class="pr">
+
+<h2 id="ux">User experience, 19 Nov 2026: no code for organisers</h2>
+<p class="answer">Organisers paste their website link, and peakst8 puts the ticket bar on their site, checks it's live and tells them.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Today</th><th>Target</th></tr></thead>
+  <tbody>
+    <tr><td>An npm link and a script shared on WhatsApp</td><td>The <a href="https://release.ps8.in/#website-tickets">help doc</a> is the only link we send</td></tr>
+    <tr><td>Website Embed shows a switch, a Base Url and an Event Id</td><td>The tab asks for the organiser's page, recognises the site builder and offers: Let peakst8 do it, Send it to my developer, Copy the code</td></tr>
+    <tr><td>Nobody checks the install</td><td>peakst8 checks the live page, shows <b>Live on yoursite.com</b> and emails if the ticket bar disappears</td></tr>
+  </tbody>
+</table></div>
+<p>Full spec, with the tab state by state, messages, phases and the release note we ship against: <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/embedded-ticketing/USER-EXPERIENCE.md">USER-EXPERIENCE.md</a>.</p>
 
 <h2 id="update">Update, 9 Nov 2026: Cubbon Classic goes first</h2>
 <p class="answer">Cubbon Classic 10K moves its registration off KonfHub by <b>20 Nov</b>, ahead of the other pilots. V1 grows to cover what a race needs on day one.</p>

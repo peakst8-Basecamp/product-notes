@@ -19,11 +19,12 @@
       "status": "In build",
       "next": "Cubbon Classic live on its own site by 20 Nov 2026",
       "owner": "Arvind",
-      "updated": "2026-11-09",
+      "updated": "2026-11-19",
       "summary": "Clubs and races sell entries on their own website with peakst8 checkout. Now includes early-bird tiers, bulk group codes and import from KonfHub. Design partners: Cubbon Classic 10K (first), Find Your Fit, Sisters in Sweat.",
       "links": {
         "Product note": "embedded-ticketing/",
         "Product screens*": "embedded-ticketing/prototype/",
+        "User experience": "https://github.com/peakst8-Basecamp/product-notes/blob/main/embedded-ticketing/USER-EXPERIENCE.md",
         "Code": "https://github.com/peakst8-Basecamp/product-notes/tree/main/embedded-ticketing/code"
       },
       "milestones": [
@@ -61,7 +62,8 @@
       "kind": "Product feature",
       "have": [
         "Product note and 17-screen prototype",
-        "Code: race-site loader, early-bird tiers, bulk group codes, KonfHub import (checked, not merged)"
+        "Code: race-site loader, early-bird tiers, bulk group codes, KonfHub import (checked, not merged)",
+        "User experience spec: no-code install, and help doc on release.ps8.in"
       ],
       "notYet": [
         "Live for any organiser",
