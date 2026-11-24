@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>peakst8 Custom Emails</title>
+<meta name="description" content="peakst8 Custom Emails: a club sends its registration emails under its own sender name and address on ps8.in, and replaces the subject and design of each email. What ships, how it works, the rules, the variables, the go-live checklist and open questions.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/custom-emails/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="peakst8 Custom Emails: product note">
+<meta property="og:description" content="Clubs send registration emails under their own name and in their own design.">
+<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/custom-emails/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"peakst8 Custom Emails: product note","datePublished":"2026-11-24","dateModified":"2026-11-24","author":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"about":"Club-branded sender and custom templates for registration emails"}
+</script>
+<style>
+:root{color-scheme:light;--bg:#fff;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148;--ok:#17945a;
+--serif:"Newsreader",Georgia,serif;--sans:"Figtree",system-ui,-apple-system,sans-serif;--mono:"Chivo Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.pg{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:24px 96px}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wm{font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.hero{text-align:center;padding-block:64px 16px;display:grid;gap:20px;justify-items:center}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6.6vw,76px);line-height:1;letter-spacing:-.025em;margin:0;max-width:16ch;text-wrap:balance}
+.hero p{margin:0;max-width:60ch;color:var(--ink-2);font-size:17px;line-height:1.5;text-wrap:pretty}
+.facts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.facts span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:7px 11px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding-top:8px}
+nav.toc a{font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--fill);border-radius:999px;padding:8px 14px}
+nav.toc a:hover{color:var(--ink)}
+.pr{max-width:820px;margin:0 auto;display:grid;gap:16px;padding-top:24px}
+.pr h2{margin:40px 0 0;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1;letter-spacing:-.015em;scroll-margin-top:16px}
+.pr h3{margin:8px 0 0;font-size:16px;font-weight:700}
+.pr p,.pr li,.pr dd{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.6}
+.pr b{color:var(--ink)}
+.pr a{color:var(--ink)}
+.pr ul,.pr ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.pr code{font-family:var(--mono);font-size:12.5px;background:var(--fill);border-radius:6px;padding:1px 5px;color:var(--ink)}
+.pr .answer{font-size:18px;line-height:1.55;color:var(--ink)}
+.tbl{overflow-x:auto;border-radius:22px;background:var(--fill)}
+.tbl table{width:100%;min-width:620px;border-collapse:collapse;font-size:14px;line-height:1.45}
+.tbl th{text-align:left;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:16px 16px 10px}
+.tbl td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:700}
+.tbl code{background:#fff}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
+.stages div{background:var(--fill);border-radius:22px;padding:18px;display:grid;gap:8px;align-content:start}
+.stages .lbl{color:var(--signal)}
+.stages b{font-size:17px}
+.stages p{font-size:14.5px}
+figure{margin:0;padding:20px;border-radius:22px;background:var(--fill);overflow-x:auto}
+figure svg{width:100%;min-width:640px;height:auto;display:block}
+figcaption{margin-top:10px;font-size:13px;color:var(--ink-3);text-align:center}
+pre{margin:0;padding:18px 20px;border-radius:22px;background:var(--ink);color:#e9e9ec;font-family:var(--mono);font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre}
+pre .c{color:#8b8c92}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns span{font-size:13px;font-weight:700;border-radius:999px;padding:9px 14px}
+.b1{background:var(--ink);color:#fff}.b2{background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}.b3{background:#fff;color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line)}
+dl.faq{margin:0;display:grid;gap:4px}
+dl.faq dt{font-weight:700;font-size:16px;margin-top:14px}
+footer{margin-top:64px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.6}
+footer a{color:var(--ink-2)}
+.status{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:13.5px;color:var(--ink-2)}
+.status b{background:var(--ink);color:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px}
+svg text{font-family:Figtree,system-ui,sans-serif}
+
+.who{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.who div{background:var(--fill);border-radius:22px;padding:18px;display:grid;gap:8px;align-content:start}
+.who .lbl{color:var(--signal)}
+.who b{font-size:17px}
+.who p{font-size:14.5px}
+.decided{font-weight:700;color:#17945a}
+.mail{background:#fff;border-radius:14px;padding:14px 16px;display:grid;gap:4px;box-shadow:inset 0 0 0 1px var(--line)}
+.mail .from{font-weight:700;color:var(--ink);font-size:15px}
+.mail .addr{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.mail .subj{font-size:14.5px;color:var(--ink-2)}
+</style>
+</head>
+<body>
+<div class="pg">
+<header class="top"><a class="wm" href="../">peakst8</a><span class="lbl">Product note · 24 Nov 2026</span></header>
+
+<main>
+<section class="hero">
+  <span class="lbl">peakst8 Custom Emails</span>
+  <h1>The club's name on every email.</h1>
+  <p>A club sends its registration emails under its own sender name and address on <b>ps8.in</b>, peakst8's separate domain for club mail, and replaces the subject and design of each email its athletes receive while they register. An email the club has not customised keeps going out in the peakst8 design.</p>
+  <div class="facts"><span>Owner: Jithin</span><span>Club settings · Emails tab</span><span>2 emails available · 7 incomplete</span><span>Default stays peakst8</span></div>
+  <div class="status" id="status" aria-live="polite"><span>Status</span><b>In build</b><span>Next: add Ticket Confirmation to the list and settle the open questions</span></div>
+  <nav class="toc" aria-label="Sections"><a href="#problem">Problem</a><a href="#what">What ships</a><a href="#emails">Emails and variables</a><a href="#how">How it works</a><a href="#rules">Rules</a><a href="#domain">Sending domain</a><a href="#consent">Consent and opt-out</a><a href="#journeys">Journeys</a><a href="#design">Design brief</a><a href="#checklist">Checklist</a><a href="#risks">Risks</a><a href="#decisions">Decisions</a></nav>
+</section>
+
+<article class="pr">
+
+<h2 id="problem">1. The problem</h2>
+<p class="answer">An athlete registers with a club and then hears from peakst8. The club's brand disappears at the moment the athlete commits.</p>
+<div class="who">
+  <div><span class="lbl">Today</span>
+    <div class="mail"><span class="from">peakst8 Support</span><span class="addr">support@peakst8.club</span><span class="subj">Your spot is confirmed</span></div>
+    <p>Every club, every event: the same sender, the same wording, the same design. A club that wants something different asks an engineer.</p></div>
+  <div><span class="lbl">With custom emails</span>
+    <div class="mail"><span class="from">Cubbon Run Club</span><span class="addr">cubbonrunclub@ps8.in</span><span class="subj">You're in for Sunday Long Run 🎟️</span></div>
+    <p>The club sets the sender once and designs each email itself, from its own settings. The club name here is an example.</p></div>
+</div>
+<p>We have already built one-off branded emails for single events by hand. Each costs engineering time and leaves a special case in the code. This replaces that with something a host does themselves.</p>
+
+<h2 id="what">2. What ships</h2>
+<p class="answer">A new Emails tab in the club's settings, with a sender and a list of emails the club can redesign.</p>
+<div class="stages">
+  <div><span class="lbl">1 · Sender name</span><b>Who it's from</b><p>The name athletes see in their inbox, for example "Cubbon Run Club".</p></div>
+  <div><span class="lbl">2 · Sender address</span><b>Before the @</b><p>The host picks the first part. The address is always on <code>ps8.in</code>.</p></div>
+  <div><span class="lbl">3 · Email list</span><b>One per moment</b><p>Each email peakst8 sends during a registration, marked Default or Custom.</p></div>
+  <div><span class="lbl">4 · Custom HTML</span><b>Subject and design</b><p>The host pastes their own HTML and, if they want, their own subject line.</p></div>
+  <div><span class="lbl">5 · Preview and reset</span><b>See it, undo it</b><p>A preview of the design, and one click back to the peakst8 default.</p></div>
+</div>
+<p><b>Not in this version:</b> sending from the club's own domain, a drag-and-drop builder, a different design per event, marketing emails, and sending a test email to yourself.</p>
+
+<h2 id="emails">3. Emails and variables</h2>
+<p class="answer">Two emails are available in V1 and seven are incomplete. Each available email has a set of variables the host places in the HTML, and peakst8 fills them in for each athlete.</p>
+<h3>Available</h3>
+<div class="tbl"><table>
+  <thead><tr><th>Email</th><th>When the athlete gets it</th><th>Default subject</th><th>Default design</th></tr></thead>
+  <tbody>
+    <tr><td>Event Registration OTP</td><td>They enter their email on the club's registration form and need a code to continue</td><td><code>OTP - Use {{ otp }} to Enter peakst8 🔓</code></td><td><code>otp_email.html</code></td></tr>
+    <tr><td>Ticket Confirmation</td><td>Their spot is confirmed: a free registration, a successful payment, a squad member joining, or a host approving a free request</td><td><code>Your spot is confirmed</code></td><td><code>event-registration-confirmation.html</code></td></tr>
+  </tbody>
+</table></div>
+<h3>Incomplete</h3>
+<p>The club cannot customise these yet. They still go out in the peakst8 design, from the peakst8 sender. Their variables are not defined, and the order they are built in is not decided.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Email</th><th>When the athlete gets it</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Request Received</td><td>They ask to join an approval-based event and are waiting for the host's decision. The general version of this email is switched off today.</td><td>Incomplete</td></tr>
+    <tr><td>Request Approved</td><td>A host approves their request and they need to pay to confirm their spot</td><td>Incomplete</td></tr>
+    <tr><td>Request Declined</td><td>A host declines their request</td><td>Incomplete</td></tr>
+    <tr><td>Incomplete Registration Reminder</td><td>They started the registration form without logging in and did not finish it</td><td>Incomplete</td></tr>
+    <tr><td>Abandoned Cart</td><td>They reached payment and their held spot expired before they paid</td><td>Incomplete</td></tr>
+    <tr><td>Waiver Copy</td><td>Their spot is confirmed and they get a PDF copy of the waiver they accepted</td><td>Incomplete</td></tr>
+    <tr><td>Invoice</td><td>They paid and their tax invoice is ready</td><td>Incomplete</td></tr>
+  </tbody>
+</table></div>
+<h3>Variables for the available emails</h3>
+<div class="tbl"><table>
+  <thead><tr><th>Email</th><th>Variable</th><th>What it becomes</th></tr></thead>
+  <tbody>
+    <tr><td>OTP</td><td><code>{{ otp }}</code></td><td>The login code</td></tr>
+    <tr><td>OTP</td><td><code>{{ first_name }}</code></td><td>The athlete's first name</td></tr>
+    <tr><td>OTP</td><td><code>{{ expire_date_str }}</code></td><td>When the code expires, in IST</td></tr>
+    <tr><td>Ticket</td><td><code>{{ athleteName }}</code></td><td>The athlete's name</td></tr>
+    <tr><td>Ticket</td><td><code>{{ eventName }}</code>, <code>{{ clubName }}</code>, <code>{{ categoryName }}</code></td><td>The event, the club and the pass they booked</td></tr>
+    <tr><td>Ticket</td><td><code>{{ locationName }}</code></td><td>The venue</td></tr>
+    <tr><td>Ticket</td><td><code>{{ formattedStartDate }}</code>, <code>{{ formattedEndDate }}</code></td><td>Start and end, date and time</td></tr>
+    <tr><td>Ticket</td><td><code>{{ whatsappGroupButtonHtml }}</code></td><td>A "Join WhatsApp Group" button, or nothing when the pass has no group</td></tr>
+    <tr><td>Ticket</td><td><code>{{ qrCodeUrl }}</code></td><td>The address of the ticket's QR image, for use as an image source. A squad member gets the captain's.</td></tr>
+  </tbody>
+</table></div>
+<p>The same variables work in the subject line. A design uses only the variables it mentions, so an optional one can be left out: a Ticket Confirmation without <code>{{ qrCodeUrl }}</code> is sent without the QR code.</p>
+<p><b>Required variables are set per email type</b> when the peakst8 team adds it to the list. All three OTP variables are required. Which Ticket Confirmation variables are required is an open decision below.</p>
+
+<h2 id="how">4. How it works</h2>
+<p class="answer">At send time peakst8 looks up the club that owns the event and uses whatever the club has set, piece by piece. Anything not set falls back to the peakst8 default.</p>
+<ol>
+  <li><b>A registration moment happens</b> for an event: a code is requested, or a ticket is issued.</li>
+  <li><b>peakst8 finds the owning club's email settings</b> and its newest design for that email type.</li>
+  <li><b>Each piece is chosen on its own:</b> sender name, sender address, subject, HTML. A club with a sender but no design gets its own sender on the peakst8 design. A design saved with a blank subject gets the default subject.</li>
+  <li><b>Variables are filled in</b> for that athlete, in the subject and the body.</li>
+  <li><b>The email joins the same send queue as every other peakst8 email</b>, so pacing, retries and the send log are unchanged.</li>
+</ol>
+<p>If the lookup of the club's settings fails, the email goes out in the peakst8 design. A branding problem never holds up a code or a ticket.</p>
+<h3>Where it lives</h3>
+<div class="tbl"><table>
+  <thead><tr><th>Piece</th><th>Where</th></tr></thead>
+  <tbody>
+    <tr><td>Screens</td><td><code>peakst8-frontend</code>: <code>components/club/manage/</code> (<code>EmailTemplateEditor</code>, <code>EmailTemplatePreview</code>)</td></tr>
+    <tr><td>Endpoints</td><td><code>GET</code> and <code>PUT /club/:clubId/email-system</code>; <code>PUT</code> and <code>DELETE /club/:clubId/email-system/templates/:emailTemplateMasterId</code>. Hosts of the club only.</td></tr>
+    <tr><td>Data</td><td><code>ClubEmailSystem</code> (sender), <code>EmailTemplate</code> (a club's design), <code>EmailTemplateMaster</code> (the list of email types and their required variables)</td></tr>
+    <tr><td>Defaults</td><td><code>EMAIL_TEMPLATE_DEFAULTS</code> in <code>peakst8-backend/src/lib/constants.ts</code>, with the HTML in <code>templates/</code></td></tr>
+    <tr><td>Technical notes</td><td><code>peakst8-backend/AGENTS.md</code>, "Outbound Email Outbox"</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="rules">5. Rules</h2>
+<ul>
+  <li><b>The domain is fixed</b> (<code>ps8.in</code> once the move ships; <code>peakst8.club</code> in the current build). The host types only the part before the <code>@</code>. It may contain letters, digits, <code>.</code>, <code>-</code> and <code>_</code>, is stored in lower case, and is at most 64 characters. The sender name is at most 100 characters.</li>
+  <li><b>Required variables are enforced on save.</b> A design missing one is refused, and the message names the missing variables.</li>
+  <li><b>A subject is optional</b> and at most 200 characters. Blank means the default subject.</li>
+  <li><b>One design per email type per club.</b> It applies to every event of that club. Saving again replaces it.</li>
+  <li><b>Reset deletes the club's design</b> for that email type, and the default is sent from the next email on.</li>
+  <li><b>The HTML is stored as the host wrote it.</b> It is only ever mailed, and the preview renders it in a locked frame with scripts and forms switched off.</li>
+  <li><b>The preview shows variables as written</b>, for example <code>{{ otp }}</code>, the same for every email. No sample values.</li>
+  <li><b>Only a host who belongs to the club</b> can see or change its email settings.</li>
+  <li><b>Campaign emails are not affected.</b> founders peak and Project 3 events keep their own confirmation designs.</li>
+</ul>
+
+<h2 id="domain">6. A separate domain for club mail (planned)</h2>
+<p class="answer">Not built yet. Today a club's sender address is on <code>peakst8.club</code>, the domain peakst8's own emails use. Before clubs go live it moves to <code>ps8.in</code>.</p>
+<div class="who">
+  <div><span class="lbl">Default emails</span>
+    <div class="mail"><span class="from">peakst8 Support</span><span class="addr">support@peakst8.club</span></div>
+    <p>A club that has customised nothing. Unchanged.</p></div>
+  <div><span class="lbl">Custom emails</span>
+    <div class="mail"><span class="from">Cubbon Run Club</span><span class="addr">cubbonrunclub@ps8.in</span></div>
+    <p>A club's own sender and designs go out from the separate domain.</p></div>
+</div>
+<p><b>Why:</b> inbox providers such as Gmail judge a sending domain by the mail that comes from it. If a club's design or wording gets marked as spam, that counts against the whole domain. Keeping club mail on <code>ps8.in</code> means it cannot hurt delivery of peakst8's own login codes and tickets.</p>
+<h3>Build notes</h3>
+<ul>
+  <li><b>Domain setup:</b> verify <code>ps8.in</code> for sending with the email provider (SES), with DKIM, SPF and a DMARC record. Until that is done, mail from it is rejected or lands in spam.</li>
+  <li><b>Code:</b> the club sender is built on <code>ORGANIZATION_EMAIL_DOMAIN</code> (<code>peakst8.club</code>) today. Add a separate constant for the club mail domain and use it where the club's address is saved; the default sender keeps the existing one.</li>
+  <li><b>Sending:</b> the mail server login does not change, only the From header. Confirm the provider accepts <code>ps8.in</code> as a From domain on that login.</li>
+  <li><b>Existing rows:</b> sender addresses already saved on <code>peakst8.club</code> are moved to <code>ps8.in</code>, keeping the part before the <code>@</code>.</li>
+  <li><b>Screens:</b> the address field's fixed suffix becomes <code>@ps8.in</code>.</li>
+  <li><b>Warm-up:</b> a new domain has no track record. Start with low volumes and check where test mail lands in Gmail and Outlook.</li>
+</ul>
+<p><b>Open:</b> a club that set its own sender but kept the peakst8 design. Proposed: it sends from <code>ps8.in</code>, since the sender is the club.</p>
+
+<h2 id="consent">7. Consent and opt-out (planned)</h2>
+<p class="answer">Not built yet. Once clubs write their own emails, we need to show that an athlete agreed to receive them and can stop them. The deadline is the Indian data protection law's consent rules, which apply from about 13 May 2027.</p>
+<div class="stages">
+  <div><span class="lbl">1 · Opt-in checkbox</span><b>On the registration form</b><p>Unticked by default, apart from the terms and waiver tick. Says who will email the athlete (the club and peakst8) and about what.</p></div>
+  <div><span class="lbl">2 · Saved for good</span><b>Who agreed to what</b><p>When the athlete ticked it, for which club, and the wording they saw.</p></div>
+  <div><span class="lbl">3 · Opt-out button</span><b>In the emails</b><p>One click, no login, effective straight away. As easy as opting in.</p></div>
+  <div><span class="lbl">4 · Respected at send</span><b>No optional mail</b><p>An athlete who opted out stops getting that club's optional emails.</p></div>
+</div>
+<h3>The law</h3>
+<ul>
+  <li>The <a href="https://www.indiacode.nic.in/bitstream/123456789/22037/2/a2023-22.pdf">Digital Personal Data Protection Act, 2023</a> (DPDP Act), section 6: consent must be free, specific, informed, unconditional and unambiguous, given by a clear affirmative action. A pre-ticked box or silence does not count.</li>
+  <li>The same section lets a person withdraw consent at any time, says withdrawing must be as easy as giving it, and requires us to stop within a reasonable time.</li>
+  <li>The DPDP Rules were notified on 13 November 2025. The consent obligations start applying 18 months later, around <b>13 May 2027</b> (<a href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/nov/doc20251117695301.pdf">government notification</a>).</li>
+  <li>India has no email-specific law like the US CAN-SPAM Act, and the Act does not mention email or unsubscribe links. An unsubscribe button is the practical way to meet the "as easy to withdraw" rule (<a href="https://chambers.com/articles/s-r-data-yes-means-yes-managing-consent-under-india-s-new-data-protection-law">commentary</a>).</li>
+</ul>
+<p>This is our reading of the Act and of published commentary, not legal advice. A lawyer should confirm it before we build.</p>
+<h3>Essential and optional emails</h3>
+<div class="tbl"><table>
+  <thead><tr><th>Kind</th><th>Emails</th><th>Opt-out</th></tr></thead>
+  <tbody>
+    <tr><td>Essential</td><td>Needed to complete the registration the athlete asked for: Event Registration OTP, Ticket Confirmation, Request Received, Request Approved, Request Declined, Waiver Copy, Invoice</td><td>None. An athlete who opts out still gets their code and their ticket.</td></tr>
+    <tr><td>Optional</td><td>Reminders and promotion: Incomplete Registration Reminder, Abandoned Cart, and any future announcements from the club</td><td>Sent only with opt-in; carries the opt-out button</td></tr>
+  </tbody>
+</table></div>
+<p>Which emails count as essential is our proposal, to be confirmed with a lawyer.</p>
+<h3>Build notes (proposal)</h3>
+<ul>
+  <li><b>Record every change:</b> each opt-in and opt-out is saved in the database as a new row and never edited or deleted by the product, so we can answer a complaint or a regulator with exactly what was agreed and when. See the table below.</li>
+  <li><b>Registration form:</b> a new checkbox, separate from <code>acceptedParticipationTermsAndWaiver</code>, stored with a timestamp and the consent wording shown.</li>
+  <li><b>Opt-out link:</b> a signed link per athlete and club, so it works without a login and cannot be guessed. It opens a page that confirms the opt-out and offers to undo it.</li>
+  <li><b>Custom designs:</b> the opt-out link becomes a required variable for optional emails, checked on save like the others, so a club's design cannot leave it out.</li>
+  <li><b>Sending:</b> the check happens where the email is queued, so every optional email obeys it without each caller remembering to.</li>
+  <li><b>Hosts:</b> an opted-out athlete is still registered and still appears in the club's registration list.</li>
+</ul>
+<h3>What we save (proposal)</h3>
+<p>One table of consent events, written to on every opt-in and opt-out. The athlete's current state is their latest row for that club.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Field</th><th>Opt-in</th><th>Opt-out</th></tr></thead>
+  <tbody>
+    <tr><td>Athlete</td><td>User id, and the email address as it was at that moment</td><td>Same</td></tr>
+    <tr><td>Club</td><td>The club the consent is for</td><td>Same</td></tr>
+    <tr><td>Action</td><td>Opted in, or asked and declined (box left unticked)</td><td>Opted out</td></tr>
+    <tr><td>When</td><td>Timestamp of the form submit</td><td>Timestamp of the click</td></tr>
+    <tr><td>Where</td><td>The event and registration whose form carried the checkbox</td><td>The email the button was clicked in (its outbound email id and type)</td></tr>
+    <tr><td>Wording</td><td>The exact checkbox text shown, or a version id pointing to it</td><td>Not applicable</td></tr>
+    <tr><td>Source</td><td>Registration form</td><td>Email button, or a settings page if one is added later</td></tr>
+  </tbody>
+</table></div>
+<ul>
+  <li><b>Append only:</b> no update or delete path in the code. A re-opt-in is a new row.</li>
+  <li><b>Declines are rows too,</b> so "never asked" and "asked and said no" are different.</li>
+  <li><b>Email kept as a snapshot,</b> because an athlete can change their address later and the record must show where the mail was going.</li>
+  <li><b>Retention and account deletion:</b> an open question for the lawyer. The record may need to outlive the account so we can prove the consent existed.</li>
+  <li><b>No IP address or device details</b> are proposed. Add them only if the lawyer asks for them, since they are personal data too.</li>
+</ul>
+
+<h2 id="journeys">8. Journeys and done criteria</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Journey</th><th>Done when</th></tr></thead>
+  <tbody>
+    <tr><td>A host sets the club's sender name and address</td><td>The next registration email for any of the club's events arrives from that name and address, still in the peakst8 design</td></tr>
+    <tr><td>A host pastes a design for an email</td><td>The preview shows it; saving is refused with the missing variables named when one is absent; the next athlete receives the club's version with their own details filled in</td></tr>
+    <tr><td>A host sets a custom subject with a variable</td><td>The athlete's subject line carries the real value</td></tr>
+    <tr><td>A host resets an email to the default</td><td>The email shows as Default and the next athlete receives the peakst8 design</td></tr>
+    <tr><td>Planned: an athlete ticks the opt-in while registering</td><td>A consent row is saved with the athlete, club, time, event and wording, and the club's optional emails reach them</td></tr>
+    <tr><td>Planned: an athlete clicks the opt-out button in an email</td><td>No login is asked for, the opt-out is confirmed on screen, an opt-out row is saved with the time and the email it came from, and no further optional email from that club is sent. Their code and ticket emails still arrive.</td></tr>
+    <tr><td>An athlete registers with a club that changed nothing</td><td>Both emails arrive exactly as they did before this feature</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="design">9. Design brief</h2>
+<p class="answer">The Emails tab is built and working. These are the states a designer should cover when refining it.</p>
+<ul>
+  <li><b>Sender:</b> name field, address field with a fixed <code>@ps8.in</code> suffix, saved state, and the error when the address has a character that is not allowed.</li>
+  <li><b>Email list:</b> each email's name, a one-line description of when it is sent, and a Default or Custom tag. The list will grow, so it should scan well at ten or more rows.</li>
+  <li><b>Editor:</b> Default / Custom HTML switch, subject field showing the default as placeholder, HTML field, the row of required variables, and the error naming missing variables.</li>
+  <li><b>Preview:</b> subject line above a white email frame, variables shown as written. A variable used as an image source, such as the QR code, shows as a broken image here; decide whether to draw a placeholder instead.</li>
+  <li><b>Reset:</b> a clear way back to the default, with a confirmation, since it deletes the club's design.</li>
+  <li><b>Empty and loading states</b> for a club that has never opened the tab.</li>
+</ul>
+
+<h2 id="checklist">10. Go-live checklist and testing</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Step</th><th>Who</th><th>State</th></tr></thead>
+  <tbody>
+    <tr><td>Sender and Event Registration OTP live for clubs</td><td>Jithin</td><td class="decided">Merged to main</td></tr>
+    <tr><td>Ticket Confirmation reads the club's sender and design</td><td>Jithin</td><td class="decided">Built</td></tr>
+    <tr><td>Database migration adding the Ticket Confirmation email type applied in each environment</td><td>Jithin</td><td>To do</td></tr>
+    <tr><td>Ticket Confirmation added to the list in each environment, with its name, description and required variables</td><td>Jithin</td><td>To do</td></tr>
+    <tr><td>Preview shows variables as written</td><td>Jithin</td><td class="decided">Built</td></tr>
+    <tr><td>Open questions below answered</td><td>Jithin</td><td>To do</td></tr>
+    <tr><td>Club mail moved to <code>ps8.in</code>: domain verified for sending, code and saved addresses switched</td><td>Jithin</td><td>Planned, before the first club</td></tr>
+    <tr><td>Consent and opt-out: lawyer's review, then build (before 13 May 2027)</td><td>Jithin</td><td>Planned</td></tr>
+    <tr><td>Short guide for hosts on writing email-safe HTML</td><td>To be assigned</td><td>To do</td></tr>
+  </tbody>
+</table></div>
+<h3>How we test</h3>
+<ul>
+  <li><b>On staging, with a test club:</b> set a sender, register for a free event and a paid event, and check both emails arrive from the club's sender.</li>
+  <li><b>Custom design:</b> save a design for each email, register again, and check every variable is filled in, in the subject and the body.</li>
+  <li><b>Guard:</b> try to save a design with a required variable removed and confirm it is refused.</li>
+  <li><b>Fallback:</b> reset to default and confirm the peakst8 design returns; register with a club that has no settings and confirm nothing changed.</li>
+  <li><b>Inboxes:</b> open each email in Gmail, Outlook and Apple Mail, on a phone and a laptop.</li>
+  <li><b>Squad:</b> confirm a squad member's confirmation uses the club's design and the captain's QR code.</li>
+</ul>
+
+<h2 id="risks">11. Risks</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>What we'll do</th></tr></thead>
+  <tbody>
+    <tr><td>A host's HTML looks broken in Gmail or Outlook</td><td>Medium</td><td>Medium</td><td>Preview in the editor, a short guide on email-safe HTML, and one-click reset</td></tr>
+    <tr><td>A custom email drops something essential</td><td>Low</td><td>High</td><td>Required variables are checked on save</td></tr>
+    <tr><td>Athletes reply to the club's address and nobody receives it</td><td>High</td><td>Medium</td><td>Decide where replies go before the first club goes live</td></tr>
+    <tr><td>A club picks an address that looks like peakst8's own, such as <code>support</code></td><td>Low</td><td>Medium</td><td>Decide whether to reserve peakst8's own addresses</td></tr>
+    <tr><td>A club puts promotion into an essential email, turning it into marketing the athlete cannot opt out of</td><td>Medium</td><td>High</td><td>Decide the rule with a lawyer, state it in the host guide, review designs if needed</td></tr>
+    <tr><td>We reach May 2027 without a record of who agreed to what</td><td>Medium</td><td>High</td><td>Save every opt-in and opt-out from the day the checkbox ships, not after</td></tr>
+    <tr><td>A consent record is edited or lost, so we cannot answer a complaint</td><td>Low</td><td>High</td><td>Rows are only ever added; no update or delete path in the code</td></tr>
+    <tr><td>One club's design or wording hurts delivery of peakst8's own emails</td><td>Low</td><td>High</td><td>Club mail moves to <code>ps8.in</code>, so it cannot damage <code>peakst8.club</code>. Still watch bounce and complaint rates per club.</td></tr>
+    <tr><td><code>ps8.in</code> is a new sending domain with no track record, so early club mail may land in spam</td><td>Medium</td><td>Medium</td><td>Set the domain up fully before any club uses it, start with low volumes, check where mail lands</td></tr>
+    <tr><td>Athletes do not recognise <code>ps8.in</code> and distrust the email</td><td>Medium</td><td>Low</td><td>The sender name is the club's own; mention peakst8 in the footer</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="decisions">12. Open questions and decisions</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Question</th><th>Owner</th><th>Decision</th></tr></thead>
+  <tbody>
+    <tr><td>1. Where do replies to a club's sender address go?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>2. Should peakst8's own address names be blocked for clubs? Today any name is accepted.</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>3. Which Ticket Confirmation variables are required in a custom design?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>4. Should the QR code be in the default Ticket Confirmation? It is available to custom designs but not in the default.</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>5. In what order are the seven incomplete emails built?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>A club with its own sender but the peakst8 design: <code>ps8.in</code> or <code>peakst8.club</code>?</td><td>Jithin</td><td>Open. Proposed: ps8.in</td></tr>
+    <tr><td>6. Does a lawyer agree with our reading of the DPDP Act, and with which emails are essential?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>How long do we keep opt-in and opt-out records, including after an account is deleted?</td><td>Jithin, with a lawyer</td><td>Open</td></tr>
+    <tr><td>7. Is the opt-in per club, or one for all of peakst8?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>8. Who is responsible for the athlete's data under the Act: peakst8, the club, or both?</td><td>Jithin, with a lawyer</td><td>Open</td></tr>
+    <tr><td>9. What do we do about athletes who registered before the checkbox existed?</td><td>Jithin, with a lawyer</td><td>Open</td></tr>
+    <tr><td>10. May a club's custom essential email carry promotional content?</td><td>Jithin, with a lawyer</td><td>Open</td></tr>
+    <tr><td>Preview shows variables as written, not sample values</td><td>Jithin</td><td class="decided">Decided, 24 Nov 2026</td></tr>
+    <tr><td>Custom emails go out from ps8.in; default emails stay on peakst8.club</td><td>Jithin</td><td class="decided">Decided, 24 Nov 2026</td></tr>
+    <tr><td>A club that customises nothing keeps the peakst8 design</td><td>Jithin</td><td class="decided">Decided</td></tr>
+  </tbody>
+</table></div>
+
+</article>
+</main>
+
+<footer>peakst8 · internal product note, 24 Nov 2026 · <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/custom-emails">Source</a> · Written from the <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/TEMPLATE.md">product note template</a></footer>
+</div>
+<script>
+(function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='custom-emails'});if(!n)return;
+var st=document.getElementById('status');st.innerHTML='<span>Status</span><b></b><span></span><span></span>';st.children[1].textContent=n.status;st.children[2].textContent=n.next?'Next: '+n.next:'';st.children[3].textContent='Updated '+n.updated+(n.owner?' · '+n.owner:'')}).catch(function(){})})();
+</script>
+</body>
+</html>
