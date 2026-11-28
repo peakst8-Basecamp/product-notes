@@ -234,6 +234,33 @@
         "Founding gyms onboarded",
         "Gym map and HYROX training plans"
       ]
+    },
+    {
+      "id": "passport",
+      "title": "peakst8 Passport",
+      "folder": "passport/",
+      "status": "Pilot",
+      "next": "HYROX Noida bookings, then payments in other currencies",
+      "owner": "Shravan",
+      "updated": "2026-11-28",
+      "summary": "An experience built around an event: athletes book the event ticket, stay, food, transport, recovery and add-ons in one go. First live: HYROX Noida. Multi-currency Razorpay checkout in build.",
+      "links": {
+        "Product note": "passport/",
+        "Figma design": "https://www.figma.com/design/TfoO40tw7pts5GQenTYzag/Athlete-Experience-Details?node-id=1029-6210&t=Ssur8zRQ8012HHyf-4",
+        "Discover packages (live)": "https://app.peakst8.club/events?tab=packages"
+      },
+      "milestones": [],
+      "kind": "Product feature",
+      "have": [
+        "Discover packages tab, Passport page and five-step booking live",
+        "HYROX Noida packages and add-ons",
+        "Waitlist for upcoming Passports"
+      ],
+      "notYet": [
+        "Paying in other currencies (backend in build, not merged)",
+        "Screens to create and edit Passports",
+        "Itinerary on the page, coupons, add-on limits"
+      ]
     }
   ],
   "_kinds": "kind is \"Product feature\" or \"Design partner\". have / notYet are short plain lists of what exists today and what does not; release.ps8.in shows them."

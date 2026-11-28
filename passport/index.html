@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>peakst8 Passport</title>
+<meta name="description" content="peakst8 Passport: an experience built around an event. Athletes book the event ticket, stay, food, transport, recovery and add-ons in one booking. What it is, what it solves, features, the booking flow, paying in other currencies through Razorpay, how it's built, gaps and open questions.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/passport/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="peakst8 Passport: product note">
+<meta property="og:description" content="The whole race week, in one booking: event ticket, stay, food, transport, recovery and add-ons.">
+<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/passport/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"peakst8 Passport: product note","datePublished":"2026-11-28","dateModified":"2026-11-28","author":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"about":"Packaged experiences around an event: ticket, stay, food, transport, recovery and add-ons, with multi-currency Razorpay checkout"}
+</script>
+<style>
+:root{color-scheme:light;--bg:#fff;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148;--ok:#17945a;
+--serif:"Newsreader",Georgia,serif;--sans:"Figtree",system-ui,-apple-system,sans-serif;--mono:"Chivo Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.pg{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:24px 96px}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wm{font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.hero{text-align:center;padding-block:64px 16px;display:grid;gap:20px;justify-items:center}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6.6vw,76px);line-height:1;letter-spacing:-.025em;margin:0;max-width:16ch;text-wrap:balance}
+.hero p{margin:0;max-width:60ch;color:var(--ink-2);font-size:17px;line-height:1.5;text-wrap:pretty}
+.facts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.facts span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:7px 11px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding-top:8px}
+nav.toc a{font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--fill);border-radius:999px;padding:8px 14px}
+nav.toc a:hover{color:var(--ink)}
+.pr{max-width:820px;margin:0 auto;display:grid;gap:16px;padding-top:24px}
+.pr h2{margin:40px 0 0;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1;letter-spacing:-.015em;scroll-margin-top:16px}
+.pr h3{margin:8px 0 0;font-size:16px;font-weight:700}
+.pr p,.pr li,.pr dd{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.6}
+.pr b{color:var(--ink)}
+.pr a{color:var(--ink)}
+.pr ul,.pr ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.pr code{font-family:var(--mono);font-size:12.5px;background:var(--fill);border-radius:6px;padding:1px 5px;color:var(--ink)}
+.pr .answer{font-size:18px;line-height:1.55;color:var(--ink)}
+.tbl{overflow-x:auto;border-radius:22px;background:var(--fill)}
+.tbl table{width:100%;min-width:620px;border-collapse:collapse;font-size:14px;line-height:1.45}
+.tbl th{text-align:left;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:16px 16px 10px}
+.tbl td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:700}
+.tbl code{background:#fff}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
+.stages div{background:var(--fill);border-radius:22px;padding:18px;display:grid;gap:8px;align-content:start}
+.stages .lbl{color:var(--signal)}
+.stages b{font-size:17px}
+.stages p{font-size:14.5px}
+figure{margin:0;padding:20px;border-radius:22px;background:var(--fill);overflow-x:auto}
+figure svg{width:100%;min-width:640px;height:auto;display:block}
+figcaption{margin-top:10px;font-size:13px;color:var(--ink-3);text-align:center}
+pre{margin:0;padding:18px 20px;border-radius:22px;background:var(--ink);color:#e9e9ec;font-family:var(--mono);font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre}
+pre .c{color:#8b8c92}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns span{font-size:13px;font-weight:700;border-radius:999px;padding:9px 14px}
+.b1{background:var(--ink);color:#fff}.b2{background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}.b3{background:#fff;color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line)}
+dl.faq{margin:0;display:grid;gap:4px}
+dl.faq dt{font-weight:700;font-size:16px;margin-top:14px}
+footer{margin-top:64px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.6}
+footer a{color:var(--ink-2)}
+.status{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:13.5px;color:var(--ink-2)}
+.status b{background:var(--ink);color:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px}
+svg text{font-family:Figtree,system-ui,sans-serif}
+.btns a{font-size:13px;font-weight:700;border-radius:999px;padding:9px 14px;text-decoration:none}
+.decided{font-weight:700;color:#17945a}
+</style>
+</head>
+<body>
+<div class="pg">
+<header class="top"><a class="wm" href="../">peakst8</a><span class="lbl">Product note · 28 Nov 2026</span></header>
+
+<main>
+<section class="hero">
+  <span class="lbl">peakst8 Passport</span>
+  <h1>The whole race week, in one booking.</h1>
+  <p>A Passport is an experience built around an event. The athlete books the event ticket, a place to stay, food, local transfers, recovery and the extras around it in one go: one or two curated base packages, optional paid add-ons on top, one payment.</p>
+  <div class="facts"><span>Owner: Shravan</span><span>First live: HYROX Noida</span><span>3 groups · 1 bookable · rest on waitlist</span><span>Rupees today · other currencies in build</span></div>
+  <div class="status" id="status" aria-live="polite"><span>Status</span><b>Pilot</b><span>Next: HYROX Noida bookings, then payments in other currencies</span></div>
+  <div class="btns" style="justify-content:center"><a class="b1 lnk" href="https://www.figma.com/design/TfoO40tw7pts5GQenTYzag/Athlete-Experience-Details?node-id=1029-6210&amp;t=Ssur8zRQ8012HHyf-4">Figma design</a><a class="b2 lnk" href="https://app.peakst8.club/events?tab=packages">Discover packages (live)</a><a class="b2 lnk" href="https://github.com/peakst8-Basecamp/product-notes/blob/main/passport/README.md">README</a></div>
+  <nav class="toc" aria-label="Sections"><a href="#what">What it is</a><a href="#problem">What it solves</a><a href="#features">Features</a><a href="#flow">Booking flow</a><a href="#currency">Currencies</a><a href="#how">How it's built</a><a href="#rules">Rules</a><a href="#gaps">Gaps</a><a href="#journeys">Journeys</a><a href="#metrics">Metrics</a><a href="#risks">Risks</a><a href="#decisions">Decisions</a></nav>
+</section>
+
+<article class="pr">
+
+<h2 id="what">1. What it is</h2>
+<p class="answer">A normal peakst8 event sells a ticket. A Passport sells an entire package around the event: ticket, stay, food, transport, recovery and extras.</p>
+<div class="stages">
+  <div><span class="lbl">Event ticket</span><b>The reason to go</b><p>HYROX Noida race entry, a trek permit, a camp place.</p></div>
+  <div><span class="lbl">Stay</span><b>Near the venue</b><p>A private villa or a 5-star hotel, with the room type stated up front.</p></div>
+  <div><span class="lbl">Food</span><b>Sorted</b><p>Food at the villa, or meals as per the hotel room plan.</p></div>
+  <div><span class="lbl">Transport</span><b>Getting around</b><p>Local transfers and a venue visit before race weekend.</p></div>
+  <div><span class="lbl">Recovery</span><b>Before and after</b><p>Morning yoga, a carb-loading get-together, a recovery party.</p></div>
+  <div><span class="lbl">Add-ons</span><b>Make it yours</b><p>Optional, paid: a heritage tour, a room to yourself, an extra night.</p></div>
+</div>
+<p>Passports come in three groups: <b>Race Week Curation</b> (HYROX, Ironman, UTMB, La Vuelta, the World Marathon Majors), <b>Into the Wild</b> (Himalayan treks) and <b>Training Camps</b> (Kalaripayattu, open-water swimming, Muay Thai, surfing and similar).</p>
+<h3>Where the event ticket comes from</h3>
+<p>Some events, such as HYROX, sell their tickets only through their own official channels, not through peakst8. peakst8 cannot sell those tickets directly, so the ticket reaches the athlete as part of a package:</p>
+<div class="stages">
+  <div><span class="lbl">1 · peakst8 buys</span><b>The event tickets</b><p>From the event's official channel.</p></div>
+  <div><span class="lbl">2 · peakst8 builds</span><b>A Passport around them</b><p>Ticket plus stay, food, transport, recovery and add-ons.</p></div>
+  <div><span class="lbl">3 · The athlete buys</span><b>The Passport on peakst8</b><p>The ticket is part of the package, not sold on its own.</p></div>
+</div>
+<p>This is why the booking form asks for what the official ticket needs: name as per government ID, date of birth, gender, HYROX category and an emergency contact. For events peakst8 runs itself, the ticket is simply part of the package.</p>
+<h3>The first one: HYROX Noida (January)</h3>
+<p>From the customer-facing package guide of 23 Nov 2026. Prices are per person, before GST.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Package</th><th>Stay</th><th>Price</th><th>Includes</th></tr></thead>
+  <tbody>
+    <tr><td>Shakeout House</td><td>Private villa at Birdwood Estate by StayVista, Delhi; sharing; room for 15 athletes</td><td>₹60,000</td><td rowspan="2">Race entry, 3 nights, food, local transfers, venue visit, morning yoga, carb-loading get-together, accelerated bib collection, photography, videography, recovery party. Not included: flights and anything outside the itinerary.</td></tr>
+    <tr><td>Race Week HQ</td><td>Radisson, Noida (5-star); double sharing</td><td>₹65,000</td></tr>
+    <tr><td>+ Heritage Day</td><td colspan="2">Taj Mahal trip (and a fourth night in the 4-night version): + ₹15,000; + ₹5,000 as a day trip in the 3-night version</td><td>Add-on</td></tr>
+    <tr><td>+ Solo Mode</td><td colspan="2">A room to yourself at Radisson for all three nights: + ₹30,000 (Race Week HQ only)</td><td>Add-on</td></tr>
+  </tbody>
+</table></div>
+<p>Two versions are being tested with customers: 4 days and 3 nights with a Taj extension, and a shorter 3-night plan with the Taj as a day trip.</p>
+
+<h2 id="problem">2. What it solves</h2>
+<p class="answer">Athletes who travel for a race plan everything around it themselves, and peakst8 sells only the ticket. A Passport sorts the whole trip in one booking.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Who</th><th>Today</th><th>What it costs them</th></tr></thead>
+  <tbody>
+    <tr><td>Athlete travelling for a race</td><td>Books the entry on one site, then the hotel, transfers, food and recovery separately</td><td>Hours of planning, a stay far from the venue, a race week alone. International athletes have it hardest.</td></tr>
+    <tr><td>Athlete looking for their next challenge</td><td>No single place to discover races, treks and camps worth travelling for</td><td>They find out late, or not at all</td></tr>
+    <tr><td>Clubs and gyms bringing a group</td><td>The coordinator builds the trip by hand (a Bali gym wants to bring 10–12 athletes to HYROX Noida)</td><td>Effort, and no group benefits</td></tr>
+    <tr><td>peakst8</td><td>Sells the ticket, nothing around it, and cannot sell tickets at all for events like HYROX that sell only through their own channels</td><td>Misses the larger spend around each race</td></tr>
+  </tbody>
+</table></div>
+<p><b>The bet</b> (from the go-to-market plan): some people pick the challenge first and plan the trip around it, and they will pay a premium of about 10–20% for convenience, access and community. This is a <b>hypothesis</b>; the discovery calendar, the waitlists and HYROX Noida bookings test it.</p>
+<p><b>Product philosophy:</b> 1–2 thoughtfully curated base packages per experience, with meaningful optional add-ons (single occupancy, cultural or heritage tours, special dinners with athletes or coaches, recovery and wellness, extra nights or transfers). It scales without turning every booking into custom travel planning.</p>
+
+<h2 id="features">3. Features</h2>
+<p class="answer">What is live on app.peakst8.club today, what is built but switched off, and what is not built.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Feature</th><th>What the athlete or team gets</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Discover packages tab</td><td>A tab next to "Discover experiences" on the events page, headed "Discover your next challenge". One featured Passport at the top, then rows for Race Week Curation, Into the Wild and Training Camps.</td><td class="decided">Live</td></tr>
+    <tr><td>Waitlist for upcoming Passports</td><td>Every Passport except the featured one opens a waitlist sheet: the athlete leaves their details (email code if signed out) to get early access.</td><td class="decided">Live</td></tr>
+    <tr><td>Passport page</td><td>Hero with duration, destination and next departure; about; what's included (picture cards); what's not included; packages; FAQs; "Enabled by peakst8".</td><td class="decided">Live</td></tr>
+    <tr><td>Packages</td><td>Each package shows the venue, photos, stay, occupancy and price per person (with "+ GST" or "Incl. GST"). Cheapest first. Sold out or closed packages stay visible, dimmed.</td><td class="decided">Live</td></tr>
+    <tr><td>Add-ons</td><td>Optional extras for the chosen package, with photos, description and price. One of each; the total updates as they are picked. The same add-on can be offered on several packages.</td><td class="decided">Live</td></tr>
+    <tr><td>Five-step booking</td><td>Package → Add-ons → Details → Review → Waiver, then payment. Details are prefilled for signed-in athletes; progress survives a refresh.</td><td class="decided">Live</td></tr>
+    <tr><td>Price breakdown</td><td>Package, each add-on, any discount, GST and total on the review step. The total equals what Razorpay charges.</td><td class="decided">Live</td></tr>
+    <tr><td>Payment and ticket</td><td>Razorpay checkout as for any event; free and approval-based packages work too. The same ticket as any event.</td><td class="decided">Live</td></tr>
+    <tr><td>After booking</td><td>The page shows View Ticket, Complete Payment, Retry Payment, Approval Pending and so on. With a payment pending, the chosen package and add-ons are locked.</td><td class="decided">Live</td></tr>
+    <tr><td>Share preview</td><td>Each Passport has its own link, page title, description and preview image.</td><td class="decided">Live</td></tr>
+    <tr><td>Kept out of event listings</td><td>Passports do not appear in normal event discovery, sport counts or a club's public event list.</td><td class="decided">Live</td></tr>
+    <tr><td>Day-by-day itinerary</td><td>Day tabs with timed activities. Data and component are ready; the section is switched off on the page.</td><td>Built, off</td></tr>
+    <tr><td>Photo wall, package benefits</td><td>"View photos" and "View Benefits" links on the hero and package cards.</td><td>Built, hidden</td></tr>
+    <tr><td>Paying in other currencies</td><td>See section 5.</td><td>In build</td></tr>
+    <tr><td>Coupons in the Passport flow</td><td>The backend applies coupons, but the Passport flow has no coupon box.</td><td>Not built</td></tr>
+    <tr><td>Create and edit Passports</td><td>Screens for the team to add itinerary, inclusions, exclusions, packages and add-ons. Today they are set up directly in the database.</td><td>In design</td></tr>
+    <tr><td>Passport stamps</td><td>Discovery built around collecting stamps; a physical passport handed out at events.</td><td>Later</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="flow">4. The booking flow</h2>
+<p class="answer">Everything happens on one page, <code>/passport/:id</code>, in five steps. Each step reuses part of the normal event registration.</p>
+<div class="stages">
+  <div><span class="lbl">1 · Package</span><b>Choose your base</b><p>Pick a package. Each package remembers its own add-ons and answers.</p></div>
+  <div><span class="lbl">2 · Add-ons</span><b>Make it yours</b><p>Tick the extras. The bar shows the new total before GST.</p></div>
+  <div><span class="lbl">3 · Details</span><b>Who's coming</b><p>The event's registration form: name, contact, ID, race category, diet, emergency contact.</p></div>
+  <div><span class="lbl">4 · Review</span><b>Check it</b><p>Stay, add-ons, answers and the full price breakdown.</p></div>
+  <div><span class="lbl">5 · Waiver</span><b>Agree and pay</b><p>The package's or event's waiver. Sign in by email code if needed, then Razorpay.</p></div>
+</div>
+<p>After payment the athlete lands on the ticket. Closing Razorpay or a failed payment returns them to the Passport page. One booking is for one guest.</p>
+
+<h2 id="currency">5. Paying in other currencies (Razorpay)</h2>
+<p class="answer">Today every Passport is priced and charged in rupees. Paying in the athlete's own currency is being built so international buyers, starting with the Bali group, can pay in their currency.</p>
+<h3>Today</h3>
+<ul>
+  <li>Prices are set in INR. The Razorpay order is created in INR, and checkout opens in INR.</li>
+  <li>The frontend already has a currency menu (INR, USD, EUR, AED) and a currency guess from the device's time zone, but both are switched off ("only rupees for now"). They use fixed, indicative rates (₹88 per US dollar, ₹102 per euro, ₹24 per dirham), so they must not be switched on as they are.</li>
+</ul>
+<h3>Being built</h3>
+<p>Backend work on branch <code>feat/razorpay-multi-currency</code>, not merged:</p>
+<ol>
+  <li><b>Which currency.</b> The app can ask for a specific currency or "auto". Auto picks one from the athlete's country (Cloudflare's country header). An unsupported country, or an older app that asks for nothing, gets INR as today.</li>
+  <li><b>Prices stay in rupees.</b> The organiser's price is in INR. It is converted at a live rate (open.er-api.com, cached for 6 hours). If the rate can't be fetched, the athlete pays in INR.</li>
+  <li><b>A 4% conversion margin.</b> Razorpay charges about 3% plus GST on international cards (2% for domestic) and converts at its bank's rate. The foreign-currency total is the rupee total × rate × 1.04, rounded up, so the rupees we receive stay close to the rupee price. The quote shows the margin as its own line.</li>
+  <li><b>Checkout in the athlete's currency.</b> The Razorpay order is created in that currency. Razorpay settles to peakst8 in INR.</li>
+  <li><b>Records.</b> The rate is locked when the order is created. Each payment stores its currency, the amount in that currency, the rate and the price breakdown. The rupee price stays the price of record for invoices, payouts and reports. A registration keeps its currency for later payments (after approval, retries).</li>
+</ol>
+<p><b>Currencies (25):</b> INR, USD, EUR, GBP, AED, SAR, QAR, OMR, KWD, BHD, SGD, MYR, THB, HKD, JPY, AUD, NZD, CAD, CHF, SEK, NOK, DKK, ZAR, LKR, NPR. Three-decimal currencies (OMR, KWD, BHD) and zero-decimal JPY are handled.</p>
+<h3>Compared with the product requirements</h3>
+<div class="tbl"><table>
+  <thead><tr><th>Question</th><th>Requirements (Shravan's PRD)</th><th>What is being built</th></tr></thead>
+  <tbody>
+    <tr><td>Who sets the currency?</td><td>The organiser picks a currency for the event and sets prices in it</td><td>Prices stay in INR; the athlete's currency is converted at checkout</td></tr>
+    <tr><td>Which currencies?</td><td>INR, USD, EUR, IDR</td><td>25 currencies, <b>without IDR</b></td></tr>
+    <tr><td>Display vs payment currency</td><td>Clearly distinguished; no surprise changes at checkout</td><td>Same currency shown and charged; the 4% margin is in the price</td></tr>
+    <tr><td>Records</td><td>Keep the original currency and price</td><td>Kept, with the rate and the INR price of record</td></tr>
+  </tbody>
+</table></div>
+<h3>Before it goes live</h3>
+<ul>
+  <li>International payments switched on for our Razorpay account, and a test payment with the Indonesian partner (Shravan, 19 Nov).</li>
+  <li>Decide the open currency questions in section 12.</li>
+  <li>Frontend: show the backend's converted quote, pass the chosen currency when booking, and open Razorpay in the order's currency. Remove the fixed rates.</li>
+  <li>Check that invoices, payouts and confirmation emails still show the right amounts.</li>
+</ul>
+
+<h2 id="how">6. How it's built</h2>
+<p class="answer">A Passport is a peakst8 event with extra content. No new checkout: packages are ticket categories, and add-ons hang off packages.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Passport word</th><th>What it is in peakst8</th><th>Where it comes from</th></tr></thead>
+  <tbody>
+    <tr><td>Passport</td><td>An event marked as a Passport, with its group, itinerary, what's included and what's not included</td><td><code>GET /event/:id</code></td></tr>
+    <tr><td>Package</td><td>A ticket category marked as a package, with images, stay, occupancy and its add-ons</td><td><code>GET /event/:id/categories</code></td></tr>
+    <tr><td>Add-on</td><td>A priced extra that can belong to several packages; a registration stores the ones chosen</td><td>On the package</td></tr>
+    <tr><td>Price quote</td><td>Base − coupon + add-ons + GST</td><td><code>GET /event/category/:categoryId/cost-break-down</code></td></tr>
+    <tr><td>Booking</td><td>The normal register or request-approval call, with the chosen add-on ids</td><td><code>POST /registration/:categoryId/register</code></td></tr>
+    <tr><td>Discovery</td><td>Featured Passports, and the rest grouped</td><td><code>GET /passport/featured</code>, <code>GET /passport/non-featured</code></td></tr>
+  </tbody>
+</table></div>
+<p>Frontend: <code>peakst8-frontend</code>, <code>app/(routes)/(public)/passport/[id]</code>, <code>components/passport</code>, and the Discover packages tab in <code>components/events</code>. Backend: <code>peakst8-backend</code>, <code>src/*/passport.*</code>, and the Passport, Package and Addon models in <code>prisma/schema.prisma</code>.</p>
+
+<h2 id="rules">7. Rules</h2>
+<ul>
+  <li><b>Listing.</b> A Passport is listed while it is public and has not ended. Featured Passports also need registration open (or sold out, so they can show "Sold out"). Order: the team's order, then start date.</li>
+  <li><b>Pricing.</b> Package price + chosen add-ons, then the coupon, then GST at the club's rate on everything, unless the package is GST-inclusive.</li>
+  <li><b>Add-ons</b> must belong to the chosen package; otherwise the quote and the booking are refused. One of each per booking.</li>
+  <li><b>Approval-based packages</b> store the chosen add-ons and charge for them at approval, at the add-on prices on that day.</li>
+  <li><b>Capacity</b> is the package's ticket capacity, held while the athlete pays. Add-ons have no limit. One booking per athlete per Passport.</li>
+  <li><b>Duration</b> ("4 Days 3 Nights") is counted from the dates in the venue's time zone.</li>
+  <li><b>Free total:</b> the ticket is issued straight away, with no Razorpay.</li>
+</ul>
+
+<h2 id="gaps">8. Known gaps</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Gap</th><th>Effect</th><th>Asked for by</th></tr></thead>
+  <tbody>
+    <tr><td>No screens to create or edit Passports</td><td>Every Passport is set up by engineering. Copying an event copies packages but drops the Passport content.</td><td>PRD (P0)</td></tr>
+    <tr><td>Add-ons have no quantity, limit, per-booking price or "mandatory" option</td><td>Can't sell a limited number of Taj seats, or two of something</td><td>PRD</td></tr>
+    <tr><td>Chosen add-ons are not shown on the ticket, in "my registrations" or in the host panel</td><td>Operations have to look them up</td><td>Integration plan, 25 Nov</td></tr>
+    <tr><td>No coupon box; one guest per booking</td><td>No promo codes, no booking for a partner</td><td>-</td></tr>
+    <tr><td>Page copy is written for race week ("Race Week", "villa", "Your race")</td><td>A trek or camp would read oddly</td><td>-</td></tr>
+    <tr><td>Itinerary switched off</td><td>Athletes can't see the day-by-day plan</td><td>PRD (P0)</td></tr>
+    <tr><td>Themed background builder</td><td>Every Passport looks the same</td><td>PRD (P0)</td></tr>
+    <tr><td>Totals differ by step: add-ons shows before GST, details shows the local sum, review shows the full total</td><td>The number on the bar changes between steps</td><td>-</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="journeys">9. Journeys and done criteria</h2>
+<ol>
+  <li><b>As an athlete, I find HYROX Noida from a poster and book the hotel package with Heritage Day.</b> Done when: the QR lands on Discover packages, the Passport page shows both packages, the review total equals the Razorpay charge, and the ticket is issued.</li>
+  <li><b>As an athlete, I join the waitlist for UTMB.</b> Done when: my details are saved against that Passport and I see the confirmation.</li>
+  <li><b>As an athlete in Bali, I pay in my currency.</b> Done when: the price shows in my currency on every step, Razorpay opens in that currency for the same amount, and peakst8 receives close to the rupee price. (Not live.)</li>
+  <li><b>As an athlete with a pending payment, I come back to finish.</b> Done when: my package and add-ons are locked and "Complete Payment" opens Razorpay for the same booking.</li>
+</ol>
+
+<h2 id="metrics">10. How we'll know it worked</h2>
+<p>Proposed targets from the go-to-market plan, not benchmarks.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Metric</th><th>Target</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>Unique landing-page visitors</td><td>1,500+ from the initial launch</td><td>PostHog</td></tr>
+    <tr><td>Visitor-to-waitlist conversion</td><td>15%+</td><td>PostHog, waitlist</td></tr>
+    <tr><td>Qualified leads (destination, budget, travel window)</td><td>100+</td><td>Waitlist and follow-up</td></tr>
+    <tr><td>Experience categories with real demand</td><td>3+</td><td>Waitlist by group</td></tr>
+    <tr><td>Serious booking enquiries</td><td>20+</td><td>Sales follow-up</td></tr>
+    <tr><td>Paid HYROX Noida bookings</td><td><b>Assumption:</b> to set with Shravan</td><td>Registrations</td></tr>
+    <tr><td>Guardrail: normal event checkout</td><td>No drop in completion</td><td>PostHog</td></tr>
+  </tbody>
+</table></div>
+<p>The Passport flow sends the same PostHog events as the event page (page viewed, register clicked, each step completed or dropped, submit), so its funnel can be read with the event funnel.</p>
+
+<h2 id="risks">11. Risks</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>What we'll do</th></tr></thead>
+  <tbody>
+    <tr><td>International cards fail, or are not switched on, for our Razorpay account</td><td>Medium</td><td>High</td><td>Confirm with Razorpay and run a test payment from Indonesia before selling abroad</td></tr>
+    <tr><td>The 4% margin feels like a hidden charge</td><td>Medium</td><td>Medium</td><td>Decide how to show it; show the currency on every step</td></tr>
+    <tr><td>Exchange rate service is down</td><td>Low</td><td>Low</td><td>Falls back to INR; the rate is cached for 6 hours</td></tr>
+    <tr><td>Add-ons oversold (Taj seats, single rooms)</td><td>Medium</td><td>Medium</td><td>Watch bookings by hand until add-ons have limits</td></tr>
+    <tr><td>Every new Passport needs an engineer</td><td>High</td><td>Medium</td><td>Ship the create and edit screens (V2)</td></tr>
+    <tr><td>Tickets bought up front from the official channel go unsold</td><td>Medium</td><td>High</td><td>Buy in small batches against bookings and waitlist demand; agree refund or transfer terms where possible</td></tr>
+    <tr><td>The event won't move a ticket into the athlete's name, or changes its terms</td><td>Low</td><td>High</td><td>Confirm the event's transfer and naming rules before selling each Passport</td></tr>
+    <tr><td>Thin margins on hotel packages</td><td>Medium</td><td>High</td><td>Price review per package before it goes on sale</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="decisions">12. Open questions and decisions</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Question</th><th>Owner</th><th>Decision</th></tr></thead>
+  <tbody>
+    <tr><td>Do organisers set prices in other currencies, or do we keep INR prices and convert?</td><td>Shravan, Jithin</td><td>Open. Being built: convert</td></tr>
+    <tr><td>Add IDR for the Bali group?</td><td>Shravan, Jithin</td><td>Open</td></tr>
+    <tr><td>Show the 4% margin to athletes, or include it in the price?</td><td>Shravan</td><td>Open</td></tr>
+    <tr><td>Are international payments switched on for our Razorpay account?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>Which HYROX Noida version: 4 nights with Taj, or 3 nights?</td><td>Shravan</td><td>Testing with customers</td></tr>
+    <tr><td>GST treatment for travel packages</td><td>Finance, with an accountant</td><td>Open</td></tr>
+    <tr><td>For events sold through other channels (HYROX): how many tickets do we buy up front, and what happens to unsold ones?</td><td>Shravan</td><td>Open</td></tr>
+    <tr><td>How does the ticket get into the athlete's name, and does the event allow it?</td><td>Shravan</td><td>Open</td></tr>
+    <tr><td>For events like HYROX, peakst8 buys the tickets and sells them only inside a Passport</td><td>Jithin</td><td class="decided">Decided</td></tr>
+    <tr><td>Show the itinerary on the page?</td><td>Shravan, Hansel</td><td>Open</td></tr>
+    <tr><td>Passports reuse events, categories and checkout; no new checkout</td><td>Jithin</td><td class="decided">Decided, 25 Nov 2026</td></tr>
+    <tr><td>Upcoming Passports are listed as a waitlist; only the featured one is bookable</td><td>Shravan</td><td class="decided">Decided, 24 Nov 2026</td></tr>
+    <tr><td>Physical passports: start at peakst8 Festival, not all HYROX events</td><td>Sagar</td><td class="decided">Decided, 18 Nov 2026</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Sources</h3>
+<ul>
+  <li>Product requirements: "PRD: peakst8 Passport - Event Booking Enhancements" (Shravan), Google Doc, 19 Nov 2026</li>
+  <li>Go-to-market strategy and hypotheses (Shravan), 18 Nov 2026; HYROX Noida package guide and three-night itinerary, 23 Nov 2026</li>
+  <li>Mattermost: the peakst8 Passport channel, the Team Platform flow review (25–27 Nov) and the frontend integration plan (25 Nov)</li>
+  <li>Code: <code>peakst8-backend</code> and <code>peakst8-frontend</code> <code>main</code> as of 27 Nov 2026; multi-currency from the backend's unmerged <code>feat/razorpay-multi-currency</code> work</li>
+  <li>Design: <a href="https://www.figma.com/design/TfoO40tw7pts5GQenTYzag/Athlete-Experience-Details?node-id=1029-6210&amp;t=Ssur8zRQ8012HHyf-4">Figma, Athlete Experience Details</a></li>
+</ul>
+
+</article>
+</main>
+
+<footer>peakst8 · internal product note, 28 Nov 2026 · <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/passport">Source</a> · Written from the <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/TEMPLATE.md">product note template</a></footer>
+</div>
+<script>
+(function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='passport'});if(!n)return;
+var st=document.getElementById('status');st.innerHTML='<span>Status</span><b></b><span></span><span></span>';st.children[1].textContent=n.status;st.children[2].textContent=n.next?'Next: '+n.next:'';st.children[3].textContent='Updated '+n.updated+(n.owner?' · '+n.owner:'')}).catch(function(){})})();
+</script>
+</body>
+</html>
