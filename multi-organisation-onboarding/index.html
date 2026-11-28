@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>peakst8 Multi-Organisation Onboarding</title>
+<meta name="description" content="peakst8 Multi-Organisation Onboarding: any club can run its own training programme in the peakst8 app. Athletes join by invite and see only their programme's plan, coaches and leaderboard. What it is, how joining works, features, rules, gaps and open questions.">
+<link rel="canonical" href="https://peakst8-basecamp.github.io/product-notes/multi-organisation-onboarding/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="peakst8 Multi-Organisation Onboarding: product note">
+<meta property="og:description" content="Any club's training programme, in the peakst8 app: invite, join, train, with a leaderboard of its own.">
+<meta property="og:url" content="https://peakst8-basecamp.github.io/product-notes/multi-organisation-onboarding/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Figtree:wght@400;500;600;700;800&family=Chivo+Mono:wght@400&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"peakst8 Multi-Organisation Onboarding: product note","datePublished":"2026-11-28","dateModified":"2026-11-28","author":{"@type":"Organization","name":"peakst8","url":"https://ps8.club"},"about":"Club training programmes in the peakst8 app: invite-based joining and a programme-scoped training experience for any organisation"}
+</script>
+<style>
+:root{color-scheme:light;--bg:#fff;--ink:#0b0b0c;--ink-2:#505157;--ink-3:#8b8c92;--fill:#f4f4f5;--line:#e7e7ea;--signal:#ff5148;--ok:#17945a;
+--serif:"Newsreader",Georgia,serif;--sans:"Figtree",system-ui,-apple-system,sans-serif;--mono:"Chivo Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.pg{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:24px 96px}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wm{font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.hero{text-align:center;padding-block:64px 16px;display:grid;gap:20px;justify-items:center}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6.6vw,76px);line-height:1;letter-spacing:-.025em;margin:0;max-width:16ch;text-wrap:balance}
+.hero p{margin:0;max-width:60ch;color:var(--ink-2);font-size:17px;line-height:1.5;text-wrap:pretty}
+.facts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.facts span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:7px 11px}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding-top:8px}
+nav.toc a{font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--fill);border-radius:999px;padding:8px 14px}
+nav.toc a:hover{color:var(--ink)}
+.pr{max-width:820px;margin:0 auto;display:grid;gap:16px;padding-top:24px}
+.pr h2{margin:40px 0 0;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.1;letter-spacing:-.015em;scroll-margin-top:16px}
+.pr h3{margin:8px 0 0;font-size:16px;font-weight:700}
+.pr p,.pr li,.pr dd{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.6}
+.pr b{color:var(--ink)}
+.pr a{color:var(--ink)}
+.pr ul,.pr ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.pr code{font-family:var(--mono);font-size:12.5px;background:var(--fill);border-radius:6px;padding:1px 5px;color:var(--ink)}
+.pr .answer{font-size:18px;line-height:1.55;color:var(--ink)}
+.tbl{overflow-x:auto;border-radius:22px;background:var(--fill)}
+.tbl table{width:100%;min-width:620px;border-collapse:collapse;font-size:14px;line-height:1.45}
+.tbl th{text-align:left;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:16px 16px 10px}
+.tbl td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:700}
+.tbl code{background:#fff}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
+.stages div{background:var(--fill);border-radius:22px;padding:18px;display:grid;gap:8px;align-content:start}
+.stages .lbl{color:var(--signal)}
+.stages b{font-size:17px}
+.stages p{font-size:14.5px}
+figure{margin:0;padding:20px;border-radius:22px;background:var(--fill);overflow-x:auto}
+figure svg{width:100%;min-width:640px;height:auto;display:block}
+figcaption{margin-top:10px;font-size:13px;color:var(--ink-3);text-align:center}
+pre{margin:0;padding:18px 20px;border-radius:22px;background:var(--ink);color:#e9e9ec;font-family:var(--mono);font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre}
+pre .c{color:#8b8c92}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns span{font-size:13px;font-weight:700;border-radius:999px;padding:9px 14px}
+.b1{background:var(--ink);color:#fff}.b2{background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}.b3{background:#fff;color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line)}
+dl.faq{margin:0;display:grid;gap:4px}
+dl.faq dt{font-weight:700;font-size:16px;margin-top:14px}
+footer{margin-top:64px;text-align:center;color:var(--ink-3);font-size:13px;line-height:1.6}
+footer a{color:var(--ink-2)}
+.status{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:13.5px;color:var(--ink-2)}
+.status b{background:var(--ink);color:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px}
+svg text{font-family:Figtree,system-ui,sans-serif}
+.btns a{font-size:13px;font-weight:700;border-radius:999px;padding:9px 14px;text-decoration:none}
+.decided{font-weight:700;color:#17945a}
+</style>
+</head>
+<body>
+<div class="pg">
+<header class="top"><a class="wm" href="../">peakst8</a><span class="lbl">Product note · 28 Nov 2026</span></header>
+
+<main>
+<section class="hero">
+  <span class="lbl">peakst8 Multi-Organisation Onboarding</span>
+  <h1>Any club's training programme, in the peakst8 app.</h1>
+  <p>The peakst8 app used to run one training programme, PUMA Project 3. Now any club can run its own. Athletes join with an invite, follow the plan week by week, and see only their own programme's coaches, challenges and leaderboard.</p>
+  <div class="facts"><span>Owner: Jithin</span><span>Live in the app since 19 Nov 2026</span><span>First customer: Cubbon Classic 10K</span><span>Set up by the peakst8 team for now</span></div>
+  <div class="status" id="status" aria-live="polite"><span>Status</span><b>Pilot</b><span>Next: new app builds on the stores, then Cubbon Classic's programme in January</span></div>
+  <div class="btns" style="justify-content:center"><a class="b1 lnk" href="https://github.com/peakst8-Basecamp/product-notes/blob/main/multi-organisation-onboarding/TECH-SPEC.md">Technical spec</a><a class="b2 lnk" href="https://github.com/peakst8-Basecamp/product-notes/blob/main/multi-organisation-onboarding/README.md">README</a></div>
+  <nav class="toc" aria-label="Sections"><a href="#what">What it is</a><a href="#problem">What it solves</a><a href="#flow">Joining</a><a href="#features">Features</a><a href="#how">How it's built</a><a href="#rules">Rules</a><a href="#gaps">Gaps</a><a href="#journeys">Journeys</a><a href="#metrics">Metrics</a><a href="#risks">Risks</a><a href="#decisions">Decisions</a></nav>
+</section>
+
+<article class="pr">
+
+<h2 id="what">1. What it is</h2>
+<p class="answer">A training programme now belongs to a club, and the app shows each athlete the programme they were invited to. It is a feature of its own, like Passport. Cubbon Classic 10K is the first customer, not the reason it exists.</p>
+<div class="stages">
+  <div><span class="lbl">Organisation</span><b>A club on peakst8</b><p>A race, a run club or a brand's training squad.</p></div>
+  <div><span class="lbl">Programme</span><b>Its training plan</b><p>Start and end dates, coaches and athletes. A club can run more than one.</p></div>
+  <div><span class="lbl">Invite</span><b>The way in</b><p>A link and a six-character code, emailed to one athlete, for one programme.</p></div>
+  <div><span class="lbl">The app</span><b>Same app, their programme</b><p>Home, training, leaderboard, challenges and coach chat, all for that programme only.</p></div>
+</div>
+<p>Everything athletes had in Project 3 works the same way for every programme: the training week, Strava sync, the leaderboard, weekly challenges, coach chat and broadcasts, and booked sessions with a meeting link. Puma itself now runs on the same flow.</p>
+
+<h2 id="problem">2. What it solves</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Who</th><th>Before</th><th>What it cost them</th></tr></thead>
+  <tbody>
+    <tr><td>A club that wants to train its athletes</td><td>The app was built around one programme. A second club meant custom work each time.</td><td>Weeks of engineering before a programme could start.</td></tr>
+    <tr><td>An athlete</td><td>No way to join a club's programme in the app unless they were in Project 3.</td><td>Training on a spreadsheet or another app, away from their club and its leaderboard.</td></tr>
+    <tr><td>peakst8</td><td>Design partner conversations (Cubbon Classic, Run Crew × Reebok, HYROX training clubs) ended at "the app only does Puma".</td><td>Athlete OS could not be sold as a product.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="flow">3. How an athlete joins</h2>
+<p class="answer">One email, one tap, a short sign-up. An athlete who already has a programme skips all of it and lands on Home.</p>
+<div class="stages">
+  <div><span class="lbl">1 · Invite</span><b>An email arrives</b><p>"You're invited to train with peakst8", with a link and a six-character code.</p></div>
+  <div><span class="lbl">2 · Open</span><b>Link or code</b><p>The link opens the app. If it doesn't, the athlete types the code in the app.</p></div>
+  <div><span class="lbl">3 · Sign in</span><b>Email code, Google or Apple</b><p>New athletes add their name, birthday and sports.</p></div>
+  <div><span class="lbl">4 · Set up</span><b>Notifications and photo</b><p>Then connect Strava so runs sync on their own.</p></div>
+  <div><span class="lbl">5 · Train</span><b>Home</b><p>This week's workouts, for their programme only.</p></div>
+</div>
+<p>If the athlete closes the app halfway, it reopens on the step they stopped at. The invite page also offers the App Store and Google Play for athletes who do not have the app yet.</p>
+
+<h2 id="features">4. Features</h2>
+<p class="answer">What is live in the app today, and what is not built.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Feature</th><th>What the athlete or club gets</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Invite by email</td><td>Each athlete gets their own invite: a link that opens the app and a six-character code as a backup.</td><td class="decided">Live</td></tr>
+    <tr><td>Invite link</td><td>Opens the app on the join screen. Without the app, a page shows the code and the store buttons.</td><td class="decided">Live</td></tr>
+    <tr><td>Sign-in and sign-up</td><td>Email code, Google or Sign in with Apple. New athletes add name, birthday and sports.</td><td class="decided">Live</td></tr>
+    <tr><td>Programme-aware Home and training</td><td>The programme's name, dates, week and workouts. Nothing from another programme.</td><td class="decided">Live</td></tr>
+    <tr><td>Leaderboard per programme</td><td>Each programme has its own board, even two programmes in the same club.</td><td class="decided">Live</td></tr>
+    <tr><td>Challenges, coach chat, broadcasts, sessions</td><td>Same as Project 3, limited to the athlete's programme and coaches.</td><td class="decided">Live</td></tr>
+    <tr><td>Strava</td><td>Connect during sign-up or later from the profile. The app allows skipping it.</td><td class="decided">Live</td></tr>
+    <tr><td>Wearable ring (Ultrahuman)</td><td>Offered only on programmes that have it switched on.</td><td class="decided">Live</td></tr>
+    <tr><td>Club screens</td><td>A club creating its own programme and inviting athletes without the peakst8 team.</td><td>Not built</td></tr>
+    <tr><td>Training plans in peakst8</td><td>Plans are still written in the partner training system (Yoska).</td><td>Planned</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="how">5. How it's built</h2>
+<p class="answer">The athlete's programme is worked out by peakst8 from who is signed in. The app never tells the server which programme, club or event to show.</p>
+<ul>
+  <li><b>One active programme per athlete.</b> A training programme hangs off a ticket of an Experience, which belongs to a club. That chain is how peakst8 knows the organisation.</li>
+  <li><b>An invite code points at one programme.</b> Using it puts the signed-in athlete in that programme and marks the code used.</li>
+  <li><b>Every screen asks "what is my programme?"</b> first, then loads training, leaderboard, coaches and challenges for it.</li>
+  <li><b>Training plans, scoring and chat</b> still come from the partner training system (Yoska), reached through peakst8 with the athlete's own access.</li>
+</ul>
+<p>The data model, routes, caching rules and the release checklist are in the <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/multi-organisation-onboarding/TECH-SPEC.md">technical spec</a>. It was written on 11 Nov 2026, before go-live, so its delivery-status table is older than this page.</p>
+
+<h2 id="rules">6. Rules</h2>
+<ul>
+  <li><b>One invite, one athlete.</b> Once used, nobody else can use it. The athlete who used it can enter it again safely.</li>
+  <li><b>One programme at a time.</b> An athlete cannot be active in two programmes.</li>
+  <li><b>Programmes are kept apart</b>, including two in the same club: separate athletes, separate leaderboards.</li>
+  <li><b>Wrong or used code:</b> the same message, "Invalid invite code", so nothing is revealed about the code.</li>
+  <li><b>No programme, no training screens.</b> An athlete without a programme is taken to the invite screen.</li>
+</ul>
+
+<h2 id="gaps">7. Known gaps</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Gap</th><th>What it means today</th><th>Plan</th></tr></thead>
+  <tbody>
+    <tr><td>No club screens</td><td>The peakst8 team creates each programme and sends the invites.</td><td>V2</td></tr>
+    <tr><td>Old Puma-only code</td><td>Still in the backend beside the new flow.</td><td>Remove once the new app builds are on the stores</td></tr>
+    <tr><td>Strava can be skipped</td><td>An athlete who skips it has no runs on the leaderboard.</td><td>Decide whether to require it</td></tr>
+    <tr><td>Strava capacity</td><td>Sync volume for a large programme (about 1,000 athletes to start) is untested.</td><td>Size it before Cubbon Classic's programme</td></tr>
+    <tr><td>Help Center wording</td><td>Existing articles still say training is for Project 3 only.</td><td>Two new articles drafted, not published</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="journeys">8. Journeys and done criteria</h2>
+<ol>
+  <li><b>As a new athlete, I open my invite and start training.</b> Done when: the link opens the join screen, I sign up, and Home shows my programme's week.</li>
+  <li><b>As an athlete without the app, I get in anyway.</b> Done when: the invite page shows my code and the store buttons, and typing the code in the app works.</li>
+  <li><b>As a Project 3 athlete, nothing changes for me.</b> Done when: I open the app and land on Home without being asked for a code.</li>
+  <li><b>As an athlete in one programme, I never see another.</b> Done when: two programmes in one club show different leaderboards and coaches.</li>
+  <li><b>As a club, my programme starts without an app release.</b> Done when: the team sets up the programme and sends invites the same day.</li>
+</ol>
+
+<h2 id="metrics">9. How we'll know it worked</h2>
+<p class="answer">Targets are proposed, not benchmarks.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Metric</th><th>Target</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>Invited athletes who join</td><td><b>Assumption:</b> 80% within a week of the invite</td><td>Invites sent vs athletes in the programme</td></tr>
+    <tr><td>Joined athletes who connect Strava</td><td><b>Assumption:</b> 90%</td><td>App analytics</td></tr>
+    <tr><td>Time to start a new club's programme</td><td><b>Assumption:</b> under one working day, no app release</td><td>Team log</td></tr>
+    <tr><td>Athletes seeing another programme's data</td><td>0</td><td>Release checklist, support</td></tr>
+    <tr><td><b>Guardrail:</b> Project 3 athletes</td><td>No drop in weekly active athletes after the change</td><td>App analytics</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="risks">10. Risks</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>What we'll do</th></tr></thead>
+  <tbody>
+    <tr><td>The change breaks the Project 3 flow</td><td>Low</td><td>High</td><td>About half the app's code changed. Test the Puma flow end to end before each build.</td></tr>
+    <tr><td>Strava limits slow sync for a large programme</td><td>Medium</td><td>High</td><td>Size it before January; move towards sync driven by new activities.</td></tr>
+    <tr><td>Setup stays manual and does not scale past a few clubs</td><td>High</td><td>Medium</td><td>Build club screens in V2.</td></tr>
+    <tr><td>Athletes lose or forward invites</td><td>Medium</td><td>Low</td><td>Invites work once; the team can send a new one.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="decisions">11. Open questions and decisions</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Question</th><th>Owner</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Is connecting Strava required, or can an athlete skip it?</td><td>Jithin, Shravan</td><td>Open</td></tr>
+    <tr><td>How many athletes can one programme take within Strava's limits?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>Does an invite expire?</td><td>Jithin</td><td>Open</td></tr>
+    <tr><td>Who sends invites until clubs have their own screen?</td><td>Arvind, Jithin</td><td>Open</td></tr>
+    <tr><td>When do training plans move from Yoska into peakst8?</td><td>Jithin, Rohit</td><td>Plan being written</td></tr>
+    <tr><td>The app never sends a programme or club id; peakst8 works it out.</td><td>Jithin</td><td class="decided">Decided</td></tr>
+    <tr><td>One active programme per athlete.</td><td>Jithin</td><td class="decided">Decided</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Sources</h3>
+<ul>
+  <li>Technical spec (Jithin), 11 Nov 2026, in this folder</li>
+  <li>Team call minutes, Mattermost Team Platform, 9 and 17 Nov 2026</li>
+  <li>Go-live update (Jithin), Mattermost Team Platform, 19 Nov 2026</li>
+  <li>The mobile app and backend code on main, read on 28 Nov 2026</li>
+</ul>
+
+</article>
+</main>
+
+<footer>peakst8 · internal product note, 28 Nov 2026 · <a href="https://github.com/peakst8-Basecamp/product-notes/tree/main/multi-organisation-onboarding">Source</a> · Written from the <a href="https://github.com/peakst8-Basecamp/product-notes/blob/main/TEMPLATE.md">product note template</a></footer>
+</div>
+<script>
+(function(){fetch('../notes.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){var n=d.notes.find(function(x){return x.id==='multi-organisation-onboarding'});if(!n)return;
+var st=document.getElementById('status');st.innerHTML='<span>Status</span><b></b><span></span><span></span>';st.children[1].textContent=n.status;st.children[2].textContent=n.next?'Next: '+n.next:'';st.children[3].textContent='Updated '+n.updated+(n.owner?' · '+n.owner:'')}).catch(function(){})})();
+</script>
+</body>
+</html>

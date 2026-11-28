@@ -46,3 +46,10 @@
 
 - [Product note](https://peakst8-basecamp.github.io/product-notes/passport/): what it is, what it solves, features, the five-step booking flow, paying in other currencies (Razorpay), how it maps onto events and categories, rules, gaps, metrics, risks, open questions
 - [Figma design](https://www.figma.com/design/TfoO40tw7pts5GQenTYzag/Athlete-Experience-Details?node-id=1029-6210&t=Ssur8zRQ8012HHyf-4): Athlete Experience Details
+
+## peakst8 Multi-Organisation Onboarding
+
+> Any club or organisation can run its own training programme in the peakst8 app (Athlete OS). Athletes join with an emailed invite (a link and a six-character code) and see only their own programme's plan, coaches, challenges and leaderboard. Live in the app since 19 Nov 2026. First customer: Cubbon Classic 10K. Programmes and invites are set up by the peakst8 team for now.
+
+- [Product note](https://peakst8-basecamp.github.io/product-notes/multi-organisation-onboarding/): what it is, what it solves, how an athlete joins, features, how it's built, rules, known gaps, journeys, metrics, risks, open questions
+- [Technical spec](https://github.com/peakst8-Basecamp/product-notes/blob/main/multi-organisation-onboarding/TECH-SPEC.md): domain model, flows, mobile routes, API contract, caching, release gate

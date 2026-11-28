@@ -261,6 +261,32 @@
         "Screens to create and edit Passports",
         "Itinerary on the page, coupons, add-on limits"
       ]
+    },
+    {
+      "id": "multi-organisation-onboarding",
+      "title": "peakst8 Multi-Organisation Onboarding",
+      "folder": "multi-organisation-onboarding/",
+      "status": "Pilot",
+      "next": "New app builds on the stores, then Cubbon Classic's programme in January",
+      "owner": "Jithin",
+      "updated": "2026-11-28",
+      "summary": "Any club can run its own training programme in the peakst8 app: athletes join by invite and see only their programme's plan, coaches and leaderboard. Live since 19 Nov 2026. First customer: Cubbon Classic 10K.",
+      "links": {
+        "Product note": "multi-organisation-onboarding/",
+        "Technical spec": "https://github.com/peakst8-Basecamp/product-notes/blob/main/multi-organisation-onboarding/TECH-SPEC.md"
+      },
+      "milestones": [],
+      "kind": "Product feature",
+      "have": [
+        "Invite by email: a link and a six-character code",
+        "Programme-only Home, training, leaderboard, challenges and coach chat",
+        "Live in the app; PUMA Project 3 runs on the same flow"
+      ],
+      "notYet": [
+        "Screens for clubs to create a programme and invite athletes",
+        "Training plans built in peakst8 (still in Yoska)",
+        "Old Puma-only code removed"
+      ]
     }
   ],
   "_kinds": "kind is \"Product feature\" or \"Design partner\". have / notYet are short plain lists of what exists today and what does not; release.ps8.in shows them."
