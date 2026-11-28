@@ -39,3 +39,10 @@
 - [Product note](https://peakst8-basecamp.github.io/product-notes/onboarding-clubs/): sources, the HYROX 365 opportunity in India, parity with what peakst8 runs today, what we build, two-week plan and estimate, owner, checklist, open questions
 
 - [Status of every note](https://peakst8-basecamp.github.io/product-notes/notes.json)
+
+## peakst8 Passport
+
+> An experience built around an event. Athletes book the event ticket, stay, food, local transport, recovery and optional paid add-ons in one booking, in three groups: Race Week Curation, Into the Wild and Training Camps. First live: HYROX Noida. Paying in the athlete's own currency through Razorpay is in build.
+
+- [Product note](https://peakst8-basecamp.github.io/product-notes/passport/): what it is, what it solves, features, the five-step booking flow, paying in other currencies (Razorpay), how it maps onto events and categories, rules, gaps, metrics, risks, open questions
+- [Figma design](https://www.figma.com/design/TfoO40tw7pts5GQenTYzag/Athlete-Experience-Details?node-id=1029-6210&t=Ssur8zRQ8012HHyf-4): Athlete Experience Details
