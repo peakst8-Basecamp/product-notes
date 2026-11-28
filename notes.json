@@ -16,10 +16,10 @@
       "id": "embedded-ticketing",
       "title": "peakst8 Embedded Ticketing",
       "folder": "embedded-ticketing/",
-      "status": "In build",
-      "next": "Cubbon Classic live on its own site by 20 Nov 2026",
+      "status": "Pilot",
+      "next": "Cubbon Classic switches from KonfHub in the first week of December",
       "owner": "Arvind",
-      "updated": "2026-11-19",
+      "updated": "2026-11-28",
       "summary": "Clubs and races sell entries on their own website with peakst8 checkout. Now includes early-bird tiers, bulk group codes and import from KonfHub. Design partners: Cubbon Classic 10K (first), Find Your Fit, Sisters in Sweat.",
       "links": {
         "Product note": "embedded-ticketing/",
@@ -39,8 +39,18 @@
           "status": "done"
         },
         {
+          "name": "Website Embed and @peakst8/sdk live",
+          "date": "2026-11-13",
+          "status": "done"
+        },
+        {
+          "name": "Cubbon Classic onboarded on peakst8",
+          "date": "2026-11-19",
+          "status": "done"
+        },
+        {
           "name": "Cubbon Classic 10K live",
-          "date": "2026-11-20",
+          "date": "2026-12-07",
           "status": "todo"
         },
         {
@@ -61,12 +71,15 @@
       ],
       "kind": "Product feature",
       "have": [
+        "Live on app.peakst8.club: Website Embed tab and the @peakst8/sdk package (13 Nov)",
+        "Cubbon Classic onboarded (19 Nov); help doc on release.ps8.in",
         "Product note and 17-screen prototype",
         "Code: race-site loader, early-bird tiers, bulk group codes, KonfHub import (checked, not merged)",
-        "User experience spec: no-code install, and help doc on release.ps8.in"
+        "User experience spec: no-code install"
       ],
       "notYet": [
-        "Live for any organiser",
+        "An organiser live on its own site (Cubbon Classic: first week of December)",
+        "Open to every organiser",
         "Code merged into backend and frontend",
         "Event pages on the organiser's domain (SEO)",
         "Club codes and bib export",

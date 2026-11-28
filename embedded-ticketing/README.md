@@ -2,7 +2,7 @@
 
 **A peakst8 product feature.** Clubs and races sell entries on their own website. peakst8 still runs checkout, payments, tickets and check-in, so the platform fee is unchanged, while the search traffic and attribution stay with the organiser.
 
-**Status:** In build · **Owner:** Arvind · **Updated:** 9 Nov 2026
+**Status:** Pilot · **Owner:** Arvind · **Updated:** 28 Nov 2026
 
 | For | Open |
 | --- | --- |
